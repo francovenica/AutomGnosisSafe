@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "babel-jest": "^25.1.0",
+    "jest": "^25.1.0",
+    "jest-puppeteer": "^4.4.0"
+  },
+  "scripts": {
+    "test_imp": "set IMPACC=impacc&& jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles"
+  },
+  "dependencies": {
+    "dappeteer": "^0.6.0",
+    "jest-cli": "^25.1.0",
+    "puppeteer": "^2.1.0"
+  },
+  "jest": {
+    "preset": "jest-puppeteer",
+    "testTimeout": 30000
+  }
+}
