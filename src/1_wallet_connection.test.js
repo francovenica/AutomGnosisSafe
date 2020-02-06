@@ -120,6 +120,5 @@ describe("Testing Wallet connection", ()=>{
             GnosisPage)
         await GnosisPage.waitForNavigation({waitUntil:'domcontentloaded' })
         expect(GnosisPage.url()).toMatch(sels.testAccounts.Safe1)
-        await GnosisPage.screenshot({path:"./snap.png", fullPage: true})
     },TIME.MID)
 })
