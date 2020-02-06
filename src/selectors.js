@@ -28,7 +28,8 @@ export const sels = {
         mm_confirm_button : "button.btn-confirm",
         mm_private_key_input : "#private-key-box",
         intercom_close_button: ".intercom-anchor",
-        valid_safe_address: "div.MuiInputAdornment-positionEnd"
+        valid_safe_address: "div.MuiInputAdornment-positionEnd",
+        safe_name_heading: "h2[data-testid='safe-name-heading']" //title of the safe in the main hub 
     },
     wallet: {
         seed: "range smoke crisp install cross shine hold grief ripple cabin sudden special",

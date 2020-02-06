@@ -7,56 +7,41 @@ global.TIME = {
   "MICRO" : "2000",  
 };
 
-export const clickSomething = async function(selector, page, type="Xpath")
-{
+
+const elementSelector = async (selector, page, type) => {
+  /*handling Xpath and Css selectors is different. Since may functions require 
+  to make this distinction this function was created to do it*/
   if(type === "Xpath"){
     await page.waitForXPath(selector)
-    const element = await page.$x(selector);
-    await element[0].click()
+    const elementHandle = await page.$x(selector)
+    return elementHandle[0]
   }
   else{
     await page.waitForSelector(selector)
-    const element = await page.$(selector)
-    await element.click()
+    return page.$(selector)
   }
+}
+
+export const clickSomething = async function(selector, page, type="Xpath"){
+  const element = await elementSelector(selector,page,type);
+  await element.click()
+  return element;
 };
 
 export const clickAndType = async function (selector, page, text="", type="Xpath"){
-  let forTyping=null;
-
-  if(type === "Xpath"){
-    const element = await page.$x(selector);
-    await element[0].click();
-    forTyping = element[0];
+  if(type==="Xpath"){
+    let forTyping= await clickSomething(selector, page, type);
+    await forTyping.type(text)
   }
   else{
-    const element = await page.$(selector);
-    await element.click();
-    forTyping = element;
-  }
-
-  if(text != ""){
-    if(type==="Xpath"){
-      await forTyping.type(text)
-    }
-    else{
-      await page.type(selector,text)
-    }
+    await page.type(selector,text)
   }
 }
 
 export const clearInput = async function(selector, page, type="Xpath"){
-  let field;
-  if(type === "Xpath"){
-    await page.waitForXPath(selector)  
-    field = await page.$x(selector)
-    await field[0].click({clickCount:3})
-  }
-  else{
-    field = await page.$(selector)
-    await field.click({clickCount: 3})
-  }
-    page.keyboard.press('Backspace');
+  const field = await elementSelector(selector, page, type);
+  await field.click({clickCount:3})
+  page.keyboard.press('Backspace');
 }
 
 export const importAccounts = async function(metamask, importAcc){
@@ -71,21 +56,19 @@ export const importAccounts = async function(metamask, importAcc){
 
 export const assertTextPresent = async function (selector, page, textPresent){
   await page.waitForXPath(selector)
-  const connected = await page.$x(selector)
-  const is_connected = await page.evaluate(x=>x.textContent, connected[0])
+  const [connected] = await page.$x(selector)
+  const is_connected = await page.evaluate(x=>x.textContent, connected)
   expect(is_connected).toMatch(textPresent)
 };
 
 export const assertElementPresent = async function (selector, page, type="Xpath"){
-  if (type ==="Xpath"){
-    await page.waitForXPath(selector)
-    const connected = await page.$x(selector)
-    expect(connected[0]).toBeDefined()
-  }
-  else{
-    await page.waitForSelector(selector)
-    const connected = await page.$(selector)
-    expect(connected).not.toBe(null)
+  const connected = await elementSelector(selector,page,type)
+  const expectHandler = expect(connected)
+
+  if (type === "Xpath") {
+    expectHandler.toBeDefined()
+  } else {
+    expectHandler.not.toBeNull()
   }
 };
 

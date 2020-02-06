@@ -118,7 +118,11 @@ describe("Testing Wallet connection", ()=>{
         await gFunc.clickSomething(
             sels.XpSelectors.load_safe_load_button,
             GnosisPage)
-        await GnosisPage.waitForNavigation({waitUntil:'domcontentloaded' })
+        await GnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
         expect(GnosisPage.url()).toMatch(sels.testAccounts.Safe1)
-    },TIME.MID)
+        await GnosisPage.waitForSelector(sels.CssSelectors.safe_name_heading);
+        const safeName = await GnosisPage.$eval(sels.CssSelectors.safe_name_heading, x => x.innerText)
+        expect(safeName).toMatch(sels.accountNames.safe_name)
+        //await GnosisPage.screenshot({path: "snapshot.png", type:"png"})
+    },TIME.MAX)
 })
