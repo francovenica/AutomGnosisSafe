@@ -106,8 +106,6 @@ describe("Loading an Existing safe", ()=>{
     },TIME.MIN)
 
     test("Load safe Review Details", async () =>{
-        const [safeCounter] = await gnosisPage.$x(sels.XpSelectors.homepage.safes_counter) 
-        const safeAmount = await gnosisPage.evaluate(x=>x.innerText, safeCounter)
         await gFunc.assertElementPresent(
             sels.XpSelectors.load_safe.review_details_title,
             gnosisPage)
@@ -127,29 +125,5 @@ describe("Loading an Existing safe", ()=>{
         await gnosisPage.waitForSelector(sels.CssSelectors.safe_name_heading);
         const safeName = await gnosisPage.$eval(sels.CssSelectors.safe_name_heading, x => x.innerText)
         expect(safeName).toMatch(sels.accountNames.safe_name)
-        [safeCounter] = await gnosisPage.$x(sels.XpSelectors.homepage.safes_counter)
-        expect(safeCounter).toBe(safeAmount + 1)
     },TIME.MAX)
 })
-/*
-describe("Create New Safe", () =>{
-    test("Open Create Safe Form", async ()=>{
-        
-    }, TIME.MIN)
-    test("Naming The Safe", async () =>{
-
-    }, TIME.MIN)
-    test("Adding Owners", async() =>{
-
-    }, TIME.MIN)
-    test("Setting Required Confirmation", async () => {
-        
-    }, TIME.MIN);
-    test("Reviewing Safe Info", async () => {
-        
-    }, TIME.MIN);
-    test("Asserting Test creationg", async () => {
-        
-    }, TIME.MIN);
-})
-*/
