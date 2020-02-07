@@ -20,7 +20,7 @@ export const sels = {
         load_safe_review_details_title: "//p[contains(text(),'Review details')]",
         load_safe_review_safe_name: "//p[contains(text(),'Name of the Safe')]/following-sibling::p",
         load_safe_review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p",
-        load_safe_load_button: "//button/span[contains(text(),'Load')]"
+        load_safe_load_button: "//button/span[contains(text(),'Load')]",
     },
     CssSelectors: {
         mm_home: "div.app-header",
