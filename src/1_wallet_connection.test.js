@@ -27,7 +27,7 @@ beforeAll(async ()=>{
     await browser.close();
 })
 */
-describe("Wallet Connection", async ()=>{
+describe("Wallet Connection", ()=>{
     test("Importing Account", async () => {
         await gFunc.importAccounts(metamask, process.env.IMPACC);
         await MMpage.waitFor(1000)
@@ -35,9 +35,9 @@ describe("Wallet Connection", async ()=>{
 
     test("Navigating in Gnosis", async () => {
         await gnosisPage.bringToFront()
-        await gFunc.clickSomething(sels.XpSelectors.accept_cookies,gnosisPage)
-        await gFunc.clickSomething(sels.XpSelectors.connect_button,gnosisPage)
-        await gFunc.clickSomething(sels.XpSelectors.metamask_option,gnosisPage)
+        await gFunc.clickSomething(sels.XpSelectors.homepage.accept_cookies,gnosisPage)
+        await gFunc.clickSomething(sels.XpSelectors.homepage.connect_button,gnosisPage)
+        await gFunc.clickSomething(sels.XpSelectors.homepage.metamask_option,gnosisPage)
     },TIME.MID)
 
     test("Confirming in MetaMask", async () => {
@@ -46,8 +46,8 @@ describe("Wallet Connection", async ()=>{
 
     test("Asserting Connection", async () => {
         await gnosisPage.bringToFront()    
-        await gFunc.clickSomething(sels.XpSelectors.metamask_option,gnosisPage)
-        await gFunc.assertTextPresent(sels.XpSelectors.loggedin_status, 
+        await gFunc.clickSomething(sels.XpSelectors.homepage.metamask_option,gnosisPage)
+        await gFunc.assertTextPresent(sels.XpSelectors.homepage.loggedin_status, 
                             gnosisPage, 
                             sels.assertions.wallet_connection);
         await gFunc.closeIntercom(sels.CssSelectors.intercom_close_button, 
@@ -55,80 +55,84 @@ describe("Wallet Connection", async ()=>{
     },TIME.MID)
 }),
 
-describe("Loading an Existing safe", async ()=>{
+describe("Loading an Existing safe", ()=>{
     test("Open Load Safe Form", async()=>{
         await gFunc.clickSomething(
-            sels.XpSelectors.load_safe_button, 
+            sels.XpSelectors.homepage.load_safe_button, 
             gnosisPage)
         await gFunc.assertTextPresent(
-            sels.XpSelectors.load_safe_form_title, 
+            sels.XpSelectors.load_safe.form_title, 
             gnosisPage,
             sels.assertions.load_safe_title)
         await gFunc.clickAndType(
-            sels.XpSelectors.load_safe_name_input, 
+            sels.XpSelectors.load_safe.name_input, 
             gnosisPage, 
             sels.accountNames.safe_name)
         await gFunc.assertTextPresent(
-            sels.XpSelectors.valid_safe_name,
+            sels.XpSelectors.load_safe.valid_safe_name,
             gnosisPage,
             sels.assertions.valid_safe_name_field)
         await gFunc.clickAndType(
-            sels.XpSelectors.load_safe_address_input, 
+            sels.XpSelectors.load_safe.address_input, 
             gnosisPage,
-            sels.testAccounts.Safe1)
+            sels.testAccounts.safe1)
         await gFunc.assertElementPresent(
             sels.CssSelectors.valid_safe_address,
             gnosisPage,
             "Css")
         await gFunc.clickSomething(
-            sels.XpSelectors.next_button,
+            sels.XpSelectors.load_safe.next_button,
             gnosisPage)
     },TIME.MIN)
 
     test("Load Safe Owner edition", async () =>{
         await gFunc.assertTextPresent(
-            sels.XpSelectors.second_step_description,
+            sels.XpSelectors.load_safe.second_step_description,
             gnosisPage,
             sels.assertions.second_step_load_safe)
         await gFunc.clearInput(
-            sels.XpSelectors.first_owner_name_input,
+            sels.XpSelectors.load_safe.first_owner_name_input,
             gnosisPage)
         await gFunc.assertElementPresent(
-            sels.XpSelectors.required_error_input,
+            sels.XpSelectors.load_safe.required_error_input,
             gnosisPage)
         await gFunc.clickAndType(
-            sels.XpSelectors.first_owner_name_input,
+            sels.XpSelectors.load_safe.first_owner_name_input,
             gnosisPage,
             sels.accountNames.owner_name)
         await gFunc.clickSomething(
-            sels.XpSelectors.load_safe_review_button,
+            sels.XpSelectors.load_safe.review_button,
             gnosisPage)
     },TIME.MIN)
 
     test("Load safe Review Details", async () =>{
+        const [safeCounter] = await gnosisPage.$x(sels.XpSelectors.homepage.safes_counter) 
+        const safeAmount = await gnosisPage.evaluate(x=>x.innerText, safeCounter)
         await gFunc.assertElementPresent(
-            sels.XpSelectors.load_safe_review_details_title,
+            sels.XpSelectors.load_safe.review_details_title,
             gnosisPage)
         await gFunc.assertTextPresent(
-            sels.XpSelectors.load_safe_review_safe_name,
+            sels.XpSelectors.load_safe.review_safe_name,
             gnosisPage,
             sels.accountNames.safe_name)
         await gFunc.assertTextPresent(
-            sels.XpSelectors.load_safe_review_owner_name,
+            sels.XpSelectors.load_safe.review_owner_name,
             gnosisPage,
             sels.accountNames.owner_name)
         await gFunc.clickSomething(
-            sels.XpSelectors.load_safe_load_button,
+            sels.XpSelectors.load_safe.load_button,
             gnosisPage)
         await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
-        expect(gnosisPage.url()).toMatch(sels.testAccounts.Safe1)
+        expect(gnosisPage.url()).toMatch(sels.testAccounts.safe1)
         await gnosisPage.waitForSelector(sels.CssSelectors.safe_name_heading);
         const safeName = await gnosisPage.$eval(sels.CssSelectors.safe_name_heading, x => x.innerText)
         expect(safeName).toMatch(sels.accountNames.safe_name)
+        [safeCounter] = await gnosisPage.$x(sels.XpSelectors.homepage.safes_counter)
+        expect(safeCounter).toBe(safeAmount + 1)
     },TIME.MAX)
 })
 /*
-describe("Create New Safe", async () =>{
+describe("Create New Safe", () =>{
     test("Open Create Safe Form", async ()=>{
         
     }, TIME.MIN)
