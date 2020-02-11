@@ -14,6 +14,8 @@ const elementSelector = async (selector, page, type) => {
   if(type === "Xpath"){
     await page.waitForXPath(selector)
     const elementHandle = await page.$x(selector)
+    if(selector === sels.XpSelectors.create_safe.review_button || selector === sels.XpSelectors.create_safe.req_conf_info_text)
+      console.log("I've found it")
     return elementHandle[0]
   }
   else{
@@ -23,7 +25,7 @@ const elementSelector = async (selector, page, type) => {
 }
 
 export const clickSomething = async function(selector, page, type="Xpath"){
-  const element = await elementSelector(selector,page,type);
+  const element = await elementSelector(selector,page, type);
   await element.click()
   return element;
 };
@@ -73,8 +75,18 @@ export const assertElementPresent = async function (selector, page, type="Xpath"
 };
 
 export const closeIntercom = async function (selector, page){
-  await page.waitFor(3000)
+  await page.waitFor(5000)
   const frame = await page.frames().find(frame => frame.name() === 'intercom-note-frame');
   const button = await frame.$(selector);
   await button.click()
+}
+
+export const getInnerText = async function (selector, page, valueType="string", type="Xpath"){
+  assertElementPresent(selector,page);
+  const [element] = await page.$x(selector) 
+  const elementText = await page.evaluate(x=>x.innerText, element)
+  if(valueType==="int")
+    return parseInt(elementText)
+  else
+    return elementText
 }

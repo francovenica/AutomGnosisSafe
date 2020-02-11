@@ -3,12 +3,14 @@
 export const sels = {
     XpSelectors: {
         homepage:{
-            connect_button: "//span[contains(text(),'Connect')]",
-            metamask_option: "//div[contains(text(),'MetaMask')]",
+            home_button: "//div/a/img", //button on the top left corner
+            connect_button: "//span[contains(text(),'Connect')]", //in the center of the homepage
+            metamask_option: "//div[contains(text(),'MetaMask')]", //top left corner of the wallet selection
             accept_cookies : "//span[contains(text(),'Accept All')]",
             loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]",
             safes_counter: "//div[contains(text(),'Safes')]/p",
             load_safe_button : "//div[contains(text(),'Load existing Safe')]",
+            create_safe_button: "//div[contains(text(),'Create new Safe')]"
         },  
         load_safe:{
             form_title: "//h2[contains(text(),'Load existing Safe')]",
@@ -25,6 +27,18 @@ export const sels = {
             review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p",
             load_button: "//button/span[contains(text(),'Load')]",
         },
+        create_safe:{
+            start_button: "//button/span[contains(text(),'Start')]",
+            required_error_input: "//p[contains(text(),'Required')]",
+            first_owner_name_input: "//input[@name='owner0Name']",
+            first_owner_address_input: "//input[@name='owner0Address']",
+            second_owner_name_input: "//input[@name='owner1Name']",
+            second_owner_address_input: "//input[@name='owner1Address']",
+            add_owner: "//p[contains(text(),'Add another owner')]",
+            req_conf_info_text : "//p[contains(text(),'out of')]",
+            review_button: "//button/span[contains(text(),'Review')]",
+            submit_button: "//button/span[contains(text(),'Submit')]"
+        }
     },
     CssSelectors: {
         mm_home: "div.app-header",
@@ -33,7 +47,11 @@ export const sels = {
         mm_private_key_input : "#private-key-box",
         intercom_close_button: ".intercom-anchor",
         valid_safe_address: "div.MuiInputAdornment-positionEnd",
-        safe_name_heading: "h2[data-testid='safe-name-heading']" //title of the safe in the main hub 
+        safe_name_heading: "h2[data-testid='safe-name-heading']", //title of the safe in the main hub 
+        create_safe_name_input : "input[placeholder='Name of the new Safe']",
+        req_conf_dropdown: "div[data-testid='threshold-select-input']",
+        req_conf_value_2 : "li[data-value='2']"
+
     },
     wallet: {
         seed: "range smoke crisp install cross shine hold grief ripple cabin sudden special",
@@ -44,8 +62,11 @@ export const sels = {
         "test3": "3F23488883EE1A6346641D77ABF6ECDC78B03A0A9233EC6FAD1AB02FFC093CC5",
         "guest1": "471F28E1C41C5FCF89A7BC76072F1A17644AE166F4FEBC31DAE2BAAF0AD8AA06",
     },
-    testAccounts: {
+    testAccountsHash: {
         "safe1" : "0x9913B9180C20C6b0F21B6480c84422F6ebc4B808",
+        "user1" : "0x61a0c717d18232711bC788F19C9Cd56a43cc8872",
+        "user2" : "0x7724b234c9099C205F03b458944942bcEBA13408",
+        "user3" : "0x6E45d69a383CECa3d54688e833Bd0e1388747e6B",
     },
     assertions : {
         wallet_connection : "RINKEBY",
@@ -54,7 +75,9 @@ export const sels = {
         second_step_load_safe: 'This Safe has'
     }, 
     accountNames : {
-        safe_name: "Autom Safe",
-        owner_name: "Autom Owner"
+        load_safe_name: "Autom Load Safe",
+        create_safe_name : "Autom Create Safe",
+        owner_name: "John Carmack",
+        owner2_name: "Gave Newell"
     }
 }
