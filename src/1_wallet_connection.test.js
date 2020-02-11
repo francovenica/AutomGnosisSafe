@@ -36,7 +36,6 @@ describe("Wallet Connection", ()=>{
     test("Navigating in Gnosis", async () => {
         console.log("Navigating in Gnosis\n")
         await gnosisPage.bringToFront()
-        await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
         await gFunc.clickSomething(sels.XpSelectors.homepage.accept_cookies,gnosisPage)
         await gFunc.clickSomething(sels.XpSelectors.homepage.connect_button,gnosisPage)
         await gFunc.clickSomething(sels.XpSelectors.homepage.metamask_option,gnosisPage)
@@ -47,8 +46,7 @@ describe("Wallet Connection", ()=>{
     },TIME.MAX)
     test("Asserting Connection", async () => {
         console.log("Asserting Connection\n")
-        await gnosisPage.bringToFront()
-        await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})    
+        await gnosisPage.bringToFront()  
         await gFunc.clickSomething(sels.XpSelectors.homepage.metamask_option,gnosisPage)
         await gFunc.assertTextPresent(sels.XpSelectors.homepage.loggedin_status, 
                             gnosisPage, 
@@ -195,9 +193,6 @@ describe("Create New Safe", () =>{
         await gFunc.clickSomething(sels.CssSelectors.req_conf_value_2,
             gnosisPage,
             "css")
-        //await gFunc.clickSomething(sels.XpSelectors.create_safe.req_conf_info_text,
-        //    gnosisPage)
-        //gnosisPage.waitFor(3000)
         await gFunc.clickSomething(sels.XpSelectors.create_safe.review_button,
             gnosisPage)
         await gFunc.clickSomething(sels.XpSelectors.create_safe.review_button,
@@ -207,9 +202,10 @@ describe("Create New Safe", () =>{
     }, TIME.MAX);
     test("Reviewing Safe Info", async () => {
         console.log("Reviewing Safe Info\n")
+        await gnosisPage.waitFor(2000)
         await gFunc.clickSomething(sels.XpSelectors.create_safe.submit_button,
             gnosisPage)
-        await gnosisPage.waitFor(1000)
+        await gnosisPage.waitFor(2000)
         await metamask.confirmTransaction()
         await MMpage.waitFor(1000)
     }, TIME.MAX)

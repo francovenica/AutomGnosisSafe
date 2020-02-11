@@ -14,8 +14,6 @@ const elementSelector = async (selector, page, type) => {
   if(type === "Xpath"){
     await page.waitForXPath(selector)
     const elementHandle = await page.$x(selector)
-    if(selector === sels.XpSelectors.create_safe.review_button || selector === sels.XpSelectors.create_safe.req_conf_info_text)
-      console.log("I've found it")
     return elementHandle[0]
   }
   else{
