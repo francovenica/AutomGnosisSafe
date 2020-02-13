@@ -36,8 +36,8 @@ export const sels = {
             second_owner_address_input: "//input[@name='owner1Address']",
             add_owner: "//p[contains(text(),'Add another owner')]",
             req_conf_info_text : "//p[contains(text(),'out of')]",
-            review_button: "//button/span[contains(text(),'Review')]",
-            submit_button: "//button/span[contains(text(),'Submit')]"
+            review_button: "//button/span[contains(text(),'Review')]/ancestor::button",
+            submit_button: "//button/span[contains(text(),'Submit')]/ancestor::button"
         }
     },
     CssSelectors: {

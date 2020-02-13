@@ -1,10 +1,12 @@
 import {sels} from "./selectors"
 
-global.TIME = {
-  "MAX" : "30000",
-  "MID" : "10000",
-  "MIN" : "6000",
-  "MICRO" : "2000",  
+export const TIME = {
+  T60 : 60000,
+  T30 : 30000,
+  T15 : 15000,
+  T10 : 10000,
+  T6 : 6000,
+  T2 : 2000,  
 };
 
 
