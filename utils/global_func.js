@@ -75,7 +75,7 @@ export const assertElementPresent = async function (selector, page, type="Xpath"
 };
 
 export const closeIntercom = async function (selector, page){
-  await page.waitFor(5000)
+  await page.waitFor(3000)
   const frame = await page.frames().find(frame => frame.name() === 'intercom-note-frame');
   const button = await frame.$(selector);
   await button.click()

@@ -1,8 +1,7 @@
 const { slowMo, TIME } = require('../utils/config').default
-const puppeteer = require('puppeteer')
-const dappeteer = require('dappeteer')
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
+import { walletConnect } from "../utils/testSetup"
 
 let browser;
 let metamask;
@@ -10,35 +9,7 @@ let gnosisPage;
 let MMpage;
 
 beforeAll(async ()=>{
-    browser = await dappeteer.launch(puppeteer,{
-        defaultViewport:null, // this extends the page to the size of the browser
-        slowMo, //Miliseconds it will wait for every action performed
-        args: ['--start-maximized', 'https://rinkeby.gnosis-safe.io/'], //maximized browser, URL for the base page
-    })
-    metamask = await dappeteer.getMetamask(browser,
-        {
-            seed: sels.wallet.seed, 
-            password: sels.wallet.password
-        });
-    await metamask.switchNetwork('Rinkeby');
-    [gnosisPage, MMpage] = await browser.pages();
-
-    const homepage = sels.XpSelectors.homepage
-
-    await gnosisPage.bringToFront()
-    await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
-    await gFunc.clickSomething(homepage.connect_button, gnosisPage)
-    await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
-
-    await metamask.confirmTransaction();
-
-    await gnosisPage.bringToFront()  
-    await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
-    await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
-    try{
-        await gFunc.closeIntercom(sels.CssSelectors.intercom_close_button, gnosisPage)
-    }catch(e){}
-
+    [browser, metamask, gnosisPage, MMpage] = await walletConnect()
 }, TIME.T30)
 
 afterAll(async () => {
@@ -59,7 +30,7 @@ describe("Create New Safe", () =>{
         console.log("Naming The Safe\n")
         await gFunc.clickSomething(create_safe.start_button, gnosisPage)
         await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
-        await gFunc.clickAndType(sels.CssSelectors.create_safe_name_input, gnosisPage, sels.accountNames.create_safe_name, "css")
+        await gFunc.clickAndType(sels.CssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
         await gFunc.clickSomething(create_safe.start_button, gnosisPage)
     },  TIME.T6)
     test("Adding Owners", async() =>{
@@ -93,6 +64,6 @@ describe("Create New Safe", () =>{
         await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
         await gnosisPage.waitForSelector(sels.CssSelectors.safe_name_heading);
         const safeName = await gnosisPage.$eval(sels.CssSelectors.safe_name_heading, x => x.innerText)
-        expect(safeName).toMatch(sels.accountNames.create_safe_name)
+        expect(safeName).toMatch(sels.safeNames.create_safe_name)
     },  TIME.T60);
 })
