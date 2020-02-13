@@ -1,8 +1,9 @@
-const { slowMo, impacc, TIME } = require('../utils/config').default
-const puppeteer = require('puppeteer')
-const dappeteer = require('dappeteer')
+const { impacc, TIME } = require('../utils/config').default
+// const puppeteer = require('puppeteer')
+// const dappeteer = require('dappeteer')
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
+import { init } from "../utils/testSetup"
 
 let browser;
 let metamask;
@@ -10,17 +11,7 @@ let gnosisPage;
 let MMpage;
 
 beforeAll(async ()=>{
-    browser = await dappeteer.launch(puppeteer,{
-        defaultViewport:null, // this extends the page to the size of the browser
-        slowMo, //Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-        args: ['--start-maximized', 'https://rinkeby.gnosis-safe.io/'], //maximized browser, URL for the base page
-    })
-    metamask = await dappeteer.getMetamask(browser,
-        {seed: sels.wallet.seed, 
-        password: sels.wallet.password
-    });
-    await metamask.switchNetwork('Rinkeby');
-    [gnosisPage, MMpage] = await browser.pages(); //get a grip on both tabs
+    [browser, metamask, gnosisPage, MMpage] = await init()
 }, TIME.T30)
 
 afterAll(async () => {
