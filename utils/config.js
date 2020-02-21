@@ -10,5 +10,6 @@ export default {
         T10 : 10000,
         T6 : 6000,
         T2 : 2000,  
-    }
+    },
+    environment : process.env.ENV === "rinkeby" ? "https://rinkeby.gnosis-safe.io/" : "https://safe-team.dev.gnosisdev.com/"
 }
