@@ -26,6 +26,7 @@ beforeAll(async () => {
   });
 
 test('Login in Authereum', async () => {
+    console.log("Login in Authereum")
     await authPage.waitFor('input[placeholder="Enter username"]')  
     const username = await authPage.$x('//input[@placeholder="Enter username"]')
     await username[0].click()
@@ -40,7 +41,7 @@ test('Login in Authereum', async () => {
     authPage.close()
 }, "30000")
 test('Login in Gnosis', async () =>{
-    await gnosisPage.waitFor(1000)
+    console.log("Login in gnosis")
     await gnosisPage.waitForXPath("//span[contains(text(),'Accept All')]/parent::a")
     const cookies = (await gnosisPage.$x("//span[contains(text(),'Accept All')]/parent::a"))[0]
     await cookies.click()
@@ -55,13 +56,11 @@ test('Login in Gnosis', async () =>{
     await authConnect.waitForXPath("//span[contains(text(),'Log in')]/parent::button")
     const logInAuth = (await authConnect.$x("//span[contains(text(),'Log in')]/parent::button"))[0]
     await logInAuth.click()
+    await authConnect.screenshot({path: "after signing in authereum"})
     await authConnect.waitFor(4000)
     try {
         await authConnect.close()
-    } catch (error) {
-        console.log("already closed = ", error )
-    }
-    
+    } catch (error) {}
     await gnosisPage.waitForXPath("//span[contains(text(),'Connect')]/parent::button")
     await connect.click()
     await gnosisPage.waitForXPath("//div[contains(text(),'Authereum')]/parent::div")
@@ -72,6 +71,7 @@ test('Login in Gnosis', async () =>{
 }, "30000")
 
 const create_safe = sels.xpSelectors.create_safe
+
 test("Naming The Safe", async (done) =>{
     console.log("Naming The Safe\n")
     await gnosisPage.waitForSelector(sels.cssSelectors.create_safe_name_input)
@@ -108,11 +108,17 @@ test("Naming The Safe", async (done) =>{
     // await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
     // await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
 },  TIME.T60)
-// test("Adding Owners", async (done) =>{
-//     // await gnosisPage.screenshot({path: '3Adding Owners.png'});
-//     console.log("Adding Owners\n")
-//     await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
-//     await gFunc.clickSomething(create_safe.add_owner, gnosisPage)
+test("Adding Owners", async (done) =>{
+    console.log("Adding Owners\n")
+    await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
+    await gFunc.clickSomething(create_safe.add_owner, gnosisPage)
+    try {
+        const rows = (await gnosisPage.$x("//div/div[1]/div[5]/div")).length
+        expect(rows).toBe(2)
+        done()
+    } catch (error) {
+        done(error)
+    }
 //     await gFunc.clickSomething(create_safe.review_btn, gnosisPage)
 //     await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
 //     // await gnosisPage.screenshot({path: '4Adding Owners.png'});
@@ -123,7 +129,7 @@ test("Naming The Safe", async (done) =>{
 //     const owner_rows = await gnosisPage.$x(create_safe.current_rows)
 //     expect(req_conf_limit).toBe(owner_rows.length)
 //     // await gnosisPage.screenshot({path: '5Adding Owners.png'});
-// },  TIME.T60);
+},  TIME.T60);
 // test("Setting Required Confirmation", async () => {
 //     await gnosisPage.screenshot({path: '6Setting Required Confirmation.png'});
 //     try {
