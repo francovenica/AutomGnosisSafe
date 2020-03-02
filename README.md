@@ -10,15 +10,9 @@
 #### To Run:
 Note: This was done in Windows, but I think nothing is exclusive to Windows so it should work in Linux and iOS just fine. Let me know!
 
-Write in the command prompt:
+Write in the command prompt  `yarn test`  to run every {FILE_NAME}.test.js in the /src folder
 
-`yarn test`
-
-to run every {FILE_NAME}.test.js in the /src folder
-
-`yarn test file_name`
-
-it will look for the {file_name}.test.js in the /src folder and only run that test.
+Write  `yarn test file_name`  it will look for the {file_name}.test.js in the /src folder and only run that test.
 
 
 #### More Notes: 
