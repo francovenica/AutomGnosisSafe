@@ -1,4 +1,4 @@
-const { impacc, TIME } = require('../utils/config').default
+const { TIME } = require('../utils/config').default
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
 import { init } from "../utils/testSetup"
@@ -21,7 +21,7 @@ afterAll(async () => {
 describe("Wallet Connection", ()=>{
     test("Importing Account", async () => {
         console.log("Importing Account\n")
-        await gFunc.importAccounts(metamask, impacc);
+        await gFunc.importAccounts(metamask);
         await MMpage.waitFor(1000)
     }, TIME.T60)
     test("Navigating in Gnosis", async () => {

@@ -12,10 +12,10 @@ beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
 }, TIME.T60)
 
-// afterAll(async () => {
-//     await gnosisPage.waitFor(2000)
-//     await browser.close();
-// })
+afterAll(async () => {
+    await gnosisPage.waitFor(2000)
+    await browser.close();
+})
 
 describe("Send Funds", ()=>{
     const safe_hub = sels.xpSelectors.safe_hub

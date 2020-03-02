@@ -133,13 +133,11 @@ export const closeIntercom = async function (selector, page){
   }
 }
 
-export const importAccounts = async function(metamask, importAcc){
-  if(importAcc === "impacc"){
-      console.log("<<Importing accounts>>")
-    const keys = Object.keys(sels.privateKeys)
-    for(let i = 0; i < keys.length; i++) { //forEach doesnt work with async functions, you have to use a regular for()
-      await metamask.importPK(sels.privateKeys[keys[i]])
-    }
+export const importAccounts = async function(metamask){
+  console.log("<<Importing accounts>>")
+  const keys = Object.keys(sels.privateKeys)
+  for(let i = 0; i < keys.length; i++) { //forEach doesnt work with async functions, you have to use a regular for()
+    await metamask.importPK(sels.privateKeys[keys[i]])
   }
 };
 

@@ -1,8 +1,5 @@
-require('dotenv').config()
-
 export default {
-    impacc: process.env.IMPACC || '',
-    slowMo: Number.isNaN(Number.parseInt(process.env.SLOWMO)) ? 0 : Number.parseInt(process.env.SLOWMO),
+    slowMo: 2,
     TIME : {
         T600 : 600000,
         T180 : 180000,

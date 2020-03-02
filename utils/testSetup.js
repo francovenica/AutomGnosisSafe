@@ -1,4 +1,4 @@
-const { TIME, slowMo, impacc, environment } = require('./config').default
+const { TIME, slowMo, environment } = require('./config').default
 const puppeteer = require('puppeteer')
 const dappeteer = require('dappeteer')
 import { sels } from "./selectors"
@@ -27,12 +27,12 @@ export const init = async ()=>{
     ]
 }
 
-export const walletConnect = async (importMultipleAccounts = false)=> {
+export const walletConnect = async (importMultipleAccounts = false) => {
     const [browser, metamask, gnosisPage, MMpage] = await init()
     const homepage = sels.xpSelectors.homepage
 
     if(importMultipleAccounts){
-        await gFunc.importAccounts(metamask, impacc);
+        await gFunc.importAccounts(metamask);
         await MMpage.waitFor(1000)
     }
 
