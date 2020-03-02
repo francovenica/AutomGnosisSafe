@@ -20,7 +20,6 @@ beforeAll(async ()=>{
 describe("Send Funds", ()=>{
     const safe_hub = sels.xpSelectors.safe_hub
     const send_funds_modal = sels.xpSelectors.send_funds_modal
-    let confirm_count = 1
     test("Open the Send Funds Form", async () => {
         console.log("Open the Send Funds Form\n")
         await gFunc.clickSomething(safe_hub.send_btn, gnosisPage)
@@ -85,20 +84,17 @@ describe("Send Funds", ()=>{
         await gnosisPage.waitFor(TIME.T2)
         await metamask.confirmTransaction()
         console.log("Finish Approving the Tx with the owner 1")
-    }, TIME.T60)
+    }, TIME.T90)
     test("Approving the Tx with the owner 2", async (done) => {
         console.log("Approving the Tx with the owner 2")
         try {
             await MMpage.waitFor(TIME.T5)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
-            console.log("waiting counter = ", confirm_count)
-            await gFunc.assertElementPresent(safe_hub.confirmed_counter(confirm_count), gnosisPage)
-            confirm_count++
+            await gFunc.assertElementPresent(safe_hub.confirmed_counter(1), gnosisPage)
             await metamask.switchAccount(1) //currently in account4, changing to account 1
             await gnosisPage.waitFor(TIME.T2)
             await gnosisPage.bringToFront()
-            console.log("Done waiting = ", confirm_count)
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
@@ -108,18 +104,15 @@ describe("Send Funds", ()=>{
             done(error)
         }
         console.log("Finish Approving the Tx with the owner 2")
-    }, TIME.T60)
+    }, TIME.T90)
     test("Approving the Tx with the owner 3", async (done) => {
         console.log("Approving the Tx with the owner 3")
         try {
             await MMpage.waitFor(TIME.T5)
             await gnosisPage.bringToFront()
-            console.log("waiting counter for owner3 = ", confirm_count)
-            await gFunc.assertElementPresent(safe_hub.confirmed_counter(confirm_count), gnosisPage)
-            confirm_count++
+            await gFunc.assertElementPresent(safe_hub.confirmed_counter(2), gnosisPage)
             await metamask.switchAccount(2)
             await gnosisPage.bringToFront()
-            console.log("done waiting counter for owner3 = ", confirm_count)
             await gnosisPage.waitFor(TIME.T5)
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
@@ -130,25 +123,23 @@ describe("Send Funds", ()=>{
             done(error)
         }
         console.log("Finish Approving the Tx with the owner 3")
-    }, TIME.T60)
+    }, TIME.T90)
     test("Verifying Execution of the Tx", async (done) => {
         console.log("Verifying Execution of the Tx")
         try {
             await gnosisPage.bringToFront()
-            const execute_tag = gnosisPage.$x(safe_hub.execute_tag)
-            await gnosisPage.waitFor(execute_tag, {timeout: TIME.T60})
             await gFunc.assertAllElementPresent([
-                safe_hub.execute_tag,
+                safe_hub.executor_tag,
                 safe_hub.executor_hash,
-                safe_hub.confirmed_counter(confirm_count)
-            ], gnosisPage)
-            const executor_hash = await gFunc.getInnerText(safe_hub.executor_hash)
-            const connected_account_hash = await gFunc.getInnerText(safe_hub.connected_account_hash)
+                safe_hub.confirmed_counter(3)
+            ], gnosisPage)          
+            const executor_hash = await gFunc.getInnerText(safe_hub.executor_hash, gnosisPage)
+            const connected_account_hash = await gFunc.getInnerText(safe_hub.connected_account_hash, gnosisPage)
             expect(executor_hash).toMatch(connected_account_hash)
             console.log("Finish Verifying Execution of the Tx")
             done()
         } catch (error) {
             done(error)
         }
-    }, TIME.T90)
+    }, TIME.T600)
 });

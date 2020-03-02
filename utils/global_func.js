@@ -5,12 +5,12 @@ const elementSelector = async (selector, page, type) => {
   to make this distinction this function was created to do it*/
   try{
     if(type === "Xpath"){
-      await page.waitForXPath(selector, {timeout:0})
+      await page.waitForXPath(selector, {timeout:60000})
       const elementHandle = await page.$x(selector)
       return elementHandle[0]
     }
     else{
-      await page.waitForSelector(selector, {timeout:0})
+      await page.waitForSelector(selector, {timeout:60000})
       return await page.$(selector)
     }
   }
@@ -101,7 +101,8 @@ export const assertAllElementPresent = async function (selectors, page, type = "
 export const getInnerText = async function (selector, page, valueType="string", type="Xpath"){
   const element = await assertElementPresent(selector,page, type != "Xpath"? type : "Xpath")
   try {
-    const elementText = await page.evaluate(type != "Xpath"? x=>x.innerText : x=>x.textContent, element)
+    //const elementText = await page.evaluate(type != "Xpath"? x=>x.innerText : x=>x.textContent, element)
+    const elementText = await page.evaluate(x=>x.innerText, element)
     return valueType !="string"? parseInt(elementText) : elementText
   } catch (error) {
     console.log("Could not get the inner text of = ", element)
