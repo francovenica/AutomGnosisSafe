@@ -16,5 +16,6 @@ Write  `yarn test file_name`  it will look for the {file_name}.test.js in the /s
 
 
 #### More Notes: 
-*Tests may fail if the site or MetaMask load too slow for any reason.
-*The run is done in "headed" mode, since it has to load the MetaMask exension into chromium. So far it seems that there is no way to run it headless with MetaMask
+* Tests may fail if the site or MetaMask load too slow for any reason.
+
+* The run is done in "headed" mode, since it has to load the MetaMask exension into chromium. So far it seems that there is no way to run it headless with MetaMask
