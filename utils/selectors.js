@@ -75,12 +75,16 @@ export const sels = {
         },
         modify_policies: {
             settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
+            owner_amount: "//div[5]//div[3]/p", //the number of owners in "settings > owners tab"
             policies_tab: "//div[contains(text(),'Policies')]",
-            current_policy: (value = 0) => `//div/p[2]/b[${value}]`,
-            modify_btn: "//span[contains(text(),'Modify')]/parent::button",
-            change_btn: "//span[contains(text(),'CHANGE')]/parent::button",
-            owners_selector: "//form/div[1]/div[2]/div[1]/div",
-            owners_required: (value = 0) => `//ul/li[${value}]`,
+            req_conf: "//div/p[2]/b[1]", // the first number in "X out of Y owners" phrase
+            max_req_conf: "//div/p[2]/b[2]", // the second number in "X out of Y owners" phrase
+            modify_btn: "//span[contains(text(),'Modify')]/parent::button", //modify button in the policies tab
+            modify_form_title: "//div[5]/div[3]/div[1]/p", //"Change required information" title of the modify policies form
+            change_btn: "//span[contains(text(),'CHANGE')]/parent::button", //change button in the modifiy policies form
+            current_req_conf : "//form//div[2]/div[1]/div/div/div", //the div with the current selection of owners required
+            owners_selector: "//div[3]/ul/li", //The full selector, its length should be the same as the amount of owners
+            owners_req: (value = 0) => `//ul/li[${value}]`, //individual values of the selector
             owner_limit: "//form//div[2]/p", //this is the full message, getNumberInString has to be used to get the number
         },
     },

@@ -163,7 +163,7 @@ test("Adding Owners", async (done) =>{
 //         console.log("Assert Safe Creation\n")
 //         await gnosisPage.bringToFront()
 //         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
-//         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "string", "css")
+//         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")
 //         expect(safeName).toMatch(sels.safeNames.create_safe_name)
 //         expect(sels.xpSelectors.safe_hub.safe_address).toBeTruthy()
         

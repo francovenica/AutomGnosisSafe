@@ -67,18 +67,19 @@ describe("Create New Safe", () =>{
         await gnosisPage.bringToFront()
         await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
-        const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "string", "css")
+        const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")
         expect(safeName).toMatch(sels.safeNames.create_safe_name)
         expect(sels.xpSelectors.safe_hub.safe_address).toBeTruthy()
         
         // save the address in a file for manual use later if needed
         const safe_adrs = await gFunc.getInnerText(sels.xpSelectors.safe_hub.safe_address, gnosisPage)
         const save_text = "safe : " + safe_adrs + "\n"
-        fs.writeFile("./createdSafes/safes.txt", save_text,{flag: 'wx'}, function(err){
-            if (err) console.log("\nAlready exist\n");
-        })
         fs.appendFile("./createdSafes/safes.txt", save_text, function(err){
-            if (err) throw err;
+            if (err) {
+                fs.writeFile("./createdSafes/safes.txt", save_text,{flag: 'wx'}, function(err){
+                    if (err) console.log("\nAlready exist\n");
+                })
+            };
         })
     },  TIME.T60);
 })

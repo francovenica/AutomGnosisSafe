@@ -75,8 +75,8 @@ export const assertElementPresent = async function (selector, page, type="Xpath"
     await page.evaluate(x=>x.style.outline = "", connected)
     return connected
   } catch (error) {
-    console.log("error in AssertElement. Could not evaluate = ", connected)
-    return {connected}
+    console.log("error in AssertElement. Could not evaluate = ", selector)
+    return connected
   }
 };
 
@@ -88,7 +88,7 @@ export const assertTextPresent = async function (selector, page, textPresent, ty
     expect(elementText).toMatch(textPresent)
     await page.evaluate(x=>x.style.outline = "", element)
   } catch (error) {
-    console.log("Could not assertTextPresent = ", element)
+    console.log("Could not assertTextPresent = ", selector, "\nError = ", error)
   }
 };
 
@@ -98,12 +98,11 @@ export const assertAllElementPresent = async function (selectors, page, type = "
   }
 };
 
-export const getInnerText = async function (selector, page, valueType="string", type="Xpath"){
+export const getInnerText = async function (selector, page, type="Xpath"){
   const element = await assertElementPresent(selector,page, type != "Xpath"? type : "Xpath")
   try {
-    //const elementText = await page.evaluate(type != "Xpath"? x=>x.innerText : x=>x.textContent, element)
     const elementText = await page.evaluate(x=>x.innerText, element)
-    return valueType !="string"? parseInt(elementText) : elementText
+    return elementText
   } catch (error) {
     console.log("Could not get the inner text of = ", element)
     return `Error = ${element}`
@@ -111,7 +110,7 @@ export const getInnerText = async function (selector, page, valueType="string", 
 }
 
 export const getNumberInString = async function(selector, page, numtype = "int", type ="Xpath"){
-  const text = await getInnerText(selector, page, "string", type)
+  const text = await getInnerText(selector, page, type)
   try {
     const number = text.match(/\d+.?\d+|\d+/)[0]
     return parseFloat(number)
@@ -140,7 +139,3 @@ export const importAccounts = async function(metamask){
     await metamask.importPK(sels.privateKeys[keys[i]])
   }
 };
-
-
-
-
