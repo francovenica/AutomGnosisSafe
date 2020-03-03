@@ -73,6 +73,16 @@ export const sels = {
             fee_msg : "//div[7]/p",
             submit_btn : "//span[contains(text(),'Submit')]/parent::button",
         },
+        modify_policies: {
+            settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
+            policies_tab: "//div[contains(text(),'Policies')]",
+            current_policy: (value = 0) => `//div/p[2]/b[${value}]`,
+            modify_btn: "//span[contains(text(),'Modify')]/parent::button",
+            change_btn: "//span[contains(text(),'CHANGE')]/parent::button",
+            owners_selector: "//form/div[1]/div[2]/div[1]/div",
+            owners_required: (value = 0) => `//ul/li[${value}]`,
+            owner_limit: "//form//div[2]/p", //this is the full message, getNumberInString has to be used to get the number
+        },
     },
     cssSelectors: {
         intercom_close_btn: ".intercom-anchor", //closes the intercom chat
@@ -128,5 +138,6 @@ export const sels = {
         duplicated_address: 'Address already introduced',
         not_a_number: 'Must be a number',
         max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
+        modify_policy: (value = 0) => `Value should be different than ${value}`,
     },
 }

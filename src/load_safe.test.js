@@ -1,4 +1,4 @@
-const { slowMo, TIME } = require('../utils/config').default
+const { TIME } = require('../utils/config').default
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
 import { walletConnect } from "../utils/testSetup"

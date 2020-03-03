@@ -1,4 +1,4 @@
-const { TIME, slowMo, environment } = require('./config').default
+const { TIME, SLOWMO, ENVIRONMENT } = require('./config').default
 const puppeteer = require('puppeteer')
 const dappeteer = require('dappeteer')
 import { sels } from "./selectors"
@@ -7,8 +7,8 @@ import * as gFunc from "./global_func"
 export const init = async ()=>{
     const browser = await dappeteer.launch(puppeteer,{
         defaultViewport:null, // this extends the page to the size of the browser
-        slowMo, //Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-        args: ['--start-maximized', environment.rinkeby], //maximized browser, URL for the base page
+        slowMo: SLOWMO, //Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
+        args: ['--start-maximized', ENVIRONMENT.rinkeby], //maximized browser, URL for the base page
     })
     const metamask = await dappeteer.getMetamask(browser,
         {seed: sels.wallet.seed, 
