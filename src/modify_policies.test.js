@@ -13,10 +13,10 @@ beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
 }, TIME.T60)
 
-// afterAll(async () => {
-//     await gnosisPage.waitFor(2000)
-//     await browser.close();
-// })
+afterAll(async () => {
+    await gnosisPage.waitFor(2000)
+    await browser.close();
+})
 
 describe("Change Policies", ()=>{
     const modify_policies = sels.xpSelectors.modify_policies
@@ -57,7 +57,6 @@ describe("Change Policies", ()=>{
             let owner_limit = await gFunc.getNumberInString(modify_policies.owner_limit, gnosisPage)
             let owner_selector = await gnosisPage.$x(modify_policies.owners_selector)//to calculate the length, no [0] for this
             await gnosisPage.waitFor(3000)
-            console.log("owner_limit = ", owner_limit,"owner_selector_length  = " , owner_selector.length)
             await expect(owner_limit).toBe(owner_selector.length) //the amount of options should be equal to the limit of owners
 
             done()
@@ -153,17 +152,7 @@ describe("Change Policies", ()=>{
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(modify_policies.settings_tab, gnosisPage)
             await gFunc.clickSomething(modify_policies.policies_tab, gnosisPage)
-            try {
-                console.log("waiting 2!!!")
-                const waiting = gnosisPage.waitForFunction('$x("//div/p[2]/b[1]")[0].innerText!="1"', {timeout: TIME.T60})
-                await waiting
-                console.log(waiting)
-                
-                console.log("Done waiting... 2")
-            } catch (error) {
-                console.log("No se pudo otra vez")
-            }
-            
+            await gnosisPage.waitForXPath("//div/p[2]/b[1][contains(text(),'3')]", {timeout: TIME.T90})
             await gFunc.assertTextPresent(modify_policies.req_conf, gnosisPage, "3")
             done()
         } catch (error) {
