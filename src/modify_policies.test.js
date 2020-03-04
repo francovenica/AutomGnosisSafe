@@ -154,18 +154,14 @@ describe("Change Policies", ()=>{
             await gFunc.clickSomething(modify_policies.settings_tab, gnosisPage)
             await gFunc.clickSomething(modify_policies.policies_tab, gnosisPage)
             try {
-                console.log("waiting!!!")
-                await gnosisPage.waitForFunction(await gnosisPage.$x("//div/p[2]/b[1]")[0].innerText != "1", {timeout: 60000})
-                console.log("Done waiting...")
-            } catch (error) {
-                console.log("no se pudo con != 1")
-            }
-            try {
                 console.log("waiting 2!!!")
-                await gnosisPage.waitForFunction(await page.evaluate(x=>x.innerText != "1", gnosisPage.$x("//div/p[2]/b[1]")[0]), {timeout: 60000})
+                const waiting = gnosisPage.waitForFunction('$x("//div/p[2]/b[1]")[0].innerText!="1"', {timeout: TIME.T60})
+                await waiting
+                console.log(waiting)
+                
                 console.log("Done waiting... 2")
             } catch (error) {
-                console.log("no se pudo con page evaluate")
+                console.log("No se pudo otra vez")
             }
             
             await gFunc.assertTextPresent(modify_policies.req_conf, gnosisPage, "3")
@@ -173,5 +169,5 @@ describe("Change Policies", ()=>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T60)
+    }, TIME.T90)
 })
