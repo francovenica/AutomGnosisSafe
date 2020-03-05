@@ -44,20 +44,17 @@ describe("Change Policies", ()=>{
         try {
             await gFunc.clickSomething(modify_policies.modify_btn, gnosisPage)
 
-            console.log("Checking error")
             await gFunc.clickSomething(modify_policies.change_btn, gnosisPage) //click on Change button and verify the error message
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.modify_policy(req_conf)), gnosisPage)
 
-            console.log("number in the form is the same as req conf")
             let current_req_conf = await gFunc.getNumberInString(modify_policies.current_req_conf,gnosisPage)
             await expect(current_req_conf).toBe(req_conf) //the number in the form is the same as the one in the policies tab
 
-            console.log("checking amout of options with the max value possible")
             await gFunc.clickSomething(modify_policies.current_req_conf, gnosisPage)
             let owner_limit = await gFunc.getNumberInString(modify_policies.owner_limit, gnosisPage)
-            let owner_selector = await gnosisPage.$x(modify_policies.owners_selector)//to calculate the length, no [0] for this
+            let owner_selector = await gFunc.amountOfElements(modify_policies.owners_selector, gnosisPage)//to calculate the length, no [0] for this
             await gnosisPage.waitFor(3000)
-            await expect(owner_limit).toBe(owner_selector.length) //the amount of options should be equal to the limit of owners
+            await expect(owner_limit).toBe(owner_selector) //the amount of options should be equal to the limit of owners
 
             done()
         } catch (error) {

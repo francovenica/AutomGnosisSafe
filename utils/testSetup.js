@@ -46,9 +46,9 @@ export const walletConnect = async (importMultipleAccounts = false) => {
     await gnosisPage.bringToFront()
     await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
     await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
-    try {
-        await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
-    } catch (e) { }
+    // try {
+    //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
+    // } catch (e) { }
     
     return [
         browser,
@@ -72,7 +72,7 @@ export const load_wallet = async (importMultipleAccounts = false) =>{
     
     await gFunc.assertTextPresent(load_safe.second_step_description, gnosisPage, sels.assertions.second_step_load_safe)
     const keys = Object.keys(sels.accountNames)
-    for(let i = 0; i < keys.length; i++) { 
+    for(let i = 0; i < keys.length; i++) {
         let selector = load_safe.first_owner_name_input(i)
         let name = sels.accountNames[keys[i]]
         await gFunc.clearInput(selector, gnosisPage)

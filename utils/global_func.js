@@ -139,3 +139,8 @@ export const importAccounts = async function(metamask){
     await metamask.importPK(sels.privateKeys[keys[i]])
   }
 };
+
+export const amountOfElements = async (selector, page) => {
+  const amount =  await page.$x(selector)
+  return amount.length
+}
