@@ -104,14 +104,14 @@ export const sels = {
             //2nd step
             req_conf: "//form/div[1]/div[3]/div[1]/div",
             owner_selector: "//div[6]/div[3]/ul/li", //.length should be the amount of owners there will be after the Tx approval
-            owner_selector_option : (index = 1) => `//div[6]/div[3]/ul/li[${index}}]`, //specific options
+            owner_selector_option : (index = 1) => `//div[6]/div[3]/ul/li[${index}]`, //specific options
             owner_limit: "//div[3]/div[2]/p", //this is the full message, getNumberInString has to be used to get the number
             review_btn : "//span[contains(text(),'Review')]/parent::button",
             //3rd step
             req_conf_verif: "//div[3]/p[2]", //verifying the new req conf set
             new_owner_section: "//p[contains(text(),'ADDING NEW OWNER')]", //for assertion 
             new_owner_name : (name) => `//p[contains(text(),'${name}')]`, //for assertion of the name
-            new_owner_hash : (hash) => `//p[contains(text(),'${hash}')]`, //for assertion of the name
+            new_owner_address : (address) => `//p[contains(text(),'${address}')]`, //for assertion of the name
             submit_btn : "//span[contains(text(),'Submit')]/parent::button"
         },
     },

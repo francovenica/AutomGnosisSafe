@@ -14,7 +14,8 @@ const elementSelector = async (selector, page, type) => {
       return await page.$(selector)
     }
   }
-  catch(e){
+  catch(error){
+    console.trace("elementSelector Error: Selector = ", selector, "\n", error)
     return {}
   }
 }
@@ -24,14 +25,14 @@ export const clickSomething = async function(selector, page, type="Xpath"){
   try {
     expect(element).not.toBe({})
   } catch (error) {
-    console.trace("Error in clickSomething Selector = ", selector)
+    console.trace("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
   }
   try {
     await page.evaluate(x=>x.style.outline = '3px solid red', element)
     await element.click()
     await page.evaluate(x=>x.style.outline = '', element)
   } catch (error) {
-    console.trace("Couldn't click = ", error, "\n\n")
+    console.trace("ClickSomething Error: Couldn't click = ", selector, "\n", error)
   }
   return element;
 };
@@ -44,7 +45,7 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
       await forTyping.type(text)
       await page.evaluate(x=>x.style.outline = "", forTyping)
     } catch (error) {
-      console.log("Couldn't type = ", forTyping, "\n\n")
+      console.log("ClickAndType Error: Couldn't type Xpath= ", selector, "\n", error)
     }
   }
   else{
@@ -53,7 +54,7 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
       await page.type(selector,text)
       await page.$eval(selector, x=>x.style.outline = "")
     } catch (error) {
-      console.log("Couldn't type = ", forTyping, "\n\n")
+      console.log("ClickAndType Error: Couldn't type Css = ", selector, "\n", error)
     }
   }
 }
@@ -75,7 +76,7 @@ export const assertElementPresent = async function (selector, page, type="Xpath"
     await page.evaluate(x=>x.style.outline = "", connected)
     return connected
   } catch (error) {
-    console.log("error in AssertElement. Could not evaluate = ", selector)
+    console.log("AssertElementPresent Error: selector = ", selector, "\n", error)
     return connected
   }
 };
@@ -88,7 +89,7 @@ export const assertTextPresent = async function (selector, page, textPresent, ty
     expect(elementText).toMatch(textPresent)
     await page.evaluate(x=>x.style.outline = "", element)
   } catch (error) {
-    console.log("Could not assertTextPresent = ", selector, "\nError = ", error)
+    console.log("AssertTextPresent Error: selector = ", selector, "\n", error)
   }
 };
 
@@ -104,7 +105,7 @@ export const getInnerText = async function (selector, page, type="Xpath"){
     const elementText = await page.evaluate(x=>x.innerText, element)
     return elementText
   } catch (error) {
-    console.log("Could not get the inner text of = ", element)
+    console.log("getInnerText Error: Selector = ", selector, "\n", error)
     return `Error = ${element}`
   }
 }
@@ -115,7 +116,7 @@ export const getNumberInString = async function(selector, page, numtype = "int",
     const number = text.match(/\d+.?\d+|\d+/)[0]
     return parseFloat(number)
   } catch (error) {
-    console.log("Could not parse the number in = ", text)
+    console.log("getNumberInString Error: selector = ", selector)
     return `Error =  ${element}`
   }
 }
@@ -142,5 +143,9 @@ export const importAccounts = async function(metamask){
 
 export const amountOfElements = async (selector, page) => {
   const amount =  await page.$x(selector)
-  return amount.length
+  try {
+    return amount.length
+  } catch (error) {
+    console.log("amountOfElements Error: selector = ", selector, "\n", error)
+  }
 }
