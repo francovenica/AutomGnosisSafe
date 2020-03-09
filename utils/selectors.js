@@ -122,6 +122,13 @@ export const sels = {
             //Delete owner modal
             to_be_deleted_address : (address) => `//div[2]/div[2]/div/div/p[contains(text(),'${address}')]`,
             removing_owner_title : "//p[contains(text(),'REMOVING OWNER')]",
+            //review deletion
+            pending_status: "//p[contains(text(),'Pending')]/ancestor::tr",
+            remove_owner_title: "//b[contains(text(),'Remove owner:')]",
+            removed_owner_name: (name) => `//div[contains(text(),'${name}')]`,
+            removed_owner_address: (address) => `//span[contains(text(),'${address}')]`,
+            changed_req_conf_title: "//b[contains(text(),'Change required confirmations:')]",
+            new_changed_req_conf : "//b[contains(text(),'Change required confirmations:')]/following-sibling::p[contains(text(),'3')]",
         },
     },
     cssSelectors: {
