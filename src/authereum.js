@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const { TIME } = require('../utils/config').default
+const { TIME, ENVIRONMENT, SLOWMO } = require('../utils/config').default
 const fs = require('fs')
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
@@ -11,9 +11,9 @@ let authPage
 beforeAll(async () => {
         browser = await puppeteer.launch({
             defaultViewport:null,
-            slowMo:5,
+            slowMo: SLOWMO,
             headless: true,
-            args: ['--start-maximized', 'https://rinkeby.gnosis-safe.io/'],
+            args: ['--start-maximized', ENVIRONMENT.rinkeby],
             handleSIGINT: false,
         });
         authPage = await browser.newPage();
@@ -163,7 +163,7 @@ test("Adding Owners", async (done) =>{
 //         console.log("Assert Safe Creation\n")
 //         await gnosisPage.bringToFront()
 //         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
-//         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "string", "css")
+//         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")
 //         expect(safeName).toMatch(sels.safeNames.create_safe_name)
 //         expect(sels.xpSelectors.safe_hub.safe_address).toBeTruthy()
         

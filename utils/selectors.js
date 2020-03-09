@@ -19,7 +19,7 @@ export const sels = {
             second_step_description: "//p[contains(text(),'This Safe has')]",
             first_owner_name_input: (index = 0) => `//input[@name='owner${index}Name']`,
             required_error_input: "//p[contains(text(),'Required')]",
-            review_btn: "//button/span[contains(text(),'Review')]",
+            review_btn: "//button/span[contains(text(),'Review')]/parent::button",
             review_details_title: "//p[contains(text(),'Review details')]",
             review_safe_name: "//p[contains(text(),'Name of the Safe')]/following-sibling::p",
             review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p",
@@ -73,6 +73,56 @@ export const sels = {
             fee_msg : "//div[7]/p",
             submit_btn : "//span[contains(text(),'Submit')]/parent::button",
         },
+        modify_policies: {
+            settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
+            owner_amount: "//div[5]//div[3]/p", //the number of owners in "settings > owners tab"
+            policies_tab: "//div[contains(text(),'Policies')]",
+            req_conf: "//div/p[2]/b[1]", // the first number in "X out of Y owners" phrase
+            max_req_conf: "//div/p[2]/b[2]", // the second number in "X out of Y owners" phrase
+            modify_btn: "//span[contains(text(),'Modify')]/parent::button", //modify button in the policies tab
+            modify_form_title: "//div[5]/div[3]/div[1]/p", //"Change required information" title of the modify policies form
+            change_btn: "//span[contains(text(),'CHANGE')]/parent::button", //change button in the modifiy policies form
+            current_req_conf : "//form//div[2]/div[1]/div/div/div", //the div with the current selection of owners required
+            owners_selector: "//div[3]/ul/li", //The full selector, its length should be the same as the amount of owners
+            owners_req: (value = 0) => `//ul/li[${value}]`, //individual values of the selector
+            owner_limit: "//form//div[2]/p", //this is the full message, getNumberInString has to be used to get the number
+        },
+        setting_owners: {
+            settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
+            owners_tab: "//div[contains(text(),'Owners')]",
+            owner_amount: "//div[5]//div[3]/p",
+            owner_table: "//table/tbody/tr", //to apply .lengnth and know the amount of owners
+            owner_name : (name) => `//td[contains(text(),'${name}')]`,
+            owner_table_row: (index = 1) => `//table/tbody/tr[${index}]`, //getting a specific row
+            owner_row_options: (address, option = 1) => `//p[contains(text(),'${address}')]/ancestor::td/following-sibling::td//img[${option}]`, //1 = edit, 2 = replace, 3 = delete
+            owner_table_row_address: (address) => `//td//p[contains(text(),'${address}')]`, //find owner row by address
+            owner_table_row_name: (name) => `//tr[5]/td[contains(text(),'${name}')]`, //find owner row by name
+            add_new_owner_btn: "//span[contains(text(),'Add new owner')]/parent::button", 
+            //1st step
+            add_new_owner_title: "//p[contains(text(),'Add new owner')]", //to assert the form opened
+            owner_name_input: "//input[@data-testid='add-owner-name-input']",
+            owner_address_input: "//input[@data-testid='add-owner-address-testid']",
+            next_btn: "//span[contains(text(),'Next')]/parent::button", //submit button to add new owners
+            //2nd step
+            req_conf: "//form/div[1]/div[3]/div[1]/div",
+            owner_selector: "//div[6]/div[3]/ul/li", //.length should be the amount of owners there will be after the Tx approval
+            owner_selector_option : (index = 1) => `//div[6]/div[3]/ul/li[${index}]`, //specific options
+            owner_limit: "//div[3]/div[2]/p", //this is the full message, getNumberInString has to be used to get the number
+            review_btn : "//span[contains(text(),'Review')]/parent::button",
+            //3rd step
+            req_conf_verif: "//div[3]/p[2]", //verifying the new req conf set
+            new_owner_section: "//p[contains(text(),'ADDING NEW OWNER')]", //for assertion 
+            new_owner_name : (name) => `//p[contains(text(),'${name}')]`, //for assertion of the name
+            new_owner_address : (address) => `//p[contains(text(),'${address}')]`, //for assertion of the name
+            submit_btn : "//span[contains(text(),'Submit')]/parent::button",
+            executor_tag : "//div[contains(text(),'Executor')]", //wait for the executor tag before keep going
+            //edit owner name form
+            edit_name_input : "//form/div[1]/div[1]/div/div/input",
+            save_btn: "//span[contains(text(),'Save')]/parent::button",
+            //Delete owner modal
+            to_be_deleted_address : (address) => `//div[2]/div[2]/div/div/p[contains(text(),'${address}')]`,
+            removing_owner_title : "//p[contains(text(),'REMOVING OWNER')]",
+        },
     },
     cssSelectors: {
         intercom_close_btn: ".intercom-anchor", //closes the intercom chat
@@ -102,6 +152,7 @@ export const sels = {
         acc2 : "0x7724b234c9099C205F03b458944942bcEBA13408",
         acc3 : "0x6E45d69a383CECa3d54688e833Bd0e1388747e6B",
         acc4 : "0x730F87dA2A3C6721e2196DFB990759e9bdfc5083",
+        acc5 : "0x66bE167c36B3b75D1130BBbDec69f9f04E7DA4fC",
         non_owner_acc : "0xc8b99Dc2414fAA46E195a8f3EC69DD222EF1744F",
     },
     assertions : {
@@ -118,7 +169,10 @@ export const sels = {
         owner_name: "John Carmack",
         owner2_name: "Gabe Newell",
         owner3_name: "Hugo Martin",
-        owner4_name: "Hideo Kojima"
+        owner4_name: "Hideo Kojima",
+    },
+    otherAccountNames : { //Other names beyond the purpose of loading or creating safes
+        owner5_name: "Shigeru Miyamoto"
     },
     errorMsg: {
         error: (msg) => `//p[contains(text(),"${msg}")]`,
@@ -128,5 +182,6 @@ export const sels = {
         duplicated_address: 'Address already introduced',
         not_a_number: 'Must be a number',
         max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
+        modify_policy: (value = 0) => `Value should be different than ${value}`,
     },
 }

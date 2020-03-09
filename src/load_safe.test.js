@@ -1,4 +1,4 @@
-const { slowMo, TIME } = require('../utils/config').default
+const { TIME } = require('../utils/config').default
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
 import { walletConnect } from "../utils/testSetup"
@@ -40,17 +40,16 @@ describe("Loading an Existing safe", () => {
     }, TIME.T15)
     test("Load safe Review Details", async () => {
         console.log("Load safe Review Details\n")
-        const valueBefore = gFunc.getInnerText(homepage.safes_counter, gnosisPage, "int")
+        const valueBefore = gFunc.getNumberInString(homepage.safes_counter, gnosisPage)
         await gFunc.assertElementPresent(load_safe.review_details_title, gnosisPage)
         await gFunc.assertTextPresent(load_safe.review_safe_name, gnosisPage, sels.safeNames.load_safe_name)
         await gFunc.assertTextPresent(load_safe.review_owner_name, gnosisPage, sels.accountNames.owner_name)
         await gFunc.clickSomething(load_safe.load_btn, gnosisPage)
-        //await gnosisPage.waitFor(sels.cssSelectors.safe_name_heading)
         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
         expect(gnosisPage.url()).toMatch(sels.testAccountsHash.safe1)
         const safeName = await gnosisPage.$eval(sels.cssSelectors.safe_name_heading, x => x.innerText)
         expect(safeName).toMatch(sels.safeNames.load_safe_name)
-        const valueAfter = gFunc.getInnerText(homepage.safes_counter, gnosisPage, "int")
+        const valueAfter = gFunc.getNumberInString(homepage.safes_counter, gnosisPage)
         expect(parseInt(valueBefore)).toBe(parseInt(valueAfter) + 1)
     }, TIME.T15)
 })

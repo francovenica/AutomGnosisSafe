@@ -54,8 +54,8 @@ describe("Send Funds", ()=>{
 
         await gFunc.clickSomething(send_funds_modal.send_max, gnosisPage)
         const input = await gFunc.assertElementPresent(send_funds_modal.amount_input, gnosisPage)
-        const value = await gnosisPage.evaluate(x=>x.value, input)
-        expect(parseFloat(value)).toBe(currentBalance)
+        const input_value = await gnosisPage.evaluate(x=>x.value, input)
+        expect(parseFloat(input_value)).toBe(currentBalance) //Checking that the value set by the "Send max" button is the same as the current balance
         await gFunc.clearInput(send_funds_modal.amount_input, gnosisPage)
 
         await gFunc.clickAndType(send_funds_modal.amount_input, gnosisPage, "0.01")

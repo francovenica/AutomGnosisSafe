@@ -1,5 +1,5 @@
 export default {
-    slowMo: 2,
+    SLOWMO: 2,
     TIME : {
         T600 : 600000,
         T180 : 180000,
@@ -11,7 +11,7 @@ export default {
         T5 : 5000,
         T2 : 2000,  
     },
-    environment : {
+    ENVIRONMENT : {
         rinkeby: "https://rinkeby.gnosis-safe.io/app/",
         dev: "https://safe-team.dev.gnosisdev.com/app/",
         PR: "https://pr585--safereact.review.gnosisdev.com/app/",
