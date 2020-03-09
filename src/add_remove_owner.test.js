@@ -30,6 +30,9 @@ describe("Adding and removing owners", () =>{
     let max_req_conf //Will store the new max required confirmation after adding the new owner
     let owner_selector //Will store the max required confirmation I can pick form the selector
     let new_req_conf //Once I change the req confirmation, this will save it
+
+    let new_owner_name = sels.otherAccountNames.owner5_name
+    let new_owner_address = sels.testAccountsHash.acc5
     test("Checking owner amount and current policies", async (done) =>{
         console.log("Checking owner amount current policies")
         try {
@@ -53,7 +56,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)
             await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //asserts error "required" in name
-            await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, sels.otherAccountNames.owner5_name)
+            await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, new_owner_name)
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //asserts error "required" in address
             await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, "0xInvalidHash")
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage)
@@ -61,7 +64,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, existing_owner_hash)
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage)
             await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-            await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, sels.testAccountsHash.acc5)
+            await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, new_owner_address)
             await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
             done()
         } catch (error) {
@@ -76,7 +79,7 @@ describe("Adding and removing owners", () =>{
 
             await gFunc.clickSomething(setting_owners.req_conf, gnosisPage)
             max_req_conf = await gFunc.getNumberInString(setting_owners.owner_limit, gnosisPage)
-            owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for this
+            owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for the xpath element for this
             await expect(owner_selector).toBe(max_req_conf) //the amount of options should be X in "out of X owners"
 
             await gFunc.clickSomething(setting_owners.owner_selector_option(1), gnosisPage)
@@ -97,8 +100,8 @@ describe("Adding and removing owners", () =>{
             expect(parseInt(req_conf_verif_array[3])).toBe(max_req_conf) //Verifying the value of Y in "X out of Y owners"
             await gFunc.assertAllElementPresent([
                 setting_owners.new_owner_section,
-                setting_owners.new_owner_name(sels.otherAccountNames.owner5_name),
-                setting_owners.new_owner_address(sels.testAccountsHash.acc5),
+                setting_owners.new_owner_name(new_owner_name),
+                setting_owners.new_owner_address(new_owner_address),
             ], gnosisPage)
             done()
         } catch (error) {
@@ -115,7 +118,7 @@ describe("Adding and removing owners", () =>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T60)
+    }, TIME.T90)
     test("Signing with owner 2", async (done) =>{
         console.log("Signing with owner 2")
         try {
@@ -134,7 +137,7 @@ describe("Adding and removing owners", () =>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T60)
+    }, TIME.T90)
     test("Signing and executing with owner 3", async (done) =>{
         console.log("Signing and executing with owner 3")
         try {
@@ -152,32 +155,100 @@ describe("Adding and removing owners", () =>{
         } catch (error) {
             done(error)
         }
+    }, TIME.T90)
+    test("Verifying new owner", async (done) =>{
+        console.log("Verifying new owner")
+        try {
+            await gnosisPage.bringToFront()
+            await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
+            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${max_req_conf}')]`, {timeout: 75000}) //wait for the amount to be max_req_conf
+            await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
+            await gFunc.assertElementPresent(setting_owners.owner_table_row_address(new_owner_address), gnosisPage) //assert new owner by address
+            done()
+        } catch (error) {
+            done(error)
+        }
+    }, TIME.T90)
+    test("Editing New owner's name", async (done) =>{
+        console.log("Editing New owner's name")
+        try {
+            await gFunc.clickSomething(setting_owners.owner_row_options(new_owner_address, 1), gnosisPage) //click "edit name" option for new owner
+            await gFunc.clearInput(setting_owners.edit_name_input, gnosisPage)
+            await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //asserts error "required" in name
+            const name_edited = new_owner_name + " edited"
+            await gFunc.clickAndType(setting_owners.edit_name_input, gnosisPage, name_edited)
+            const input_innertext = await gFunc.getInnerText(setting_owners.edit_name_input, gnosisPage)
+            expect(input_innertext).toMatch(name_edited)
+            await gFunc.clickSomething(setting_owners.save_btn, gnosisPage)
+            const edited_name_new_owner = await gFunc.getInnerText(setting_owners.owner_table_row_name(name_edited), gnosisPage)
+            expect(edited_name_new_owner).toMatch(name_edited)
+            new_owner_name = edited_name_new_owner //For deletion I have to review the owner name, so Im updating it
+            done()
+        } catch (error) {
+            done(error)
+        }
     }, TIME.T60)
-    // test("Verifying new owner", async (done) =>{
-    //     console.log("Verifying new owner")
-    //     try {
+    test("Deleting recently added owner", async (done) =>{
+        console.log("Deleting recently added owner")
+        try {
+            await gFunc.clickSomething(setting_owners.owner_row_options(new_owner_address, 3), gnosisPage) //deleting the new owner
+            await gFunc.assertElementPresent(setting_owners.to_be_deleted_address(new_owner_address), gnosisPage)
+            await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
+            done()
+        } catch (error) {
+            done(error)
+        }
+    }, TIME.T60)
+    test("Setting new required confirmation after deletion", async (done) =>{
+        console.log("Setting new required confirmation after deletion")
+        try {
+            await gFunc.clickSomething(setting_owners.req_conf, gnosisPage)
+            max_req_conf = await gFunc.getNumberInString(setting_owners.owner_limit, gnosisPage)
+            owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for the xpath element for this
+            await expect(owner_selector).toBe(max_req_conf) //the amount of options should be X in "out of X owners"
+            await gFunc.clickSomething(setting_owners.owner_selector_option(3), gnosisPage)
+            await gnosisPage.waitFor(TIME.T2) // always after clicking in one of these selector you have to wait before clicking submit
+            new_req_conf = await gFunc.getNumberInString(setting_owners.req_conf,gnosisPage) //saving the new required confirmations
+            await gFunc.clickSomething(setting_owners.review_btn, gnosisPage)
+            done()
+        } catch (error) {
+            done(error)
+        }
+    }, TIME.T90)
+    test("Reviewing user deletion, submitting and signing", async (done) =>{
+        console.log("Reviewing user deletion, submitting and signing")
+        try {
+            const req_conf_verif = await gFunc.getInnerText(setting_owners.req_conf_verif, gnosisPage)
+            const req_conf_verif_array = req_conf_verif.split(" ")//To get both numbers from "X out of Y owners" i have put them in an array
+            expect(parseInt(req_conf_verif_array[0])).toBe(new_req_conf) //Verifying the value of X in "X out of Y owners"
+            expect(parseInt(req_conf_verif_array[3])).toBe(max_req_conf) //Verifying the value of Y in "X out of Y owners"
+            await gFunc.assertAllElementPresent([
+                setting_owners.removing_owner_title,
+                setting_owners.new_owner_name(new_owner_name),
+                setting_owners.new_owner_address(new_owner_address),
+            ], gnosisPage)
 
-    //         done()
-    //     } catch (error) {
-    //         done(error)
-    //     }
-    // }, TIME.T60)
-    // test("Deleting recently added owner", async (done) =>{
-    //     console.log("Deleting recently added owner")
-    //     try {
-
-    //         done()
-    //     } catch (error) {
-    //         done(error)
-    //     }
-    // }, TIME.T60)
-    // test("Verifying owner deletion", async (done) =>{
-    //     console.log("Verifying owner deletion")
-    //     try {
-
-    //         done()
-    //     } catch (error) {
-    //         done(error)
-    //     }
-    // }, TIME.T60)
+            await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
+            await gnosisPage.waitFor(TIME.T2)
+            await metamask.confirmTransaction()
+            owners_current_amount = owners_current_amount - 1
+            done()
+        } catch (error) {
+            done(error)
+        }
+    }, TIME.T60)
+    test("Verifying owner deletion", async (done) =>{
+        console.log("Verifying owner deletion")
+        try {
+            await MMpage.waitFor(TIME.T5)
+            await gnosisPage.bringToFront()
+            await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
+            await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
+            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${owners_current_amount}')]`, {timeout: 75000})
+            expect(owner_rows_amount).toBe(owners_current_amount)
+            done()
+        } catch (error) {
+            done(error)
+        }
+    }, TIME.T90)
 })

@@ -102,7 +102,9 @@ export const assertAllElementPresent = async function (selectors, page, type = "
 export const getInnerText = async function (selector, page, type="Xpath"){
   const element = await assertElementPresent(selector,page, type != "Xpath"? type : "Xpath")
   try {
-    const elementText = await page.evaluate(x=>x.innerText, element)
+    let elementText = await page.evaluate(x=>x.innerText, element)
+    if(elementText === "") 
+      elementText = await page.evaluate(x=>x.value, element)
     return elementText
   } catch (error) {
     console.log("getInnerText Error: Selector = ", selector, "\n", error)

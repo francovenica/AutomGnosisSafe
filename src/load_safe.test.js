@@ -45,7 +45,6 @@ describe("Loading an Existing safe", () => {
         await gFunc.assertTextPresent(load_safe.review_safe_name, gnosisPage, sels.safeNames.load_safe_name)
         await gFunc.assertTextPresent(load_safe.review_owner_name, gnosisPage, sels.accountNames.owner_name)
         await gFunc.clickSomething(load_safe.load_btn, gnosisPage)
-        //await gnosisPage.waitFor(sels.cssSelectors.safe_name_heading)
         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
         expect(gnosisPage.url()).toMatch(sels.testAccountsHash.safe1)
         const safeName = await gnosisPage.$eval(sels.cssSelectors.safe_name_heading, x => x.innerText)

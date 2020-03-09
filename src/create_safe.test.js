@@ -21,6 +21,7 @@ afterAll(async () => {
 describe("Create New Safe", () =>{
     const homepage = sels.xpSelectors.homepage
     const create_safe = sels.xpSelectors.create_safe
+    const errorMsg = sels.errorMsg
     test("Open Create Safe Form", async ()=>{
         console.log("Open Create Safe Form\n")
         await gFunc.clickSomething(homepage.home_btn, gnosisPage)
@@ -30,7 +31,7 @@ describe("Create New Safe", () =>{
     test("Naming The Safe", async () =>{
         console.log("Naming The Safe\n")
         await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
-        await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
         await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
         await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
     },  TIME.T60)
@@ -39,9 +40,9 @@ describe("Create New Safe", () =>{
         await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
         await gFunc.clickSomething(create_safe.add_owner, gnosisPage)
         await gFunc.clickSomething(create_safe.review_btn, gnosisPage)
-        await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
         await gFunc.clickAndType(create_safe.second_owner_name_input, gnosisPage, sels.accountNames.owner2_name)
-        await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
         await gFunc.clickAndType(create_safe.second_owner_address_input, gnosisPage, sels.testAccountsHash.acc2)
         const req_conf_limit = await gFunc.getNumberInString(create_safe.req_conf_info_text, gnosisPage)
         const owner_rows = await gnosisPage.$x(create_safe.current_rows)

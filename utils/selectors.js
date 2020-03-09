@@ -94,7 +94,9 @@ export const sels = {
             owner_table: "//table/tbody/tr", //to apply .lengnth and know the amount of owners
             owner_name : (name) => `//td[contains(text(),'${name}')]`,
             owner_table_row: (index = 1) => `//table/tbody/tr[${index}]`, //getting a specific row
-            owner_row_options: (option = 1) => `//tbody/tr[1]/td[3]/div/img[${option}]`, //1 = edit, 2 = replace, 3 = delete
+            owner_row_options: (address, option = 1) => `//p[contains(text(),'${address}')]/ancestor::td/following-sibling::td//img[${option}]`, //1 = edit, 2 = replace, 3 = delete
+            owner_table_row_address: (address) => `//td//p[contains(text(),'${address}')]`, //find owner row by address
+            owner_table_row_name: (name) => `//tr[5]/td[contains(text(),'${name}')]`, //find owner row by name
             add_new_owner_btn: "//span[contains(text(),'Add new owner')]/parent::button", 
             //1st step
             add_new_owner_title: "//p[contains(text(),'Add new owner')]", //to assert the form opened
@@ -112,7 +114,13 @@ export const sels = {
             new_owner_section: "//p[contains(text(),'ADDING NEW OWNER')]", //for assertion 
             new_owner_name : (name) => `//p[contains(text(),'${name}')]`, //for assertion of the name
             new_owner_address : (address) => `//p[contains(text(),'${address}')]`, //for assertion of the name
-            submit_btn : "//span[contains(text(),'Submit')]/parent::button"
+            submit_btn : "//span[contains(text(),'Submit')]/parent::button",
+            //edit owner name form
+            edit_name_input : "//form/div[1]/div[1]/div/div/input",
+            save_btn: "//span[contains(text(),'Save')]/parent::button",
+            //Delete owner modal
+            to_be_deleted_address : (address) => `//div[2]/div[2]/div/div/p[contains(text(),'${address}')]`,
+            removing_owner_title : "//p[contains(text(),'REMOVING OWNER')]",
         },
     },
     cssSelectors: {
