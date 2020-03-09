@@ -1,0 +1,4 @@
+{
+  "address": "0x2578816c8686218Aebc6891D27a9EDFF1de954C8",
+  "privateKey": "0x1d36218c85483b5ea14f0ac814a2a8e52c381063bd74e040633d9398d2b83dca"
+}

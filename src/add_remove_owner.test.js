@@ -12,10 +12,10 @@ beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
 }, TIME.T60)
 
-// afterAll(async () => {
-//     await gnosisPage.waitFor(2000)
-//     await browser.close();
-// })
+afterAll(async () => {
+    await gnosisPage.waitFor(2000)
+    await browser.close();
+})
 
 describe("Adding and removing owners", () =>{
     const modify_policies = sels.xpSelectors.modify_policies
@@ -240,8 +240,18 @@ describe("Adding and removing owners", () =>{
     test("Verifying owner deletion", async (done) =>{
         console.log("Verifying owner deletion")
         try {
-            await MMpage.waitFor(TIME.T5)
+            await MMpage.waitFor(TIME.T2)
             await gnosisPage.bringToFront()
+            await gnosisPage.waitForXPath(setting_owners.pending_status)
+            await gFunc.clickSomething(setting_owners.pending_status, gnosisPage)
+            await gnosisPage.waitForXPath("//div[contains(text(),'Executor')]")
+            await gFunc.assertAllElementPresent([
+                setting_owners.remove_owner_title,
+                setting_owners.removed_owner_name(new_owner_name),
+                setting_owners.removed_owner_address(new_owner_address),
+                setting_owners.changed_req_conf_title,
+                setting_owners.new_changed_req_conf,
+            ], gnosisPage)
             await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
             await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
             await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${owners_current_amount}')]`)
