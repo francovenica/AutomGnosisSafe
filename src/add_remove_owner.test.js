@@ -160,9 +160,10 @@ describe("Adding and removing owners", () =>{
         console.log("Verifying new owner")
         try {
             await gnosisPage.bringToFront()
+            await gnosisPage.waitForXPath("//div[contains(text(),'Executor')]")
             await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
-            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${max_req_conf}')]`, {timeout: 75000}) //wait for the amount to be max_req_conf
             await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
+            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${max_req_conf}')]`) //wait for the amount to be max_req_conf
             await gFunc.assertElementPresent(setting_owners.owner_table_row_address(new_owner_address), gnosisPage) //assert new owner by address
             done()
         } catch (error) {
@@ -231,7 +232,6 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
             await metamask.confirmTransaction()
-            owners_current_amount = owners_current_amount - 1
             done()
         } catch (error) {
             done(error)
@@ -244,7 +244,8 @@ describe("Adding and removing owners", () =>{
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
             await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
-            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${owners_current_amount}')]`, {timeout: 75000})
+            await gnosisPage.waitForXPath(`//div[5]//div[3]/p[contains(text(),'${owners_current_amount}')]`)
+            owner_rows_amount = await gFunc.amountOfElements(setting_owners.owner_table, gnosisPage)
             expect(owner_rows_amount).toBe(owners_current_amount)
             done()
         } catch (error) {

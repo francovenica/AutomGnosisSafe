@@ -115,6 +115,7 @@ export const sels = {
             new_owner_name : (name) => `//p[contains(text(),'${name}')]`, //for assertion of the name
             new_owner_address : (address) => `//p[contains(text(),'${address}')]`, //for assertion of the name
             submit_btn : "//span[contains(text(),'Submit')]/parent::button",
+            executor_tag : "//div[contains(text(),'Executor')]", //wait for the executor tag before keep going
             //edit owner name form
             edit_name_input : "//form/div[1]/div[1]/div/div/input",
             save_btn: "//span[contains(text(),'Save')]/parent::button",
