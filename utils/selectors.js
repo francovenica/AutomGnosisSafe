@@ -50,10 +50,16 @@ export const sels = {
             execute_btn : "//span[contains(text(),'Execute')]/ancestor::button", //button in the Tx expanded
             execute_tx_btn : "//span[contains(text(),'Execute Transaction')]/ancestor::button", //button in the modal for execution
             confirmed_counter : (owners) => `//div[contains(text(),'Confirmed [${owners}/3]')]`,
+            rejected_counter : (owners) => `//div[contains(text(),'Rejected [${owners}/3]')]`,
             executor_tag : "//div[contains(text(),'Executor')]",
             executor_hash : "//div[contains(text(),'Executor')]/parent::div//span",
             connected_account_hash: "//div[2]/p[2]",
-            balance_ETH : "//p[contains(text(),'Ether')]/ancestor::tr[@data-testid='balance-row']//td[2]/div"
+            balance_ETH : "//p[contains(text(),'Ether')]/ancestor::tr[@data-testid='balance-row']//td[2]/div", 
+            reject_btn: "//span[contains(text(),'Reject')]/parent::button",
+            reject_tx_btn : "//span[contains(text(),'Reject Transaction')]/parent::button",
+            execute_reject_tx_btn : "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
+            balances_tab: "//span[contains(text(),'Balances')]/ancestor::button",
+            top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
         },
         send_funds_modal:{
             modal_title: "//p[contains(text(),'Send Funds')]",

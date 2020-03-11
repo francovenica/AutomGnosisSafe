@@ -12,10 +12,10 @@ beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
 }, TIME.T60)
 
-// afterAll(async () => {
-//     await gnosisPage.waitFor(2000)
-//     await browser.close();
-// })
+afterAll(async () => {
+    await gnosisPage.waitFor(2000)
+    await browser.close();
+})
 
 describe("Adding and removing owners", () =>{
     const setting_owners = sels.xpSelectors.setting_owners
