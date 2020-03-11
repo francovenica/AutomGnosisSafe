@@ -50,9 +50,16 @@ export const sels = {
             execute_btn : "//span[contains(text(),'Execute')]/ancestor::button", //button in the Tx expanded
             execute_tx_btn : "//span[contains(text(),'Execute Transaction')]/ancestor::button", //button in the modal for execution
             confirmed_counter : (owners) => `//div[contains(text(),'Confirmed [${owners}/3]')]`,
+            rejected_counter : (owners) => `//div[contains(text(),'Rejected [${owners}/3]')]`,
             executor_tag : "//div[contains(text(),'Executor')]",
             executor_hash : "//div[contains(text(),'Executor')]/parent::div//span",
-            connected_account_hash: "//div[2]/p[2]"
+            connected_account_hash: "//div[2]/p[2]",
+            balance_ETH : "//p[contains(text(),'Ether')]/ancestor::tr[@data-testid='balance-row']//td[2]/div", 
+            reject_btn: "//span[contains(text(),'Reject')]/parent::button",
+            reject_tx_btn : "//span[contains(text(),'Reject Transaction')]/parent::button",
+            execute_reject_tx_btn : "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
+            balances_tab: "//span[contains(text(),'Balances')]/ancestor::button",
+            top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
         },
         send_funds_modal:{
             modal_title: "//p[contains(text(),'Send Funds')]",
@@ -129,6 +136,27 @@ export const sels = {
             removed_owner_address: (address) => `//span[contains(text(),'${address}')]`,
             changed_req_conf_title: "//b[contains(text(),'Change required confirmations:')]",
             new_changed_req_conf : "//b[contains(text(),'Change required confirmations:')]/following-sibling::p[contains(text(),'3')]",
+        },
+        replace_owner:{
+            replace_owner_title: "//p[contains(text(),'Replace owner')]", //for assertion
+            //1st step of Replace owner
+            onwer_replaced_address: (address) => `//form//p[contains(text(),'${address}')]`, //address of current owner
+            owner_name_input: "//input[@data-testid='replace-owner-name-input']",
+            owner_address_input: "//input[@data-testid='replace-owner-address-testid']",
+            //2nd step of replace owner
+            removing_owner_title : "//p[contains(text(),'REMOVING OWNER')]",
+            new_owner_section: "//p[contains(text(),'ADDING NEW OWNER')]", //for assertion
+            replaced_owner_address : (address) => `//p[contains(text(),'REMOVING OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${address}')] `,
+            owner_for_replacement_name: (name) => `//p[contains(text(),'ADDING NEW OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${name}')]`,
+            owner_for_replacement_address: (address) => `//p[contains(text(),'ADDING NEW OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${address}')]`,
+            //Tx  validation
+            tx_remove_owner_title : "//b[contains(text(),'Remove owner:')]",
+            tx_removed_owner_address: (address) => `//b[contains(text(),'Remove owner:')]/parent::div//span[contains(text(),'${address}')]`,
+            tx_add_owner_title : "//b[contains(text(),'Add owner:')]",
+            tx_add_owner_name : (name) => `//b[contains(text(),'Add owner:')]/parent::div//div[contains(text(),'${name}')]`,
+            tx_add_owner_address :(address) => `//b[contains(text(),'Add owner:')]/parent::div//span[contains(text(),'${address}')]`,
+            tx_req_conf_title: "//b[contains(text(),'confirmations:')]",
+            tx_req_conf_threshold : "//b[contains(text(),'confirmations:')]/following-sibling::p"
         },
     },
     cssSelectors: {
