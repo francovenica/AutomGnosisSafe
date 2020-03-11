@@ -130,6 +130,27 @@ export const sels = {
             changed_req_conf_title: "//b[contains(text(),'Change required confirmations:')]",
             new_changed_req_conf : "//b[contains(text(),'Change required confirmations:')]/following-sibling::p[contains(text(),'3')]",
         },
+        replace_owner:{
+            replace_owner_title: "//p[contains(text(),'Replace owner')]", //for assertion
+            //1st step of Replace owner
+            onwer_replaced_address: (address) => `//form//p[contains(text(),'${address}')]`, //address of current owner
+            owner_name_input: "//input[@data-testid='replace-owner-name-input']",
+            owner_address_input: "//input[@data-testid='replace-owner-address-testid']",
+            //2nd step of replace owner
+            removing_owner_title : "//p[contains(text(),'REMOVING OWNER')]",
+            new_owner_section: "//p[contains(text(),'ADDING NEW OWNER')]", //for assertion
+            replaced_owner_address : (address) => `//p[contains(text(),'REMOVING OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${address}')] `,
+            owner_for_replacement_name: (name) => `//p[contains(text(),'ADDING NEW OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${name}')]`,
+            owner_for_replacement_address: (address) => `//p[contains(text(),'ADDING NEW OWNER')]/parent::div/following-sibling::div//p[contains(text(),'${address}')]`,
+            //Tx  validation
+            tx_remove_owner_title : "//b[contains(text(),'Remove owner:')]",
+            tx_removed_owner_address: (address) => `//b[contains(text(),'Remove owner:')]/parent::div//span[contains(text(),'${address}')]`,
+            tx_add_owner_title : "//b[contains(text(),'Add owner:')]",
+            tx_add_owner_name : (name) => `//b[contains(text(),'Add owner:')]/parent::div//div[contains(text(),'${name}')]`,
+            tx_add_owner_address :(address) => `//b[contains(text(),'Add owner:')]/parent::div//span[contains(text(),'${address}')]`,
+            tx_req_conf_title: "//b[contains(text(),'confirmations:')]",
+            tx_req_conf_threshold : "//b[contains(text(),'confirmations:')]/following-sibling::p"
+        },
     },
     cssSelectors: {
         intercom_close_btn: ".intercom-anchor", //closes the intercom chat
