@@ -33,8 +33,8 @@ describe("Send Funds", ()=>{
     }, TIME.T30)
     test("Filling the Form", async () => {
         console.log("Filling the Form\n")
-        const currentBalance = await gFunc.getNumberInString(send_funds_modal.balance_number,gnosisPage)
-
+        const current_balance = await gFunc.getNumberInString(send_funds_modal.balance_number,gnosisPage)
+        
         await gFunc.clickAndType(sels.cssSelectors.send_funds_recep, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
         await gFunc.clickSomething(send_funds_modal.token_selec, gnosisPage)
         await gFunc.clickSomething(send_funds_modal.ether_selection, gnosisPage)
@@ -49,13 +49,13 @@ describe("Send Funds", ()=>{
         await gFunc.clearInput(send_funds_modal.amount_input, gnosisPage)
         
         await gFunc.clickAndType(send_funds_modal.amount_input, gnosisPage, "99999")
-        await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.max_amount_tokens(currentBalance)), gnosisPage)
+        await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.max_amount_tokens(current_balance)), gnosisPage)
         await gFunc.clearInput(send_funds_modal.amount_input, gnosisPage)
 
         await gFunc.clickSomething(send_funds_modal.send_max, gnosisPage)
         const input = await gFunc.assertElementPresent(send_funds_modal.amount_input, gnosisPage)
         const input_value = await gnosisPage.evaluate(x=>x.value, input)
-        expect(parseFloat(input_value)).toBe(currentBalance) //Checking that the value set by the "Send max" button is the same as the current balance
+        expect(parseFloat(input_value)).toBe(current_balance) //Checking that the value set by the "Send max" button is the same as the current balance
         await gFunc.clearInput(send_funds_modal.amount_input, gnosisPage)
 
         await gFunc.clickAndType(send_funds_modal.amount_input, gnosisPage, "0.01")

@@ -116,6 +116,7 @@ export const getNumberInString = async function(selector, page, numtype = "int",
   const text = await getInnerText(selector, page, type)
   try {
     const number = text.match(/\d+.?\d+|\d+/)[0]
+    console.log("text = ", text, "\nnumber = ", number, "\nparsefloat number = ", parseFloat(number))
     return parseFloat(number)
   } catch (error) {
     console.log("getNumberInString Error: selector = ", selector)

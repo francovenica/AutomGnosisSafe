@@ -49,7 +49,7 @@ describe("Adding and removing owners", () =>{
                 owner_for_replacement_address = sels.testAccountsHash.acc3
             }    
             owner_for_replacement_name = "Cory Barlog"
-            console.log("Flag = ", flag, "owner_replaced_address = ", owner_replaced_address, "\nowner_for_replacement_address = ", owner_for_replacement_address)
+            console.log("Owner_replaced_address = ", owner_replaced_address, "\nOwner_for_replacement_address = ", owner_for_replacement_address)
             done()
         } catch (error) {
             done(error)
@@ -59,6 +59,7 @@ describe("Adding and removing owners", () =>{
         const existing_owner_address = owner_replaced_address
         console.log("Open Replace Owner form")
         try {
+            await gFunc.assertElementPresent(setting_owners.owner_row_options(owner_replaced_address, 2), gnosisPage)
             await gFunc.clickSomething(setting_owners.owner_row_options(owner_replaced_address, 2), gnosisPage)
             await gFunc.assertElementPresent(replace_owner.onwer_replaced_address(owner_replaced_address),gnosisPage)
             await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
@@ -138,21 +139,19 @@ describe("Adding and removing owners", () =>{
         try {
             await MMpage.waitFor(TIME.T2)
             await gnosisPage.bringToFront()
-            await gnosisPage.waitForXPath("//p[contains(text(),'Pending')]")
-            await gFunc.clickSomething(setting_owners.pending_status, gnosisPage)
             await gnosisPage.waitForXPath("//div[contains(text(),'Executor')]")
             await gFunc.assertAllElementPresent([
                 replace_owner.tx_remove_owner_title,
                 replace_owner.tx_removed_owner_address(owner_replaced_address),
                 replace_owner.tx_add_owner_title,
-                //replace_owner.tx_add_owner_name(owner_for_replacement_name), // This is broken 
+                //replace_owner.tx_add_owner_name(owner_for_replacement_name), // This is broken in the application. Issue #649
                 replace_owner.tx_add_owner_address(owner_for_replacement_address),
                 replace_owner.tx_req_conf_title, //this probably should not be here
                 replace_owner.tx_req_conf_threshold,//this probably should not be here
             ],gnosisPage)
             await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
             await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
-            await gFunc.assertAllElementPresent(setting_owners.owner_table_row_address(owner_for_replacement_address), gnosisPage)
+            await gFunc.assertElementPresent(setting_owners.owner_table_row_address(owner_for_replacement_address), gnosisPage)
             done()
         } catch (error) {
             done(error)

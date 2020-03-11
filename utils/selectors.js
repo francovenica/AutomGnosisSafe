@@ -52,7 +52,8 @@ export const sels = {
             confirmed_counter : (owners) => `//div[contains(text(),'Confirmed [${owners}/3]')]`,
             executor_tag : "//div[contains(text(),'Executor')]",
             executor_hash : "//div[contains(text(),'Executor')]/parent::div//span",
-            connected_account_hash: "//div[2]/p[2]"
+            connected_account_hash: "//div[2]/p[2]",
+            balance_ETH : "//p[contains(text(),'Ether')]/ancestor::tr[@data-testid='balance-row']//td[2]/div"
         },
         send_funds_modal:{
             modal_title: "//p[contains(text(),'Send Funds')]",
