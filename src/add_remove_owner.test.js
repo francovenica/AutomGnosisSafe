@@ -31,8 +31,8 @@ describe("Adding and removing owners", () =>{
     let owner_selector //Will store the max required confirmation I can pick form the selector
     let new_req_conf //Once I change the req confirmation, this will save it
 
-    let new_owner_name = sels.otherAccountNames.owner5_name
-    let new_owner_address = sels.testAccountsHash.acc5
+    let new_owner_name = sels.otherAccountNames.owner6_name
+    let new_owner_address = sels.testAccountsHash.non_owner_acc
     test("Checking owner amount and current policies", async (done) =>{
         console.log("Checking owner amount current policies")
         try {

@@ -156,5 +156,5 @@ describe("Adding and removing owners", () =>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T60)
+    }, TIME.T90)
 })

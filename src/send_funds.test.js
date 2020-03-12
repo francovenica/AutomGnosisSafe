@@ -140,5 +140,5 @@ describe("Send Funds", ()=>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T600)
+    }, TIME.T90)
 });

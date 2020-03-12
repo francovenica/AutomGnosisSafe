@@ -207,7 +207,8 @@ export const sels = {
         owner4_name: "Hideo Kojima",
     },
     otherAccountNames : { //Other names beyond the purpose of loading or creating safes
-        owner5_name: "Shigeru Miyamoto"
+        owner5_name: "Shigeru Miyamoto",
+        owner6_name: "Koji Igarashi"
     },
     errorMsg: {
         error: (msg) => `//p[contains(text(),"${msg}")]`,
