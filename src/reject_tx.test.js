@@ -130,5 +130,5 @@ describe("Reject Tx flow", ()=>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T600)
+    }, TIME.T90)
 });
