@@ -64,7 +64,6 @@ export const load_wallet = async (importMultipleAccounts = false) =>{
     const homepage = sels.xpSelectors.homepage
     const load_safe = sels.xpSelectors.load_safe
     
-    await gnosisPage.waitFor(TIME.T2)
     await gFunc.clickSomething(homepage.load_safe_btn, gnosisPage)
     await gFunc.assertTextPresent(load_safe.form_title, gnosisPage, sels.assertions.load_safe_title)
     await gFunc.clickAndType(load_safe.name_input, gnosisPage, sels.safeNames.load_safe_name)
@@ -81,6 +80,7 @@ export const load_wallet = async (importMultipleAccounts = false) =>{
     }
     await gFunc.clickSomething(load_safe.review_btn, gnosisPage)
     await gFunc.assertElementPresent(load_safe.review_details_title, gnosisPage)
+    await gnosisPage.waitFor(TIME.T2)
     await gFunc.clickSomething(load_safe.load_btn, gnosisPage)
 
     return [
