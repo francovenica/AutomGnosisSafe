@@ -59,6 +59,7 @@ describe("Adding and removing owners", () =>{
         const existing_owner_address = owner_replaced_address
         console.log("Open Replace Owner form")
         try {
+            await gnosisPage.waitFor(TIME.T2)
             await gFunc.assertElementPresent(setting_owners.owner_row_options(owner_replaced_address, 2), gnosisPage)
             await gFunc.clickSomething(setting_owners.owner_row_options(owner_replaced_address, 2), gnosisPage)
             await gFunc.assertElementPresent(replace_owner.onwer_replaced_address(owner_replaced_address),gnosisPage)
