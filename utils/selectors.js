@@ -3,7 +3,7 @@ export const sels = {
         homepage:{
             home_btn: "//div/a/img",
             connect_btn: "//span[contains(text(),'Connect')]/parent::button",
-            metamask_option: "//div[contains(text(),'MetaMask')]", 
+            metamask_option: "//span[contains(text(),'MetaMask')]/parent::button",
             accept_cookies : "//span[contains(text(),'Accept All')]/parent::a",
             loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]",
             safes_counter: "//div[contains(text(),'Safes')]/p",

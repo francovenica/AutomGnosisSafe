@@ -18,7 +18,17 @@ afterAll(async () => {
     await browser.close();
 })
 
+beforeAll(async ()=>{
+    [browser, metamask, gnosisPage, MMpage] = await init()
+}, TIME.T60)
+
+afterAll(async () => {
+    await gnosisPage.waitFor(2000)
+    await browser.close();
+})
+
 describe("Wallet Connection", ()=>{
+    const homepage = sels.xpSelectors.homepage
     test("Importing Account", async () => {
         console.log("Importing Account\n")
         await gFunc.importAccounts(metamask);
@@ -27,21 +37,15 @@ describe("Wallet Connection", ()=>{
     test("Navigating in Gnosis", async () => {
         console.log("Navigating in Gnosis\n")
         await gnosisPage.bringToFront()
-        await gFunc.clickSomething(sels.xpSelectors.homepage.accept_cookies,gnosisPage)
-        await gFunc.clickSomething(sels.xpSelectors.homepage.connect_btn,gnosisPage)
-        await gFunc.clickSomething(sels.xpSelectors.homepage.metamask_option,gnosisPage)
-    }, TIME.T15)
-    test("Confirming in MetaMask", async () => {
-        console.log("Confirming in MetaMask\n")
-        await metamask.confirmTransaction();
+        await gFunc.clickSomething(homepage.accept_cookies,gnosisPage)
+        await gFunc.clickSomething(homepage.connect_btn,gnosisPage)
+        await gFunc.clickSomething(homepage.metamask_option,gnosisPage)
     }, TIME.T15)
     test("Asserting Connection", async () => {
         console.log("Asserting Connection\n")
-        await gnosisPage.bringToFront()  
-        await gFunc.clickSomething(sels.xpSelectors.homepage.metamask_option,gnosisPage)
-        await gFunc.assertTextPresent(sels.xpSelectors.homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
-        try{
-            await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
-        }catch(e){}
-    }, TIME.T15)
+        await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
+        // try{
+        //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
+        // }catch(e){}
+    }, TIME.T30)
 })

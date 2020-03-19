@@ -40,11 +40,6 @@ export const walletConnect = async (importMultipleAccounts = false) => {
     await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
     await gFunc.clickSomething(homepage.connect_btn, gnosisPage)
     await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
-
-    await metamask.confirmTransaction();
-
-    await gnosisPage.bringToFront()
-    await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
     await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
     // try {
     //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)

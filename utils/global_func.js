@@ -15,7 +15,7 @@ const elementSelector = async (selector, page, type) => {
     }
   }
   catch(error){
-    console.trace("elementSelector Error: Selector = ", selector, "\n", error)
+    console.log("elementSelector Error: Selector = ", selector, "\n", error)
     return {}
   }
 }
@@ -25,14 +25,14 @@ export const clickSomething = async function(selector, page, type="Xpath"){
   try {
     expect(element).not.toBe({})
   } catch (error) {
-    console.trace("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
+    console.log("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
   }
   try {
     await page.evaluate(x=>x.style.outline = '3px solid red', element)
     await element.click()
     await page.evaluate(x=>x.style.outline = '', element)
   } catch (error) {
-    console.trace("ClickSomething Error: Couldn't click = ", selector, "\n", error)
+    console.log("ClickSomething Error: Couldn't click = ", selector, "\n", error)
   }
   return element;
 };
