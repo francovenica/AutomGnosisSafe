@@ -4,11 +4,12 @@ export const sels = {
             home_btn: "//div/a/img",
             connect_btn: "//span[contains(text(),'Connect')]/parent::button",
             metamask_option: "//span[contains(text(),'MetaMask')]/parent::button",
-            accept_cookies : "//span[contains(text(),'Accept All')]/parent::a",
+            accept_cookies : "//span[contains(text(),'Accept preferences')]",
             loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]",
             safes_counter: "//div[contains(text(),'Safes')]/p",
             load_safe_btn : "//div[contains(text(),'Load existing Safe')]",
-            create_safe_btn: "//div[contains(text(),'Create new Safe')]"
+            create_safe_btn: "//div[contains(text(),'Create new Safe')]",
+            close_rinkeby_notif: "/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button"
         },  
         load_safe:{
             form_title: "//h2[contains(text(),'Load existing Safe')]",
@@ -37,6 +38,7 @@ export const sels = {
             req_conf_info_text : "//p[contains(text(),'out of')]",
             review_btn: "//button/span[contains(text(),'Review')]/ancestor::button",
             submit_btn: "//button/span[contains(text(),'Submit')]/ancestor::button",
+            continue_btn: "//button/span[contains(text(),'Continue')]/ancestor::button",
         },
         safe_hub:{
             send_btn: "//span[contains(text(),'Send')]/ancestor::button", //this is the first of many buttons. I'm expecting to be clicked first
@@ -58,7 +60,7 @@ export const sels = {
             reject_btn: "//span[contains(text(),'Reject')]/parent::button",
             reject_tx_btn : "//span[contains(text(),'Reject Transaction')]/parent::button",
             execute_reject_tx_btn : "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
-            balances_tab: "//span[contains(text(),'Balances')]/ancestor::button",
+            assets_tab: "//span[contains(text(),'Assets')]/ancestor::button",
             top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
         },
         send_funds_modal:{
@@ -67,7 +69,7 @@ export const sels = {
             safe_name: (name) => `//p[contains(text(), '${name}')]`,
             balance: "//p[contains(text(),'Balance')]",
             balance_number : "//form/div[1]/div[1]/div[2]/div[2]/p/b",
-            token_selec: "//li/p[contains(text(),'Select an asset')]",
+            token_selec: "//div/div/div/div/li/span",
             ether_selection: "//div/span[contains(text(),'Ether')]/parent::div", 
             required_error_input: "//div/p[contains(text(), 'Required')]",
             amount_input: "//div[6]/div/div/div/input",
@@ -112,8 +114,8 @@ export const sels = {
             next_btn: "//span[contains(text(),'Next')]/parent::button", //submit button to add new owners
             //2nd step
             req_conf: "//form/div[1]/div[3]/div[1]/div",
-            owner_selector: "//div[6]/div[3]/ul/li", //.length should be the amount of owners there will be after the Tx approval
-            owner_selector_option : (index = 1) => `//div[6]/div[3]/ul/li[${index}]`, //specific options
+            owner_selector: "//div[3]/div[3]/ul/li", //.length should be the amount of owners there will be after the Tx approval
+            owner_selector_option : (index = 1) => `//ul/li[contains(text(),'${index}')]`, //specific options
             owner_limit: "//div[3]/div[2]/p", //this is the full message, getNumberInString has to be used to get the number
             review_btn : "//span[contains(text(),'Review')]/parent::button",
             //3rd step
@@ -155,8 +157,6 @@ export const sels = {
             tx_add_owner_title : "//b[contains(text(),'Add owner:')]",
             tx_add_owner_name : (name) => `//b[contains(text(),'Add owner:')]/parent::div//div[contains(text(),'${name}')]`,
             tx_add_owner_address :(address) => `//b[contains(text(),'Add owner:')]/parent::div//span[contains(text(),'${address}')]`,
-            tx_req_conf_title: "//b[contains(text(),'confirmations:')]",
-            tx_req_conf_threshold : "//b[contains(text(),'confirmations:')]/following-sibling::p"
         },
     },
     cssSelectors: {

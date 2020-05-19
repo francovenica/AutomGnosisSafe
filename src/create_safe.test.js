@@ -66,6 +66,8 @@ describe("Create New Safe", () =>{
     test("Assert Safe Creation", async () => {
         console.log("Assert Safe Creation\n")
         await gnosisPage.bringToFront()
+        await gnosisPage.waitForXPath(create_safe.continue_btn)
+        await gFunc.clickSomething(create_safe.continue_btn, gnosisPage)
         await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")

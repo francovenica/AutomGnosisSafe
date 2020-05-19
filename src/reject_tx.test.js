@@ -20,18 +20,25 @@ afterAll(async () => {
 describe("Reject Tx flow", ()=>{
     const safe_hub = sels.xpSelectors.safe_hub
     const send_funds_modal = sels.xpSelectors.send_funds_modal
+    const homepage = sels.xpSelectors.homepage
     let currentBalance = 0.0
     test("Open the Send Funds Form", async (done) => {
         try {
             console.log("Open the Send Funds Form")
             currentBalance = await gFunc.getNumberInString(safe_hub.balance_ETH, gnosisPage)
+            console.log("Current balance = " ,currentBalance)
+            try {
+                await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
+            } catch (error) {}
+            await gnosisPage.waitFor(TIME.T2)
             await gFunc.clickSomething(safe_hub.send_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.send_funds_btn, gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
-    }, TIME.T30)
+    }, TIME.T60)
     test("Filling the Form", async (done) => {
         try {
             console.log("Filling the Form")
@@ -45,33 +52,37 @@ describe("Reject Tx flow", ()=>{
             await gFunc.clickSomething(sels.cssSelectors.review_send_fund_btn, gnosisPage, "css")
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T15)
     test("Approving the Tx with the owner 1", async (done) => {
         try {
             console.log("Approving the Tx with the owner 1")
+            await gnosisPage.waitFor(TIME.T5)
             await gFunc.clickSomething(send_funds_modal.submit_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
     test("Rejecting with the 1st  owner", async (done) => {
         try {
             console.log("Rejecting with the 1st  owner")
-            await MMpage.waitFor(TIME.T5)
+            //await MMpage.waitFor(TIME.T5)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
             await gFunc.assertElementPresent(safe_hub.confirmed_counter(1), gnosisPage)
             await gFunc.clickSomething(safe_hub.reject_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.reject_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -80,7 +91,6 @@ describe("Reject Tx flow", ()=>{
         try {
             await MMpage.waitFor(TIME.T5)
             await gnosisPage.bringToFront()
-            await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
             await gFunc.assertElementPresent(safe_hub.rejected_counter(1), gnosisPage)
             await metamask.switchAccount(1) //currently in account4, changing to account 1
             await gnosisPage.waitFor(TIME.T2)
@@ -88,9 +98,10 @@ describe("Reject Tx flow", ()=>{
             await gFunc.clickSomething(safe_hub.reject_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.execute_reject_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -109,6 +120,7 @@ describe("Reject Tx flow", ()=>{
             await metamask.confirmTransaction()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -119,15 +131,17 @@ describe("Reject Tx flow", ()=>{
             await gFunc.assertAllElementPresent([
                 safe_hub.executor_tag,
                 safe_hub.executor_hash,
-                safe_hub.rejected_counter(3)
+                safe_hub.rejected_counter(3),
+                safe_hub.top_tx_cancelled_label
             ], gnosisPage)
-            await gFunc.assertElementPresent(safe_hub.top_tx_cancelled_label, gnosisPage)
-            await gFunc.clickSomething(safe_hub.balances_tab, gnosisPage)
+            //await gFunc.assertElementPresent(safe_hub.top_tx_cancelled_label, gnosisPage)
+            await gFunc.clickSomething(safe_hub.assets_tab, gnosisPage)
             await gnosisPage.waitFor(3000) //Numbers flicker for a bit when you enter in this tab
             const post_test_balance = await gFunc.getNumberInString(safe_hub.balance_ETH, gnosisPage)
             expect(post_test_balance).toBe(currentBalance)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)

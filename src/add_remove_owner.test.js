@@ -45,6 +45,7 @@ describe("Adding and removing owners", () =>{
             expect(owners_current_amount).toBe(owner_rows_amount)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -68,6 +69,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -81,13 +83,14 @@ describe("Adding and removing owners", () =>{
             max_req_conf = await gFunc.getNumberInString(setting_owners.owner_limit, gnosisPage)
             owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for the xpath element for this
             await expect(owner_selector).toBe(max_req_conf) //the amount of options should be X in "out of X owners"
-
             await gFunc.clickSomething(setting_owners.owner_selector_option(1), gnosisPage)
             await gnosisPage.waitFor(TIME.T2) // always after clicking in one of these selector you have to wait before clicking submit
             new_req_conf = await gFunc.getNumberInString(setting_owners.req_conf,gnosisPage) //saving the new required confirmations
+            await gnosisPage.waitFor(TIME.T2) //If I don't wait the Review button shows being clicked, but it wont actually click
             await gFunc.clickSomething(setting_owners.review_btn, gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -105,6 +108,7 @@ describe("Adding and removing owners", () =>{
             ], gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -113,9 +117,10 @@ describe("Adding and removing owners", () =>{
         try {
             await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -132,9 +137,10 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -153,6 +159,7 @@ describe("Adding and removing owners", () =>{
             await metamask.confirmTransaction()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -167,6 +174,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.assertElementPresent(setting_owners.owner_table_row_address(new_owner_address), gnosisPage) //assert new owner by address
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -186,6 +194,7 @@ describe("Adding and removing owners", () =>{
             new_owner_name = edited_name_new_owner //For deletion I have to review the owner name, so Im updating it
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -197,6 +206,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -213,6 +223,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(setting_owners.review_btn, gnosisPage)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)
@@ -234,6 +245,7 @@ describe("Adding and removing owners", () =>{
             await metamask.confirmTransaction()
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T60)
@@ -259,6 +271,7 @@ describe("Adding and removing owners", () =>{
             expect(owner_rows_amount).toBe(owners_current_amount)
             done()
         } catch (error) {
+            console.log(error)
             done(error)
         }
     }, TIME.T90)

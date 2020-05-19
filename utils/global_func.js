@@ -1,5 +1,8 @@
 import {sels} from "./selectors"
 
+
+//$$(".MuiCollapse-container").forEach((element) => element.remove())
+
 const elementSelector = async (selector, page, type) => {
   /*handling Xpath and Css selectors is different. Since may functions require 
   to make this distinction this function was created to do it*/
@@ -29,7 +32,8 @@ export const clickSomething = async function(selector, page, type="Xpath"){
   }
   try {
     await page.evaluate(x=>x.style.outline = '3px solid red', element)
-    await element.click()
+    await page.evaluate(x=>x.click() , element)
+    //await element.click()
     await page.evaluate(x=>x.style.outline = '', element)
   } catch (error) {
     console.log("ClickSomething Error: Couldn't click = ", selector, "\n", error)

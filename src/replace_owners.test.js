@@ -92,7 +92,7 @@ describe("Adding and removing owners", () =>{
             ], gnosisPage)
             await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
             done(error)
@@ -111,7 +111,7 @@ describe("Adding and removing owners", () =>{
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
             done(error)
@@ -147,8 +147,6 @@ describe("Adding and removing owners", () =>{
                 replace_owner.tx_add_owner_title,
                 //replace_owner.tx_add_owner_name(owner_for_replacement_name), // This is broken in the application. Issue #649
                 replace_owner.tx_add_owner_address(owner_for_replacement_address),
-                replace_owner.tx_req_conf_title, //this probably should not be here
-                replace_owner.tx_req_conf_threshold,//this probably should not be here
             ],gnosisPage)
             await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
             await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
@@ -157,5 +155,5 @@ describe("Adding and removing owners", () =>{
         } catch (error) {
             done(error)
         }
-    }, TIME.T90)
+    }, 150000)
 })

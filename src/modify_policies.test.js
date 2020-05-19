@@ -69,7 +69,7 @@ describe("Change Policies", ()=>{
             await gnosisPage.waitFor(2000)
             await gFunc.clickSomething(modify_policies.change_btn, gnosisPage)
             await gnosisPage.waitFor(3000)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
             done(error)
@@ -88,7 +88,7 @@ describe("Change Policies", ()=>{
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
             await gnosisPage.waitFor(TIME.T2)
-            await metamask.confirmTransaction()
+            await metamask.sign()
             done()
         } catch (error) {
             done(error)

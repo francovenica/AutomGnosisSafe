@@ -8,7 +8,7 @@ export const init = async ()=>{
     const browser = await dappeteer.launch(puppeteer,{
         defaultViewport:null, // this extends the page to the size of the browser
         slowMo: SLOWMO, //Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-        args: ['--start-maximized', ENVIRONMENT.rinkeby], //maximized browser, URL for the base page
+        args: ['--start-maximized', ENVIRONMENT.stg], //maximized browser, URL for the base page
     })
     const metamask = await dappeteer.getMetamask(browser,
         {seed: sels.wallet.seed, 
@@ -41,9 +41,9 @@ export const walletConnect = async (importMultipleAccounts = false) => {
     await gFunc.clickSomething(homepage.connect_btn, gnosisPage)
     await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
     await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
-    // try {
-    //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
-    // } catch (e) { }
+    try {
+        await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
+    } catch (e) { }
     
     return [
         browser,
