@@ -30,14 +30,29 @@ export const clickSomething = async function(selector, page, type="Xpath"){
   } catch (error) {
     console.log("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
   }
+  await page.evaluate(x=>x.style.outline = '3px solid red', element)
   try {
-    await page.evaluate(x=>x.style.outline = '3px solid red', element)
-    await page.evaluate(x=>x.click() , element)
+    await page.evaluate(x=>x.click(), element)
     //await element.click()
-    await page.evaluate(x=>x.style.outline = '', element)
   } catch (error) {
     console.log("ClickSomething Error: Couldn't click = ", selector, "\n", error)
   }
+  await page.evaluate(x=>x.style.outline = '', element)
+  return element;
+};
+
+export const openDropdown = async function(selector, page, type="Xpath"){
+  const element = await elementSelector(selector, page, type);
+  try {
+    expect(element).not.toBe({})
+  } catch (error) {
+    console.log("OpenDrowpdown Error: Empty element Selector = ", selector, "\n", error)
+  }
+  await page.evaluate(x=>x.style.outline = '3px solid red', element)
+  //await page.evaluate(x=>x.focus(), element)
+  //page.keyboard.press('ArrowDown');
+  await element.click()
+  await page.evaluate(x=>x.style.outline = '', element)
   return element;
 };
 

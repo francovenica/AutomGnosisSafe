@@ -50,7 +50,7 @@ describe("Create New Safe", () =>{
     },  TIME.T30);
     test("Setting Required Confirmation", async () => {
         console.log("Setting Required Confirmation")
-        await gFunc.clickSomething(sels.cssSelectors.req_conf_dropdown, gnosisPage, "css")
+        await gFunc.openDropdown(sels.cssSelectors.req_conf_dropdown, gnosisPage, "css")
         await gFunc.clickSomething(sels.cssSelectors.req_conf_value_2, gnosisPage, "css")
         await gnosisPage.waitFor(2000);
         await gFunc.clickSomething(create_safe.review_btn, gnosisPage)    

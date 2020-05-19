@@ -44,7 +44,7 @@ describe("Send Funds", ()=>{
         try {
             const current_balance = await gFunc.getNumberInString(send_funds_modal.balance_number,gnosisPage)
             await gFunc.clickAndType(sels.cssSelectors.send_funds_recep, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
-            await gFunc.clickSomething(send_funds_modal.token_selec, gnosisPage)
+            await gFunc.openDropdown(send_funds_modal.token_selec, gnosisPage, "css")
             await gFunc.clickSomething(send_funds_modal.ether_selection, gnosisPage)
             
             await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.required), gnosisPage)
