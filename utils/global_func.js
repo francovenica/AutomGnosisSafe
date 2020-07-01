@@ -1,58 +1,72 @@
 import {sels} from "./selectors"
 
-
 //$$(".MuiCollapse-container").forEach((element) => element.remove())
+//console.log(await gnosisPage.$$eval(loadPage.owner_row, x=>x.length)) Count amount of elements with the same selector
+//await page.evaluate(x=>x.style.outline = '3px solid red', element)
+//await page.evaluate(x=>x.style.outline = '', element)
 
 const elementSelector = async (selector, page, type) => {
   /*handling Xpath and Css selectors is different. Since may functions require 
   to make this distinction this function was created to do it*/
   try{
     if(type === "Xpath"){
-      await page.waitForXPath(selector, {timeout:60000})
+      await page.waitForXPath(selector, {timeout:40000})
       const elementHandle = await page.$x(selector)
       return elementHandle[0]
     }
     else{
-      await page.waitForSelector(selector, {timeout:60000})
+      await page.waitForSelector(selector, {timeout:40000})
       return await page.$(selector)
     }
   }
   catch(error){
-    console.log("elementSelector Error: Selector = ", selector, "\n", error)
-    return {}
+    return "Selector Not Found"
   }
 }
+
+export const clickElement = async function(selector, page, type="css"){
+  const element = await elementSelector(selector, page, type);
+  try {
+    expect(element).not.toBe("Selector Not Found")
+  } catch (error) {
+    console.log("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
+  }
+  try {
+    await element.click()
+  } catch (error) {
+    console.log("ClickSomething Error: Couldn't click = ", selector, "\n", error)
+  }
+  return element;
+};
 
 export const clickSomething = async function(selector, page, type="Xpath"){
   const element = await elementSelector(selector, page, type);
   try {
-    expect(element).not.toBe({})
+    expect(element).not.toBe("Selector Not Found")
   } catch (error) {
     console.log("ClickSomething Error: Empty element Selector = ", selector, "\n", error)
   }
-  await page.evaluate(x=>x.style.outline = '3px solid red', element)
   try {
     await page.evaluate(x=>x.click(), element)
     //await element.click()
   } catch (error) {
     console.log("ClickSomething Error: Couldn't click = ", selector, "\n", error)
   }
-  await page.evaluate(x=>x.style.outline = '', element)
+  
   return element;
 };
 
 export const openDropdown = async function(selector, page, type="Xpath"){
   const element = await elementSelector(selector, page, type);
   try {
-    expect(element).not.toBe({})
+    expect(element).not.toBe("Selector Not Found")
   } catch (error) {
     console.log("OpenDrowpdown Error: Empty element Selector = ", selector, "\n", error)
   }
-  await page.evaluate(x=>x.style.outline = '3px solid red', element)
   //await page.evaluate(x=>x.focus(), element)
   //page.keyboard.press('ArrowDown');
   await element.click()
-  await page.evaluate(x=>x.style.outline = '', element)
+  
   return element;
 };
 
@@ -60,18 +74,14 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
   if(type === "Xpath"){
     let forTyping= await clickSomething(selector, page, type);
     try {
-      await page.evaluate(x=>x.style.outline = '3px solid red', forTyping)
       await forTyping.type(text)
-      await page.evaluate(x=>x.style.outline = "", forTyping)
     } catch (error) {
       console.log("ClickAndType Error: Couldn't type Xpath= ", selector, "\n", error)
     }
   }
   else{
     try {
-      await page.$eval(selector, x=>x.style.outline = '3px solid red')
-      await page.type(selector,text)
-      await page.$eval(selector, x=>x.style.outline = "")
+      await page.type(selector, text)
     } catch (error) {
       console.log("ClickAndType Error: Couldn't type Css = ", selector, "\n", error)
     }
@@ -80,33 +90,32 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
 
 export const clearInput = async function(selector, page, type="Xpath"){
   const field = await elementSelector(selector, page, type);
-  await page.evaluate(x=>x.style.outline = '3px solid red', field)
   await field.click({clickCount:3})
   page.keyboard.press('Backspace');
-  await page.evaluate(x=>x.style.outline = "", field)
 }
 
 export const assertElementPresent = async function (selector, page, type="Xpath"){
-  const connected = await elementSelector(selector, page, type)
+  const element = await elementSelector(selector, page, type)
   try {
-    await page.evaluate(x=>x.style.outline = '3px solid red', connected)
-    const expectHandler = expect(connected)
+    expect(element).not.toBe("Selector Not Found")
+  } catch (error) {
+    console.log("AssertElement Error: Empty element Selector = ", selector, "\n", error)
+  }
+  try {
+    const expectHandler = expect(element)
     type !="Xpath" ? expectHandler.not.toBeNull() : expectHandler.toBeDefined() //for Css there is a different condition to make
-    await page.evaluate(x=>x.style.outline = "", connected)
-    return connected
+    return element
   } catch (error) {
     console.log("AssertElementPresent Error: selector = ", selector, "\n", error)
-    return connected
+    return element
   }
 };
 
 export const assertTextPresent = async function (selector, page, textPresent, type="Xpath"){
   const element = await assertElementPresent(selector,page, type != "Xpath"? type : "Xpath")
   try {
-    await page.evaluate(x=>x.style.outline = '3px solid red', element)
     const elementText = await page.evaluate(x=>x.innerText, element)
     expect(elementText).toMatch(textPresent)
-    await page.evaluate(x=>x.style.outline = "", element)
   } catch (error) {
     console.log("AssertTextPresent Error: selector = ", selector, "\n", error)
   }
@@ -135,7 +144,6 @@ export const getNumberInString = async function(selector, page, numtype = "int",
   const text = await getInnerText(selector, page, type)
   try {
     const number = text.match(/\d+.?\d+|\d+/)[0]
-    //console.log("text = ", text, "\nnumber = ", number, "\nparsefloat number = ", parseFloat(number))
     return parseFloat(number)
   } catch (error) {
     console.log("getNumberInString Error: selector = ", selector)

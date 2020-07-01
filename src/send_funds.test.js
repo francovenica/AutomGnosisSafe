@@ -1,7 +1,6 @@
-const { TIME } = require('../utils/config').default
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup"
+import { load_wallet } from "../utils/testSetup-copy"
 
 let browser;
 let metamask;
@@ -10,7 +9,7 @@ let MMpage;
 
 beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
-}, TIME.T60)
+}, 60000)
 
 afterAll(async () => {
     await gnosisPage.waitFor(2000)
@@ -38,7 +37,7 @@ describe("Send Funds", ()=>{
             console.log(error)
             done(error)
         }
-    }, TIME.T30)
+    }, 30000)
     test("Filling the Form", async (done) => {
         console.log("Filling the Form\n")
         try {
@@ -74,7 +73,7 @@ describe("Send Funds", ()=>{
             console.log(error)
             done(error)
         }
-    }, TIME.T15)
+    }, 15000)
     test("Review Info", async (done) => {
         console.log("Review Info")
         try {
@@ -96,52 +95,52 @@ describe("Send Funds", ()=>{
             console.log(error)
             done(error)
         }
-    }, TIME.T15)
+    }, 15000)
     test("Approving the Tx with the owner 1", async (done) => {
         console.log("Approving the Tx with the owner 1")
         try {
-            await gnosisPage.waitFor(TIME.T5)
+            await gnosisPage.waitFor(5000)
             await gFunc.clickSomething(send_funds_modal.submit_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.sign()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Approving the Tx with the owner 2", async (done) => {
         console.log("Approving the Tx with the owner 2")
         try {
-            await MMpage.waitFor(TIME.T5)
+            await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
             await gFunc.assertElementPresent(safe_hub.confirmed_counter(1), gnosisPage)
             await metamask.switchAccount(1) //currently in account4, changing to account 1
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.sign()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Approving the Tx with the owner 3", async (done) => {
         console.log("Approving the Tx with the owner 3")
         try {
-            await MMpage.waitFor(TIME.T5)
+            await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
             await gFunc.assertElementPresent(safe_hub.confirmed_counter(2), gnosisPage)
             await metamask.switchAccount(2)
             await gnosisPage.bringToFront()
-            await gnosisPage.waitFor(TIME.T5)
+            await gnosisPage.waitFor(5000)
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.confirmTransaction()
             done()
         } catch (error) {
@@ -149,7 +148,7 @@ describe("Send Funds", ()=>{
             done(error)
         }
         console.log("Finish Approving the Tx with the owner 3")
-    }, TIME.T90)
+    }, 90000)
     test("Verifying Execution of the Tx", async (done) => {
         console.log("Verifying Execution of the Tx")
         try {
@@ -167,5 +166,5 @@ describe("Send Funds", ()=>{
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
 });

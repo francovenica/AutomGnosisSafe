@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const { TIME, ENVIRONMENT, SLOWMO } = require('../utils/config').default
+const { ENVIRONMENT, SLOWMO } = require('../utils/config').default
 const fs = require('fs')
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
@@ -107,7 +107,7 @@ test("Naming The Safe", async (done) =>{
     // await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
     // await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
     // await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
-},  TIME.T60)
+},  60000)
 test("Adding Owners", async (done) =>{
     console.log("Adding Owners\n")
     await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
@@ -129,7 +129,7 @@ test("Adding Owners", async (done) =>{
 //     const owner_rows = await gnosisPage.$x(create_safe.current_rows)
 //     expect(req_conf_limit).toBe(owner_rows.length)
 //     // await gnosisPage.screenshot({path: '5Adding Owners.png'});
-},  TIME.T60);
+},  60000);
 // test("Setting Required Confirmation", async () => {
 //     await gnosisPage.screenshot({path: '6Setting Required Confirmation.png'});
 //     try {
@@ -144,7 +144,7 @@ test("Adding Owners", async (done) =>{
 //         console.log("Error Setting Required Confirmation= " , error)
 //     }
 //     await gnosisPage.screenshot({path: '8Setting Required Confirmation.png'});
-// },  TIME.T30);
+// },  60000);
 // test("Reviewing Safe Info", async () => {
 //     await gnosisPage.screenshot({path: '9Reviewing Safe Info.png'});
 //     try {
@@ -156,7 +156,7 @@ test("Adding Owners", async (done) =>{
 //         console.log("Error Reviewing Safe Info = " , error)
 //     }
 //     await gnosisPage.screenshot({path: '10Reviewing Safe Info.png'});
-// },  TIME.T30)
+// },  30000)
 // test("Assert Safe Creation", async () => {
 //     await gnosisPage.screenshot({path: '11Assert Safe Creation.png'});
 //     try {
@@ -181,4 +181,4 @@ test("Adding Owners", async (done) =>{
 //         console.log("Error Assert Safe Creation = " , error)
 //     }
 //     await gnosisPage.screenshot({path: '12Assert Safe Creation.png'});
-// },  TIME.T60);
+// },  60000);

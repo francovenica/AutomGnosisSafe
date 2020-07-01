@@ -4,7 +4,7 @@ const dappeteer = require('dappeteer')
 import { sels } from "./selectors"
 import * as gFunc from "./global_func"
 
-const ENV = ENVIRONMENT.local
+const ENV = ENVIRONMENT.dev
 
 export const init = async ()=>{
     const browser = await dappeteer.launch(puppeteer,{
@@ -32,8 +32,6 @@ export const init = async ()=>{
 export const walletConnect = async (importMultipleAccounts = false) => {
     const [browser, metamask, gnosisPage, MMpage] = await init()
     const homepage = sels.xpSelectors.homepage
-    const cssTopBar = sels.testIdSelectors.top_bar
-    const welcomePage = sels.testIdSelectors.welcome_page
 
     if(importMultipleAccounts){
         await gFunc.importAccounts(metamask);
@@ -41,46 +39,51 @@ export const walletConnect = async (importMultipleAccounts = false) => {
     }
 
     await gnosisPage.bringToFront()
-    if(ENV != ENVIRONMENT.local ) //for local env there is no Cookies to accept
-        await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
-    await gFunc.clickElement(cssTopBar.not_connected_network, gnosisPage)
-    await gFunc.clickElement(welcomePage.connect_btn, gnosisPage)
+    await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+    await gFunc.clickSomething(homepage.connect_btn, gnosisPage)
     await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
-    await gFunc.assertElementPresent(cssTopBar.connected_network, gnosisPage, "css")
+
+    await metamask.confirmTransaction();
+
+    await gnosisPage.bringToFront()
+    await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
+    await gFunc.assertTextPresent(homepage.loggedin_status, gnosisPage, sels.assertions.wallet_connection);
     // try {
     //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
     // } catch (e) { }
+    
     return [
         browser,
         metamask,
         gnosisPage,
         MMpage,
     ]
-    
 }
 
 export const load_wallet = async (importMultipleAccounts = false) =>{
     const [browser, metamask, gnosisPage, MMpage] = await walletConnect(importMultipleAccounts)
-    const welcomePage = sels.testIdSelectors.welcome_page
-    const loadPage = sels.testIdSelectors.load_safe_page
 
-    await gFunc.clickElement(welcomePage.load_safe_btn, gnosisPage)
-    await gFunc.assertElementPresent(loadPage.form, gnosisPage, "css")
-    await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, "css")
-    await gFunc.clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, "css")
-    await gFunc.clickElement(loadPage.next_btn, gnosisPage)
-    await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, "css")
+    const homepage = sels.xpSelectors.homepage
+    const load_safe = sels.xpSelectors.load_safe
+    
+    await gFunc.clickSomething(homepage.load_safe_btn, gnosisPage)
+    await gFunc.assertTextPresent(load_safe.form_title, gnosisPage, sels.assertions.load_safe_title)
+    await gFunc.clickAndType(load_safe.name_input, gnosisPage, sels.safeNames.load_safe_name)
+    await gFunc.clickAndType(load_safe.address_input, gnosisPage, sels.testAccountsHash.safe1)
+    await gFunc.clickSomething(load_safe.next_btn, gnosisPage)
+    
+    await gFunc.assertTextPresent(load_safe.second_step_description, gnosisPage, sels.assertions.second_step_load_safe)
     const keys = Object.keys(sels.accountNames)
     for(let i = 0; i < keys.length; i++) {
-        let selector = loadPage.owner_name(i)
+        let selector = load_safe.first_owner_name_input(i)
         let name = sels.accountNames[keys[i]]
-        await gFunc.clearInput(selector, gnosisPage, "css")
-        await gFunc.clickAndType(selector, gnosisPage, name, "css")
+        await gFunc.clearInput(selector, gnosisPage)
+        await gFunc.clickAndType(selector, gnosisPage, name)
     }
-    await gFunc.clickElement(loadPage.review_btn, gnosisPage)
-    await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, "css")
+    await gFunc.clickSomething(load_safe.review_btn, gnosisPage)
+    await gFunc.assertElementPresent(load_safe.review_details_title, gnosisPage)
     await gnosisPage.waitFor(2000)
-    await gFunc.clickElement(loadPage.load_btn, gnosisPage)
+    await gFunc.clickSomething(load_safe.load_btn, gnosisPage)
 
     return [
         browser,

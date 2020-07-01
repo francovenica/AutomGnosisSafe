@@ -1,39 +1,39 @@
 export const sels = {
     xpSelectors: {
         homepage:{
-            home_btn: "//div/a/img",
-            connect_btn: "//span[contains(text(),'Connect')]/parent::button",
-            metamask_option: "//span[contains(text(),'MetaMask')]/parent::button",
-            accept_cookies : "//span[contains(text(),'Accept preferences')]",
-            loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]",
-            safes_counter: "//div[contains(text(),'Safes')]/p",
-            load_safe_btn : "//div[contains(text(),'Load existing Safe')]",
-            create_safe_btn: "//div[contains(text(),'Create new Safe')]",
-            close_rinkeby_notif: "/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button"
+            home_btn: "//div/a/img", //done
+            connect_btn: "//span[contains(text(),'Connect')]/parent::button", //done, separated in connected and not-connected
+            metamask_option: "//span[contains(text(),'MetaMask')]/parent::button", //cant be done
+            accept_cookies : "//span[contains(text(),'Accept preferences')]", //done, cannot be used in local
+            loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]", //done
+            safes_counter: "//div[contains(text(),'Safes')]/p", //done
+            load_safe_btn : "//div[contains(text(),'Load existing Safe')]", //done
+            create_safe_btn: "//div[contains(text(),'Create new Safe')]", //done
+            close_rinkeby_notif: "/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button" //do i need it?
         },  
         load_safe:{
-            form_title: "//h2[contains(text(),'Load existing Safe')]",
-            name_input: "//input[@name='name']",
-            address_input: "//input[@name='address']",
-            valid_safe_name: "//p[contains(text(),'Safe name')]",
-            next_btn: "//span[contains(text(),'Next')]",
-            second_step_description: "//p[contains(text(),'This Safe has')]",
-            first_owner_name_input: (index = 0) => `//input[@name='owner${index}Name']`,
-            required_error_input: "//p[contains(text(),'Required')]",
-            review_btn: "//button/span[contains(text(),'Review')]/parent::button",
-            review_details_title: "//p[contains(text(),'Review details')]",
-            review_safe_name: "//p[contains(text(),'Name of the Safe')]/following-sibling::p",
-            review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p",
-            load_btn: "//button/span[contains(text(),'Load')]",
+            form_title: "//h2[contains(text(),'Load existing Safe')]", //done, load-safe-form
+            name_input: "//input[@name='name']", //done
+            address_input: "//input[@name='address']", //done
+            valid_safe_name: "//p[contains(text(),'Safe name')]", //can't name errors
+            next_btn: "//span[contains(text(),'Next')]", //cant find it
+            second_step_description: "//p[contains(text(),'This Safe has')]", //done
+            first_owner_name_input: (index = 0) => `//input[@name='owner${index}Name']`, //done, can't do "first name" but all of them
+            required_error_input: "//p[contains(text(),'Required')]", //cant name errors
+            review_btn: "//button/span[contains(text(),'Review')]/parent::button", //cant find it
+            review_details_title: "//p[contains(text(),'Review details')]", //done
+            review_safe_name: "//p[contains(text(),'Name of the Safe')]/following-sibling::p", //done
+            review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p", //done
+            load_btn: "//button/span[contains(text(),'Load')]", //cant find it
         },
         create_safe:{
-            start_btn: "//button/span[contains(text(),'Start')]",
-            required_error_input: "//p[contains(text(),'Required')]",
-            first_owner_name_input: "//input[@name='owner0Name']",
-            first_owner_address_input: "//input[@name='owner0Address']",
+            start_btn: "//button/span[contains(text(),'Start')]", //done
+            required_error_input: "//p[contains(text(),'Required')]", //cant name errors
+            first_owner_name_input: "//input[@name='owner0Name']", //done
+            first_owner_address_input: "//input[@name='owner0Address']", //done
             second_owner_name_input: "//input[@name='owner1Name']",
             second_owner_address_input: "//input[@name='owner1Address']",
-            add_owner: "//p[contains(text(),'Add another owner')]",
+            add_owner: "//p[contains(text(),'Add another owner')]", //done
             current_rows : "//div/div[1]/div[5]/div", //used to get how many owners were input
             req_conf_info_text : "//p[contains(text(),'out of')]",
             review_btn: "//button/span[contains(text(),'Review')]/ancestor::button",
@@ -171,6 +171,70 @@ export const sels = {
         review_send_fund_btn: "button[data-testid='review-tx-btn']", //same button as above but enabled
         send_funds_recep: "input[id='free-solo-demo']", //send funds recipient field
         token_field: "div[id=mui-component-select-token] > li" //selector of tokens in send funds
+    },
+    testIdSelectors: {
+        general: { //id's that are on items that are spread through the site
+            qr_icon: "img[data-testid='qr-icon']"
+        },
+        main_hub: {
+            safe_name_heading : "h2[data-testid='safe-name-heading']",
+            safe_address_heading : "p[data-testid='safe-address-heading']",
+            main_send_btn : "button[data-testid='main-send-btn']",
+            assets_tab : "button[data-testid='balances-tab-btn']",
+            transactions_tab : "button[data-testid='transactions-tab-btn']",
+            apps_tab : "button[data-testid='apps-tab-btn']",
+            addressbook_tab : "button[data-testid='address-book-tab-btn']",
+            settings_tab : "button[data-testid='settings-tab-btn']",
+        },
+        top_bar: {
+            heading_gnosis_logo : "img[data-testid='heading-gnosis-logo']",
+            safes_counter: "p[data-testid='safe-counter-heading']",
+            connected_network: "p[data-testid='connected-wallet']",
+            not_connected_network: "p[data-testid='not-connected-wallet']",
+            disconnect_btn: "button[data-testid='disconnect-btn']"
+        },
+        welcome_page: {
+            connect_btn: "button[data-testid='connect-btn']",
+            create_safe_btn: "a[data-testid='create-new-safe-btn']", 
+            load_safe_btn: "a[data-testid='load-existing-safe-btn']",
+            accept_preferences: "span[data-testid='accept-preferences']"
+        },
+        load_safe_page: {
+            form: "form[data-testid='load-safe-form']",
+            safe_name_field: "input[data-testid='load-safe-name-field']",
+            safe_address_field: "input[data-testid='load-safe-address-field']",
+            valid_address: "svg[data-testid='valid-address']",
+            step_two: "p[data-testid='load-safe-step-two']",
+            owner_row: "div[data-testid='owner-row']", //all the rows, to count
+            owner_name: (index = 0) => `input[data-testid='load-safe-owner-name-${index}']`,
+            step_trhee: "p[data-testid='load-safe-step-three']",
+            review_safe_name: "p[data-testid='load-form-review-safe-name']",
+            review_owner_name: "p[data-testid='load-safe-review-owner-name']",
+            submit_btn: "button[type='submit']",
+        },
+        create_safe_page: {
+            form: "form[data-testid='create-safe-form']",
+            safe_name_field: "input[data-testid='create-safe-name-field']",
+            step_two: "p[data-testid='create-safe-step-two']",
+            owner_row: "div[data-testid='create-safe-owner-row']",
+            owner_name_field: (index = 0) => `input[data-testid='create-safe-owner-name-field-${index}']`,
+            address_field: (index = 0) => `input[data-testid='create-safe-address-field-${index}']`,
+            valid_address: (index = 0) => `svg[data-testid='valid-address-${index}']`,
+            add_owner_btn: "button[data-testid='add-owner-btn']",
+            threshold_select_input: "div[data-testid='threshold-select-input']",
+            select_input : (index = 1) => `li[data-testid='input-${index}']`,
+            req_conf_limit: (validOwners = 1) => `p[data-testid='create-safe-req-conf-${validOwners}']`,
+            step_three: "p[data-testid='create-safe-step-three']",
+            review_safe_name: "p[data-testid='create-safe-review-name']",
+            review_req_conf: (owner_amount = 1) => `p[data-testid='create-safe-review-req-owners-${owner_amount}']`,
+            review_owner_name: (index = 0) => `p[data-testid='create-safe-owner-name-${index}']`,
+            review_owner_address: (index = 0) => `p[data-testid='create-safe-owner-address-${index}']`,
+            safe_creation_proccess_title: "h2['safe-creation-process-title']",
+            back_btn: "button[data-testid='safe-creation-back-btn']",
+            continue_btn: "button[data-testid='continue-btn']",
+            submit_btn: "button[type='submit']",
+            etherscan_link: "a[data-testid='safe-create-etherscan-link']",
+        }
     },
     wallet: {
         seed: "range smoke crisp install cross shine hold grief ripple cabin sudden special", //it imports the wallet with "acc1" as owner

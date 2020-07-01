@@ -1,7 +1,6 @@
-const { TIME } = require('../utils/config').default
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup"
+import { load_wallet } from "../utils/testSetup-copy"
 
 let browser;
 let metamask;
@@ -10,7 +9,7 @@ let MMpage;
 
 beforeAll(async ()=>{
     [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
-}, TIME.T60)
+}, 60000)
 
 afterAll(async () => {
     await gnosisPage.waitFor(2000)
@@ -48,7 +47,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("First step of the form: name and address", async (done) =>{
         console.log("First step of the form: name and address")
         const existing_owner_hash = sels.testAccountsHash.acc1
@@ -72,7 +71,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Second step of the form: Req Confirmations", async (done) =>{
         console.log("Second step of the form: Req Confirmations")
         try {
@@ -84,16 +83,16 @@ describe("Adding and removing owners", () =>{
             owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for the xpath element for this
             await expect(owner_selector).toBe(max_req_conf) //the amount of options should be X in "out of X owners"
             await gFunc.clickSomething(setting_owners.owner_selector_option(1), gnosisPage)
-            await gnosisPage.waitFor(TIME.T2) // always after clicking in one of these selector you have to wait before clicking submit
+            await gnosisPage.waitFor(2000) // always after clicking in one of these selector you have to wait before clicking submit
             new_req_conf = await gFunc.getNumberInString(setting_owners.req_conf,gnosisPage) //saving the new required confirmations
-            await gnosisPage.waitFor(TIME.T2) //If I don't wait the Review button shows being clicked, but it wont actually click
+            await gnosisPage.waitFor(2000) //If I don't wait the Review button shows being clicked, but it wont actually click
             await gFunc.clickSomething(setting_owners.review_btn, gnosisPage)
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Third step: Verification", async (done) =>{
         console.log("Third step: Verification")
         try {
@@ -111,58 +110,58 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Submiting and signing tx with owner 1", async (done) =>{
         console.log("Submiting and signing tx with owner 1")
         try {
             await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.sign()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Signing with owner 2", async (done) =>{
         console.log("Signing with owner 2")
         try {
-            await MMpage.waitFor(TIME.T5)
+            await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
             await gFunc.assertElementPresent(safe_hub.confirmed_counter(1), gnosisPage)
             await metamask.switchAccount(1) //currently in account4, changing to account 1
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await gnosisPage.bringToFront()
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.sign()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Signing and executing with owner 3", async (done) =>{
         console.log("Signing and executing with owner 3")
         try {
-            await MMpage.waitFor(TIME.T5)
+            await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
             await gFunc.assertElementPresent(safe_hub.confirmed_counter(2), gnosisPage)
             await metamask.switchAccount(2)
             await gnosisPage.bringToFront()
-            await gnosisPage.waitFor(TIME.T5)
+            await gnosisPage.waitFor(5000)
             await gFunc.clickSomething(safe_hub.confirm_btn, gnosisPage)
             await gFunc.clickSomething(safe_hub.approve_tx_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.confirmTransaction()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Verifying new owner", async (done) =>{
         console.log("Verifying new owner")
         try {
@@ -177,7 +176,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Editing New owner's name", async (done) =>{
         console.log("Editing New owner's name")
         try {
@@ -197,7 +196,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Deleting recently added owner", async (done) =>{
         console.log("Deleting recently added owner")
         try {
@@ -209,7 +208,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Setting new required confirmation after deletion", async (done) =>{
         console.log("Setting new required confirmation after deletion")
         try {
@@ -218,7 +217,7 @@ describe("Adding and removing owners", () =>{
             owner_selector = await gFunc.amountOfElements(setting_owners.owner_selector, gnosisPage)//to calculate the length, no [0] for the xpath element for this
             await expect(owner_selector).toBe(max_req_conf) //the amount of options should be X in "out of X owners"
             await gFunc.clickSomething(setting_owners.owner_selector_option(3), gnosisPage)
-            await gnosisPage.waitFor(TIME.T2) // always after clicking in one of these selector you have to wait before clicking submit
+            await gnosisPage.waitFor(2000) // always after clicking in one of these selector you have to wait before clicking submit
             new_req_conf = await gFunc.getNumberInString(setting_owners.req_conf,gnosisPage) //saving the new required confirmations
             await gFunc.clickSomething(setting_owners.review_btn, gnosisPage)
             done()
@@ -226,7 +225,7 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
     test("Reviewing user deletion, submitting and signing", async (done) =>{
         console.log("Reviewing user deletion, submitting and signing")
         try {
@@ -241,18 +240,18 @@ describe("Adding and removing owners", () =>{
             ], gnosisPage)
 
             await gFunc.clickSomething(setting_owners.submit_btn, gnosisPage)
-            await gnosisPage.waitFor(TIME.T2)
+            await gnosisPage.waitFor(2000)
             await metamask.confirmTransaction()
             done()
         } catch (error) {
             console.log(error)
             done(error)
         }
-    }, TIME.T60)
+    }, 60000)
     test("Verifying owner deletion", async (done) =>{
         console.log("Verifying owner deletion")
         try {
-            await MMpage.waitFor(TIME.T2)
+            await MMpage.waitFor(2000)
             await gnosisPage.bringToFront()
             await gnosisPage.waitForXPath(setting_owners.pending_status)
             await gFunc.clickSomething(setting_owners.pending_status, gnosisPage)
@@ -274,5 +273,5 @@ describe("Adding and removing owners", () =>{
             console.log(error)
             done(error)
         }
-    }, TIME.T90)
+    }, 90000)
 })
