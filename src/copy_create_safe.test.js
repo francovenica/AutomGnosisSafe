@@ -77,7 +77,6 @@ describe("Create New Safe", () =>{
         await gnosisPage.bringToFront()
         await gFunc.assertElementPresent(createPage.back_btn,gnosisPage, "css")
         await gFunc.assertElementPresent(createPage.etherscan_link,gnosisPage, "css")
-        await gFunc.assertElementPresent("Random",gnosisPage, "css")
         await gFunc.clickElement(createPage.continue_btn, gnosisPage)
         const safeName = await gFunc.getInnerText(mainHub.safe_name_heading, gnosisPage, "css")
         expect(safeName).toMatch(new_safe_name)

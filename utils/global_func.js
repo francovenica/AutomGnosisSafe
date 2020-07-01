@@ -10,12 +10,12 @@ const elementSelector = async (selector, page, type) => {
   to make this distinction this function was created to do it*/
   try{
     if(type === "Xpath"){
-      await page.waitForXPath(selector, {timeout:40000})
+      await page.waitForXPath(selector, {timeout:60000})
       const elementHandle = await page.$x(selector)
       return elementHandle[0]
     }
     else{
-      await page.waitForSelector(selector, {timeout:40000})
+      await page.waitForSelector(selector, {timeout:60000})
       return await page.$(selector)
     }
   }
