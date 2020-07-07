@@ -41,7 +41,7 @@ describe("Loading an Existing safe", () => {
     }, 60000)
     test("Load safe Review Details", async () => {
         console.log("Load safe Review Details\n")
-        const safeAmountBefore = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "int", "css")
+        const safeAmountBefore = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "css")
         await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, "css")
         await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, "css")
         await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, "css")
@@ -52,7 +52,7 @@ describe("Loading an Existing safe", () => {
         expect(loadedSafeAddress).toMatch(sels.testAccountsHash.safe1)
         const safeName = await gFunc.getInnerText(mainHub.safe_name_heading, gnosisPage, "css")
         expect(safeName).toMatch(sels.safeNames.load_safe_name)
-        const safeAmountAfter = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "int", "css")
+        const safeAmountAfter = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "css")
         expect(parseInt(safeAmountAfter)).toBe(parseInt(safeAmountBefore) + 1)
     }, 60000)
 })

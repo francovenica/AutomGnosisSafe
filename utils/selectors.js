@@ -180,16 +180,33 @@ export const sels = {
             safe_name_heading : "h2[data-testid='safe-name-heading']",
             safe_address_heading : "p[data-testid='safe-address-heading']",
             main_send_btn : "button[data-testid='main-send-btn']",
+            modal_send_funds_btn : "button[data-testid='modal-send-funds-btn']",
+            modal_send_collectible_btn : "button[data-testid='modal-send-collectible-btn']",
+            modal_contract_interaction_btn : "button[data-testid='modal-contract-interaction-btn']",
             assets_tab : "button[data-testid='balances-tab-btn']",
             transactions_tab : "button[data-testid='transactions-tab-btn']",
             apps_tab : "button[data-testid='apps-tab-btn']",
             addressbook_tab : "button[data-testid='address-book-tab-btn']",
             settings_tab : "button[data-testid='settings-tab-btn']",
+            execute_checkbox : "label[data-testid='execute-checkbox']",
+            approve_tx_btn : "button[data-testid='approve-tx-modal-submit-btn']",
+        },
+        transaction_tab:{
+            tx_status : (status ="") => `p[data-testid='tx-status-${status}']`,
+            confirmed_tx_check : "img[data-testid='confirmed-tx-check']",
+            not_confirmed_tx_check : "img[data-testid='not-confirmed-tx-check']",
+            confirmed_counter : (owners) =>  `div[data-testid='confirmed-${owners}-out-of-2']`,
+            confirm_tx_btn: "button[data-testid='confirm-btn']",
+            tx_description_send: "div[data-testid='tx-description-send']"
+        },
+        asset_tab:{
+            balance_value: (symbol = "") => `div[data-testid='balance-${symbol.toUpperCase()}']`,
         },
         top_bar: {
             heading_gnosis_logo : "img[data-testid='heading-gnosis-logo']",
             safes_counter: "p[data-testid='safe-counter-heading']",
             connected_network: "p[data-testid='connected-wallet']",
+            cut_address: "p[data-testid='cut-address']",
             not_connected_network: "p[data-testid='not-connected-wallet']",
             disconnect_btn: "button[data-testid='disconnect-btn']"
         },
@@ -234,6 +251,22 @@ export const sels = {
             continue_btn: "button[data-testid='continue-btn']",
             submit_btn: "button[type='submit']",
             etherscan_link: "a[data-testid='safe-create-etherscan-link']",
+        },
+        send_funds_form:{
+            modal_title_send_funds : "div[data-testid='modal-title-send-funds']",
+            current_eth_balance : "b[data-testid='current-eth-balance']",
+            recipient_input : "input[id='free-solo-demo']",
+            select_token : "div[id='mui-component-select-token']",
+            review_btn_disabled: "button[data-testid='review-tx-btn'][disabled]", //send funds review button initially disabled
+            review_btn: "button[data-testid='review-tx-btn']",
+            select_token_ether : "div[data-testid='select-token-Ether']",
+            send_max_btn : "button[data-testid='send-max-btn']",
+            amount_input : "input[data-testid='amount-input']",
+            send_funds_review : "div[data-testid='send-funds-review-step']",
+            recipient_address_review : "p[data-testid='recipient-address-review-step']",
+            amount_eth_review : "p[data-testid='amount-ETH-review-step']",
+            fee_msg_review : "p[data-testid='fee-meg-review-step']",
+            submit_btn : "button[data-testid='submit-tx-btn']",
         }
     },
     wallet: {

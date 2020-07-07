@@ -68,19 +68,19 @@ export const load_wallet = async (importMultipleAccounts = false) =>{
     await gFunc.assertElementPresent(loadPage.form, gnosisPage, "css")
     await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, "css")
     await gFunc.clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, "css")
-    await gFunc.clickElement(loadPage.next_btn, gnosisPage)
+    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
     await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, "css")
     const keys = Object.keys(sels.accountNames)
-    for(let i = 0; i < keys.length; i++) {
+    for(let i = 0; i < keys.length ; i++) { //only names on the first 2 owners
         let selector = loadPage.owner_name(i)
         let name = sels.accountNames[keys[i]]
         await gFunc.clearInput(selector, gnosisPage, "css")
         await gFunc.clickAndType(selector, gnosisPage, name, "css")
     }
-    await gFunc.clickElement(loadPage.review_btn, gnosisPage)
+    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
     await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, "css")
     await gnosisPage.waitFor(2000)
-    await gFunc.clickElement(loadPage.load_btn, gnosisPage)
+    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
 
     return [
         browser,

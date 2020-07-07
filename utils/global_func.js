@@ -5,17 +5,17 @@ import {sels} from "./selectors"
 //await page.evaluate(x=>x.style.outline = '3px solid red', element)
 //await page.evaluate(x=>x.style.outline = '', element)
 
-const elementSelector = async (selector, page, type) => {
+const elementSelector = async (selector, page, type, timeout) => {
   /*handling Xpath and Css selectors is different. Since may functions require 
   to make this distinction this function was created to do it*/
   try{
     if(type === "Xpath"){
-      await page.waitForXPath(selector, {timeout:60000})
+      await page.waitForXPath(selector, {timeout})
       const elementHandle = await page.$x(selector)
       return elementHandle[0]
     }
     else{
-      await page.waitForSelector(selector, {timeout:60000})
+      await page.waitForSelector(selector, {timeout})
       return await page.$(selector)
     }
   }
@@ -25,7 +25,7 @@ const elementSelector = async (selector, page, type) => {
 }
 
 export const clickElement = async function(selector, page, type="css"){
-  const element = await elementSelector(selector, page, type);
+  const element = await elementSelector(selector, page, type, 20000);
   try {
     expect(element).not.toBe("Selector Not Found")
   } catch (error) {
@@ -40,7 +40,7 @@ export const clickElement = async function(selector, page, type="css"){
 };
 
 export const clickSomething = async function(selector, page, type="Xpath"){
-  const element = await elementSelector(selector, page, type);
+  const element = await elementSelector(selector, page, type, 20000);
   try {
     expect(element).not.toBe("Selector Not Found")
   } catch (error) {
@@ -57,7 +57,7 @@ export const clickSomething = async function(selector, page, type="Xpath"){
 };
 
 export const openDropdown = async function(selector, page, type="Xpath"){
-  const element = await elementSelector(selector, page, type);
+  const element = await elementSelector(selector, page, type, 20000);
   try {
     expect(element).not.toBe("Selector Not Found")
   } catch (error) {
@@ -89,13 +89,13 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
 }
 
 export const clearInput = async function(selector, page, type="Xpath"){
-  const field = await elementSelector(selector, page, type);
+  const field = await elementSelector(selector, page, type, 20000);
   await field.click({clickCount:3})
   page.keyboard.press('Backspace');
 }
 
 export const assertElementPresent = async function (selector, page, type="Xpath"){
-  const element = await elementSelector(selector, page, type)
+  const element = await elementSelector(selector, page, type, 60000)
   try {
     expect(element).not.toBe("Selector Not Found")
   } catch (error) {
@@ -104,6 +104,7 @@ export const assertElementPresent = async function (selector, page, type="Xpath"
   try {
     const expectHandler = expect(element)
     type !="Xpath" ? expectHandler.not.toBeNull() : expectHandler.toBeDefined() //for Css there is a different condition to make
+    console.log('Found = ', selector, "\n")
     return element
   } catch (error) {
     console.log("AssertElementPresent Error: selector = ", selector, "\n", error)
@@ -123,7 +124,7 @@ export const assertTextPresent = async function (selector, page, textPresent, ty
 
 export const assertAllElementPresent = async function (selectors, page, type = "Xpath"){
   for (let i = 0 ; i < selectors.length ; i++) {
-    expect(await assertElementPresent (selectors[i], page, type)).not.toBe({})
+    expect(await assertElementPresent (selectors[i], page, type)).not.toBe("Selector Not Found")
   }
 };
 
@@ -140,14 +141,37 @@ export const getInnerText = async function (selector, page, type="Xpath"){
   }
 }
 
-export const getNumberInString = async function(selector, page, numtype = "int", type ="Xpath"){
+export const getNumberInString = async function(selector, page, type ="Xpath"){
   const text = await getInnerText(selector, page, type)
   try {
     const number = text.match(/\d+.?\d+|\d+/)[0]
     return parseFloat(number)
   } catch (error) {
     console.log("getNumberInString Error: selector = ", selector)
-    return `Error =  ${element}`
+    return `Error =  ${text}`
+  }
+}
+
+export const selectorChildren = async function(selector, page, operation, index){
+  try {
+    const handle = await elementSelector(selector, page, "css", 5000)
+    const elementChildren = await page.evaluateHandle((e, index) => {return e.childNodes[index]}, handle, index)
+    const text = await page.evaluate(x => x.innerText, elementChildren)
+    switch(operation){
+      case "text":
+        return text
+        break
+      case "number":
+        return parseFloat(text.match(/\d+.?\d+|\d+/)[0])
+        break
+      case "assert":
+        return "Found"
+        break;
+      }
+    }
+  catch (error) {
+    console.log('Error = ', error)
+    return "Not Found"
   }
 }
 
@@ -166,13 +190,17 @@ export const closeIntercom = async function (selector, page){
 export const importAccounts = async function(metamask){
   console.log("<<Importing accounts>>")
   const keys = Object.keys(sels.privateKeys)
-  for(let i = 0; i < keys.length; i++) { //forEach doesnt work with async functions, you have to use a regular for()
+  for(let i = 0; i < 1; i++) { //forEach doesnt work with async functions, you have to use a regular for()
     await metamask.importPK(sels.privateKeys[keys[i]])
   }
 };
 
-export const amountOfElements = async (selector, page) => {
-  const amount =  await page.$x(selector)
+export const amountOfElements = async (selector, page, type="Xpath") => {
+  let amount = ""
+  if (type === "Xpath")
+    amount = await page.$x(selector)
+  else 
+    amount = await page.$$(selector)
   try {
     return amount.length
   } catch (error) {
