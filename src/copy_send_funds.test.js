@@ -21,10 +21,8 @@ describe("Send Funds", ()=>{
     const mainHub = sels.testIdSelectors.main_hub
     const sendFunds = sels.testIdSelectors.send_funds_form
     const txTab = sels.testIdSelectors.transaction_tab
-    const topBar = sels.testIdSelectors.topBar
     const assetTab = sels.testIdSelectors.asset_tab
 
-    const safe_hub = sels.xpSelectors.safe_hub
     const send_funds_modal = sels.xpSelectors.send_funds_modal
     const homepage = sels.xpSelectors.homepage
 
@@ -34,8 +32,9 @@ describe("Send Funds", ()=>{
     test("Open the Send Funds Form", async (done) => {
         console.log("Open the Send Funds Form\n")
         try {
-            await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
-            await gFunc.clickElement(mainHub.main_send_btn, gnosisPage)
+            //await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
+            await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
+            await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
             await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
             await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, "css")
             done()
@@ -66,7 +65,8 @@ describe("Send Funds", ()=>{
     
             await gFunc.clickElement(sendFunds.send_max_btn, gnosisPage)
             const input_value = await gFunc.getNumberInString(sendFunds.amount_input, gnosisPage, "css")
-            current_eth_funds = parseFloat(input_value.toFixed(3)) //to compare after the tx is done
+            //current_eth_funds = parseFloat(input_value.toFixed(3)) //to compare after the tx is done
+            current_eth_funds = await gFunc.getInnerText(sendFunds.amount_input, gnosisPage, "css")
             expect(parseFloat(input_value)).toBe(current_balance) //Checking that the value set by the "Send max" button is the same as the current balance
             await gFunc.clearInput(sendFunds.amount_input, gnosisPage, "css")
 
@@ -110,7 +110,7 @@ describe("Send Funds", ()=>{
             //checking amount of "Success and awaiting conf status for final review"
             await gFunc.assertElementPresent(txTab.tx_status("Awaiting confirmations"), gnosisPage, "css")
             amount_await_conf_status = await gFunc.amountOfElements(txTab.tx_status("Awaiting confirmations"), gnosisPage, "css")
-            expect(amount_await_conf_status).toBe(1) //it should be only 1 awaiting confirmations
+            expect(amount_await_conf_status).toBe(1) //it should be only 1 awaiting confirmations tx at this point
             await gFunc.assertElementPresent(txTab.tx_status("Success"), gnosisPage, "css")
             amount_success_status = await gFunc.amountOfElements(txTab.tx_status("Success"), gnosisPage, "css")
             amount_await_conf_status = "" //reset
@@ -144,14 +144,19 @@ describe("Send Funds", ()=>{
             amount_await_conf_status = await gFunc.amountOfElements(txTab.tx_status("Awaiting your confirmation"), gnosisPage, "css")
             expect(amount_await_conf_status).toBe(0) //There should not be awaiting confirmations status
             const current_success_status_amount = await gFunc.amountOfElements(txTab.tx_status("Success"), gnosisPage, "css")
-            expect(current_success_status_amount).toBe(amount_success_status + 1) //should be 1 more success status in the list than before
+            if (amount_success_status != 25)
+                expect(current_success_status_amount).toBe(amount_success_status + 1) //should be 1 more success status in the list than before
             const amount_sent = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, "number", 0)
             expect(amount_sent).toBe(0.01)
             const recipient_address = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, "text", 1)
             expect(recipient_address.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)
             await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
             await gFunc.assertElementPresent(assetTab.balance_value("eth"), gnosisPage, "css")
-            await gnosisPage.waitFor(3000) //if we get the value right away it gets it with all the decimal.
+            const array = ['[data-testid="balance-ETH"]', current_eth_funds ]
+            await gnosisPage.waitForFunction((array) => {
+                console.log('selector =======>', array[0])
+                return document.querySelector(array[0]).innerText !== array[1]
+              }, { polling: 100 }, array);
             const new_eth_funds = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
             expect(parseFloat(new_eth_funds.toFixed(3))).toBe(current_eth_funds - 0.01)
             done()

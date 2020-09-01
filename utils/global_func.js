@@ -88,6 +88,13 @@ export const clickAndType = async function (selector, page, text="", type="Xpath
   }
 }
 
+const removeNotifications = async function (page){
+  await page.evaluate(() => {
+    const memoRoot = document.querySelector('[class^="memo-root-"]')
+    memoRoot && memoRoot.remove()
+  })
+}
+
 export const clearInput = async function(selector, page, type="Xpath"){
   const field = await elementSelector(selector, page, type, 20000);
   await field.click({clickCount:3})
@@ -95,6 +102,7 @@ export const clearInput = async function(selector, page, type="Xpath"){
 }
 
 export const assertElementPresent = async function (selector, page, type="Xpath"){
+  await removeNotifications(page)
   const element = await elementSelector(selector, page, type, 60000)
   try {
     expect(element).not.toBe("Selector Not Found")
@@ -173,6 +181,22 @@ export const selectorChildren = async function(selector, page, operation, index)
     console.log('Error = ', error)
     return "Not Found"
   }
+}
+
+
+export const findNodeByText = async function(tag, text, page){
+  await page.$$eval(tag, elements => {
+    console.log(elements);})
+  
+  // let value = await page.evaluateHandle((tag, text) => {
+  //   const element = document.querySelectorAll(tag).forEach(e =>{
+  //     if(e.innerHTML === "verdura")
+  //     return e
+  //   });
+  // }, tag, text)
+  // console.log("value = ", value)
+  // const result = await page.evaluate(e => e.innerHTML, value);
+  // console.log("Result = " , result)
 }
 
 //------------------Stand alone functions

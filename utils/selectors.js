@@ -179,15 +179,16 @@ export const sels = {
         main_hub: {
             safe_name_heading : "h2[data-testid='safe-name-heading']",
             safe_address_heading : "p[data-testid='safe-address-heading']",
-            main_send_btn : "button[data-testid='main-send-btn']",
+            //main_send_btn : "button[data-testid='main-send-btn']",
+            new_transaction_btn : "button[id='new-transaction-btn']",
             modal_send_funds_btn : "button[data-testid='modal-send-funds-btn']",
             modal_send_collectible_btn : "button[data-testid='modal-send-collectible-btn']",
             modal_contract_interaction_btn : "button[data-testid='modal-contract-interaction-btn']",
-            assets_tab : "button[data-testid='balances-tab-btn']",
-            transactions_tab : "button[data-testid='transactions-tab-btn']",
-            apps_tab : "button[data-testid='apps-tab-btn']",
-            addressbook_tab : "button[data-testid='address-book-tab-btn']",
-            settings_tab : "button[data-testid='settings-tab-btn']",
+            assets_tab : "[id='tab-assets']",
+            transactions_tab : "[id='tab-transactions']",
+            apps_tab : "[id='tab-apps']",
+            addressbook_tab : "[id='tab-addressbook']",
+            settings_tab : "[id='tab-settings']",
             execute_checkbox : "label[data-testid='execute-checkbox']",
             approve_tx_btn : "button[data-testid='approve-tx-modal-submit-btn']",
         },
@@ -197,7 +198,9 @@ export const sels = {
             not_confirmed_tx_check : "img[data-testid='not-confirmed-tx-check']",
             confirmed_counter : (owners) =>  `div[data-testid='confirmed-${owners}-out-of-2']`,
             confirm_tx_btn: "button[data-testid='confirm-btn']",
-            tx_description_send: "div[data-testid='tx-description-send']"
+            reject_tx_btn: "button[data-testid='reject-btn']", 
+            tx_description_send: "div[data-testid='tx-description-send']",
+            transaction_row : (index = 0) => `[data-testid='transaction-row-${index}']`,
         },
         asset_tab:{
             balance_value: (symbol = "") => `div[data-testid='balance-${symbol.toUpperCase()}']`,
@@ -318,4 +321,13 @@ export const sels = {
         max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
         modify_policy: (value = 0) => `Value should be different than ${value}`,
     },
+    statusToLabel: {
+        success: 'Success',
+        cancelled: 'Cancelled',
+        failed: 'Failed',
+        awaiting_your_confirmation: 'Awaiting your confirmation',
+        awaiting_confirmations: 'Awaiting confirmations',
+        awaiting_execution: 'Awaiting execution',
+        pending: 'Pending',
+      }
 }
