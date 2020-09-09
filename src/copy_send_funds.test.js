@@ -22,17 +22,19 @@ describe("Send Funds", ()=>{
     const sendFunds = sels.testIdSelectors.send_funds_form
     const txTab = sels.testIdSelectors.transaction_tab
     const assetTab = sels.testIdSelectors.asset_tab
-
     const send_funds_modal = sels.xpSelectors.send_funds_modal
-    const homepage = sels.xpSelectors.homepage
+    // const homepage = sels.xpSelectors.homepage
 
     let amount_await_conf_status = ""
     let amount_success_status = ""
     let current_eth_funds = ""
+    let current_eth_funds_on_text = ""
     test("Open the Send Funds Form", async (done) => {
         console.log("Open the Send Funds Form\n")
         try {
             //await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
+            current_eth_funds_on_text = await gFunc.getInnerText(assetTab.balance_value("eth"), gnosisPage, "css")
+            current_eth_funds = parseFloat((await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")).toFixed(3))
             await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
             await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
             await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
@@ -46,28 +48,26 @@ describe("Send Funds", ()=>{
     test("Filling the Form", async (done) => {
         console.log("Filling the Form\n")
         try {
-            const current_balance = await gFunc.getNumberInString(sendFunds.current_eth_balance, gnosisPage, "css")
             await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
             await gFunc.openDropdown(sendFunds.select_token, gnosisPage, "css")
             await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
 
             await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "0", "ccs")
-            await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.greater_than_0), gnosisPage)
+            await gFunc.assertElementPresent(errorMsg.error(errorMsg.greater_than_0), gnosisPage)
             await gFunc.clearInput(sendFunds.amount_input, gnosisPage, "css")
 
             await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "abc", "css")
-            await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.not_a_number), gnosisPage)
+            await gFunc.assertElementPresent(errorMsg.error(errorMsg.not_a_number), gnosisPage)
             await gFunc.clearInput(sendFunds.amount_input, gnosisPage, "css")
             
             await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "99999", "css")
-            await gFunc.assertElementPresent(sels.errorMsg.error(sels.errorMsg.max_amount_tokens(current_balance)), gnosisPage)
+            await gFunc.assertElementPresent(errorMsg.error(errorMsg.max_amount_tokens(current_eth_funds)), gnosisPage)
             await gFunc.clearInput(sendFunds.amount_input, gnosisPage, "css")
     
             await gFunc.clickElement(sendFunds.send_max_btn, gnosisPage)
             const input_value = await gFunc.getNumberInString(sendFunds.amount_input, gnosisPage, "css")
-            //current_eth_funds = parseFloat(input_value.toFixed(3)) //to compare after the tx is done
-            current_eth_funds = await gFunc.getInnerText(sendFunds.amount_input, gnosisPage, "css")
-            expect(parseFloat(input_value)).toBe(current_balance) //Checking that the value set by the "Send max" button is the same as the current balance
+            // Checking that the value set by the "Send max" button is the same as the current balance
+            expect(parseFloat(input_value)).toBe(current_eth_funds) 
             await gFunc.clearInput(sendFunds.amount_input, gnosisPage, "css")
 
             await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "0.01", "css")
@@ -149,16 +149,18 @@ describe("Send Funds", ()=>{
             const amount_sent = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, "number", 0)
             expect(amount_sent).toBe(0.01)
             const recipient_address = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, "text", 1)
+            // regex to match an address hash
             expect(recipient_address.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)
             await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
             await gFunc.assertElementPresent(assetTab.balance_value("eth"), gnosisPage, "css")
-            const array = ['[data-testid="balance-ETH"]', current_eth_funds ]
+            const array = ['[data-testid="balance-ETH"]', current_eth_funds_on_text]
+            // check every 100ms an update in the ETH funds in the assets tab
             await gnosisPage.waitForFunction((array) => {
-                console.log('selector =======>', array[0])
                 return document.querySelector(array[0]).innerText !== array[1]
               }, { polling: 100 }, array);
             const new_eth_funds = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
-            expect(parseFloat(new_eth_funds.toFixed(3))).toBe(current_eth_funds - 0.01)
+            expect(parseFloat(new_eth_funds.toFixed(3))).toBe(parseFloat((current_eth_funds - 0.01).toFixed(3)))
+            
             done()
         } catch (error) {
             console.log(error)

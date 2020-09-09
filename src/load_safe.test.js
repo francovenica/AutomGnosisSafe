@@ -20,7 +20,6 @@ describe("Loading an Existing safe", () => {
     const load_safe = sels.xpSelectors.load_safe
     const welcomePage = sels.testIdSelectors.welcome_page
     const loadPage = sels.testIdSelectors.load_safe_page
-    const topBar = sels.testIdSelectors.top_bar
     const mainHub = sels.testIdSelectors.main_hub
     test("Open Load Safe Form", async () => {
         console.log("Open Load Safe Form\n")
@@ -41,18 +40,20 @@ describe("Loading an Existing safe", () => {
     }, 60000)
     test("Load safe Review Details", async () => {
         console.log("Load safe Review Details\n")
-        const safeAmountBefore = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "css")
         await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, "css")
         await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, "css")
         await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, "css")
         await gnosisPage.waitFor(2000)
         await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
-        await gFunc.assertElementPresent(mainHub.safe_address_heading, gnosisPage, "css")
-        const loadedSafeAddress =  await gFunc.getInnerText(mainHub.safe_address_heading, gnosisPage, "css")
-        expect(loadedSafeAddress).toMatch(sels.testAccountsHash.safe1)
-        const safeName = await gFunc.getInnerText(mainHub.safe_name_heading, gnosisPage, "css")
-        expect(safeName).toMatch(sels.safeNames.load_safe_name)
-        const safeAmountAfter = await gFunc.getNumberInString(topBar.safes_counter, gnosisPage, "css")
-        expect(parseInt(safeAmountAfter)).toBe(parseInt(safeAmountBefore) + 1)
+        await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
+        await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
+        await gFunc.assertAllElementPresent([
+            mainHub.receiver_modal_safe_name,
+            mainHub.receiver_modal_safe_address
+        ], gnosisPage, "css")
+        const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
+        const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
+        expect(safeName).toBe(sels.safeNames.load_safe_name)
+        expect(safeAddress).toBe(sels.testAccountsHash.safe1)
     }, 60000)
 })

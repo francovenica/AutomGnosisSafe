@@ -77,14 +77,20 @@ describe("Create New Safe", () =>{
         await gnosisPage.bringToFront()
         await gFunc.assertElementPresent(createPage.back_btn,gnosisPage, "css")
         await gFunc.assertElementPresent(createPage.etherscan_link,gnosisPage, "css")
+        await gFunc.assertElementPresent(createPage.continue_btn,gnosisPage, "css")
         await gFunc.clickElement(createPage.continue_btn, gnosisPage)
-        const safeName = await gFunc.getInnerText(mainHub.safe_name_heading, gnosisPage, "css")
+        await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
+        await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
+        await gFunc.assertAllElementPresent([
+            mainHub.receiver_modal_safe_name,
+            mainHub.receiver_modal_safe_address
+        ], gnosisPage, "css")
+        const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
         expect(safeName).toMatch(new_safe_name)
-        expect(mainHub.safe_address_heading).toBeTruthy()
         
         // save the address in a file for manual use later if needed
-        const safe_adrs = await gFunc.getInnerText(mainHub.safe_address_heading, gnosisPage, "css")
-        const save_text = "safe : " + safe_adrs + "\n"
+        const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
+        const save_text = "safe : " + safeAddress + "\n"
         fs.appendFile("./createdSafes/safes.txt", save_text, function(err){
             if (err) {
                 fs.writeFile("./createdSafes/safes.txt", save_text,{flag: 'wx'}, function(err){
@@ -92,5 +98,5 @@ describe("Create New Safe", () =>{
                 })
             };
         })
-    },  90000);
+    },  180000);
 })
