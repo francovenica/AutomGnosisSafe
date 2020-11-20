@@ -1,6 +1,9 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
 import { walletConnect } from "../utils/testSetup"
+const { getDocument, queries, waitFor } = require('pptr-testing-library')
+
+const { getByTestId, getByLabelText, getByText } = queries
 
 let browser;
 let metamask;
@@ -47,13 +50,17 @@ describe("Loading an Existing safe", () => {
         await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
         await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
         await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
-        await gFunc.assertAllElementPresent([
-            mainHub.receiver_modal_safe_name,
-            mainHub.receiver_modal_safe_address
-        ], gnosisPage, "css")
-        const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
-        const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
-        expect(safeName).toBe(sels.safeNames.load_safe_name)
-        expect(safeAddress).toBe(sels.testAccountsHash.safe1)
+        const $name = await getByText(sels.safeNames.load_safe_name)
+        console.log('$name type = ', typeof($name))
+        console.log('$name content = ', $name)
+
+        // await gFunc.assertAllElementPresent([
+        //     mainHub.receiver_modal_safe_name,
+        //     mainHub.receiver_modal_safe_address
+        // ], gnosisPage, "css")
+        // const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
+        // const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
+        // expect(safeName).toBe(sels.safeNames.load_safe_name)
+        // expect(safeAddress).toBe(sels.testAccountsHash.safe1)
     }, 60000)
 })

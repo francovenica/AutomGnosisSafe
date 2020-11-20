@@ -32,8 +32,7 @@ describe("Reject Tx flow", ()=>{
             console.log("Open the Send Funds Form")
             await gFunc.assertElementPresent(assetTab.balance_value("eth"), gnosisPage, "css")
             currentBalance = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
-            await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
-            await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
+            await gFunc.clickByText("button", "New Transaction", gnosisPage)
             await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
             await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, "css")
             done()
@@ -77,7 +76,12 @@ describe("Reject Tx flow", ()=>{
             //await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
             await gFunc.assertElementPresent(txTab.tx_status(labels.awaiting_confirmations), gnosisPage, "css")
-            await gFunc.clickElement(txTab.tx_status(labels.awaiting_confirmations), gnosisPage)
+            await gnosisPage.evaluate(() => {
+                const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
+                firstTx && firstTx.click()
+              })
+            //Can't click an element by the label because notifications block the click
+            //await gFunc.clickElement(txTab.tx_status(labels.awaiting_confirmations), gnosisPage)
             await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage, "css")
             await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, "css")
             await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
@@ -106,6 +110,7 @@ describe("Reject Tx flow", ()=>{
             await gnosisPage.waitFor(2000)
             await gnosisPage.bringToFront()
             await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, "css")
+            await gnosisPage.waitFor(2000)
             await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
             await gnosisPage.waitForFunction(
                 'document.querySelector("body").innerText.includes("Execute Transaction Rejection")'
@@ -129,7 +134,7 @@ describe("Reject Tx flow", ()=>{
             await gnosisPage.waitForFunction(
                 'document.querySelector("table[class^=MuiTable-root]").innerText.includes("Executor")'
             );
-            await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
+            await gFunc.clickByText("span", "ASSETS", gnosisPage)
             await gnosisPage.waitFor(3000) //Numbers flicker for a bit when you enter in this tab
             const post_test_balance = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
             expect(post_test_balance).toBe(currentBalance) //balance should not have changed

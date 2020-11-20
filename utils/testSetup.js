@@ -4,7 +4,7 @@ const dappeteer = require('dappeteer')
 import { sels } from "./selectors"
 import * as gFunc from "./global_func"
 
-const ENV = ENVIRONMENT.local
+const ENV = ENVIRONMENT.dev
 
 export const init = async ()=>{
     const browser = await dappeteer.launch(puppeteer,{

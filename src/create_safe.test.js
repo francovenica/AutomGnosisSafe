@@ -23,6 +23,7 @@ describe("Create New Safe", () =>{
     const errorMsg = sels.errorMsg
     test("Open Create Safe Form", async ()=>{
         console.log("Open Create Safe Form\n")
+        await gFunc.assertElementPresent(homepage.home_btn, gnosisPage, "css")
         await gFunc.clickSomething(homepage.home_btn, gnosisPage)
         await gFunc.clickSomething(homepage.create_safe_btn, gnosisPage)
         await gFunc.assertElementPresent(sels.cssSelectors.create_safe_name_input, gnosisPage, "css")        

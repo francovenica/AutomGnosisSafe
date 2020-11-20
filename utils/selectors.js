@@ -202,7 +202,7 @@ export const sels = {
             confirmed_counter : (owners) =>  `div[data-testid='confirmed-${owners}-out-of-2']`,
             rejected_counter : (owners) => `div[data-testid='rejected-${owners}-out-of-2']`,
             confirm_tx_btn: "button[data-testid='confirm-btn']",
-            reject_tx_btn: "button[data-testid='reject-btn']", 
+            reject_tx_btn: "button[data-testid='reject-btn']:enabled", 
             tx_description_send: "div[data-testid='tx-description-send']",
             transaction_row : (index = 0) => `[data-testid='transaction-row-${index}']`,
         },
@@ -257,7 +257,7 @@ export const sels = {
             back_btn: "button[data-testid='safe-creation-back-btn']",
             continue_btn: "button[data-testid='continue-btn']",
             submit_btn: "button[type='submit']",
-            etherscan_link: "a[data-testid='safe-create-etherscan-link']",
+            etherscan_link: "a[data-testid='safe-create-explorer-link']",
         },
         send_funds_form:{
             modal_title_send_funds : "div[data-testid='modal-title-send-funds']",
@@ -275,6 +275,9 @@ export const sels = {
             fee_msg_review : "p[data-testid='fee-meg-review-step']",
             submit_btn : "button[data-testid='submit-tx-btn']:enabled",
             submit_btn_disabled : "button[data-testid='submit-tx-btn']:disabled"
+        },
+        settings_tabs:{
+            req_conf_dropdown: "div[data-testid='threshold-select-input']", //req confirmation dropdown for the safe creation form
         }
     },
     wallet: {

@@ -29,6 +29,7 @@ describe("Create New Safe", () =>{
     const owner_2_address = sels.testAccountsHash.acc2
     test("Open Create Safe Form", async ()=>{
         console.log("Open Create Safe Form\n")
+        await gFunc.assertElementPresent(welcomePage.create_safe_btn, gnosisPage, "css")
         await gFunc.clickElement(welcomePage.create_safe_btn, gnosisPage)
         await gFunc.assertElementPresent(createPage.form, gnosisPage, "css")
     },  60000)
@@ -52,14 +53,14 @@ describe("Create New Safe", () =>{
         await gFunc.assertElementPresent(createPage.valid_address(1), gnosisPage, "css")
         rows_amount = await gnosisPage.$$eval(createPage.owner_row, x=>x.length) //see how many owner I've created
         await gFunc.assertElementPresent(createPage.req_conf_limit(rows_amount), gnosisPage, "css") //that amount should be in the text "out of X owners"
-    },  30000);
+    },  60000);
     test("Setting Required Confirmation", async () => {
         console.log("Setting Required Confirmation")
         await gFunc.clickElement(createPage.threshold_select_input, gnosisPage)
         await gFunc.clickElement(createPage.select_input(rows_amount), gnosisPage)
         await gnosisPage.waitFor(2000) //gotta wait before clickin review_btn or doesn't work
         await gFunc.clickElement(createPage.submit_btn, gnosisPage) 
-    },  30000);
+    },  60000);
     test("Reviewing Safe Info", async () => {
         console.log("Reviewing Safe Info\n")
         await gFunc.assertElementPresent(createPage.step_three, gnosisPage, "css")
@@ -71,7 +72,7 @@ describe("Create New Safe", () =>{
         await MMpage.bringToFront()
         await MMpage.waitFor(2000)
         await metamask.confirmTransaction()
-    },  30000)
+    },  60000)
     test("Assert Safe Creation", async () => {
         console.log("Assert Safe Creation\n")
         await gnosisPage.bringToFront()

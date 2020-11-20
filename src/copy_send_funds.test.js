@@ -23,7 +23,7 @@ describe("Send Funds", ()=>{
     const txTab = sels.testIdSelectors.transaction_tab
     const assetTab = sels.testIdSelectors.asset_tab
     const send_funds_modal = sels.xpSelectors.send_funds_modal
-    // const homepage = sels.xpSelectors.homepage
+    //const homepage = sels.xpSelectors.homepage
 
     let amount_await_conf_status = ""
     let amount_success_status = ""
@@ -35,8 +35,9 @@ describe("Send Funds", ()=>{
             //await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
             current_eth_funds_on_text = await gFunc.getInnerText(assetTab.balance_value("eth"), gnosisPage, "css")
             current_eth_funds = parseFloat((await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")).toFixed(3))
-            await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
-            await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
+            //await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
+            //await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
+            await gFunc.clickByText("button", "New Transaction", gnosisPage)
             await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
             await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, "css")
             done()
@@ -51,6 +52,8 @@ describe("Send Funds", ()=>{
             await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
             await gFunc.openDropdown(sendFunds.select_token, gnosisPage, "css")
             await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
+
+            await gnosisPage.waitFor(1000)
 
             await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "0", "ccs")
             await gFunc.assertElementPresent(errorMsg.error(errorMsg.greater_than_0), gnosisPage)
@@ -108,13 +111,19 @@ describe("Send Funds", ()=>{
             await MMpage.waitFor(2000)
             await gnosisPage.bringToFront()
             //checking amount of "Success and awaiting conf status for final review"
-            await gFunc.assertElementPresent(txTab.tx_status("Awaiting confirmations"), gnosisPage, "css")
+            await gFunc.assertElementPresent(txTab.tx_status("Awaiting confirmations"), gnosisPage, "css")     
             amount_await_conf_status = await gFunc.amountOfElements(txTab.tx_status("Awaiting confirmations"), gnosisPage, "css")
             expect(amount_await_conf_status).toBe(1) //it should be only 1 awaiting confirmations tx at this point
             await gFunc.assertElementPresent(txTab.tx_status("Success"), gnosisPage, "css")
             amount_success_status = await gFunc.amountOfElements(txTab.tx_status("Success"), gnosisPage, "css")
             amount_await_conf_status = "" //reset
-            await gFunc.clickElement(txTab.tx_status("Awaiting confirmations"), gnosisPage)
+
+            //Notifications are blocking the click ot the tx, I had to click it in another way now
+            //await gFunc.clickElement(txTab.tx_status("Awaiting confirmations"), gnosisPage)
+            await gnosisPage.evaluate(() => {
+                const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
+                firstTx && firstTx.click()
+              })
             await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage, "css")
             await gFunc.assertElementPresent(txTab.not_confirmed_tx_check, gnosisPage, "css")
             await metamask.switchAccount(1) //currently in account2, changing to account 1
@@ -151,7 +160,8 @@ describe("Send Funds", ()=>{
             const recipient_address = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, "text", 1)
             // regex to match an address hash
             expect(recipient_address.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)
-            await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
+            //await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
+            await gFunc.clickByText("span", "ASSETS", gnosisPage)
             await gFunc.assertElementPresent(assetTab.balance_value("eth"), gnosisPage, "css")
             const array = ['[data-testid="balance-ETH"]', current_eth_funds_on_text]
             // check every 100ms an update in the ETH funds in the assets tab

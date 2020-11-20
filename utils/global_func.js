@@ -183,20 +183,9 @@ export const selectorChildren = async function(selector, page, operation, index)
   }
 }
 
-
-export const findNodeByText = async function(tag, text, page){
-  await page.$$eval(tag, elements => {
-    console.log(elements);})
-  
-  // let value = await page.evaluateHandle((tag, text) => {
-  //   const element = document.querySelectorAll(tag).forEach(e =>{
-  //     if(e.innerHTML === "verdura")
-  //     return e
-  //   });
-  // }, tag, text)
-  // console.log("value = ", value)
-  // const result = await page.evaluate(e => e.innerHTML, value);
-  // console.log("Result = " , result)
+export const clickByText = async function(tag, text, page){
+  await page.$$eval( tag, (nodes, text) => nodes.forEach ( singleNode => { if(singleNode.innerText === text) singleNode.click()})
+  , text)
 }
 
 //------------------Stand alone functions
