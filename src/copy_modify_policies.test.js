@@ -16,7 +16,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Change Policies", ()=>{
+describe.skip("Change Policies", ()=>{
     
     const modify_policies = sels.testIdSelectors.settings_tabs
     const errorMsg = sels.errorMsg

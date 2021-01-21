@@ -1,6 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/copy_testSetup"
+import { load_wallet } from "../utils/testSetup"
 
 let browser;
 let metamask;

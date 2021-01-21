@@ -16,7 +16,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Send Funds", ()=>{
+describe.skip("Send Funds", ()=>{
     const errorMsg = sels.errorMsg
     const mainHub = sels.testIdSelectors.main_hub
     const sendFunds = sels.testIdSelectors.send_funds_form

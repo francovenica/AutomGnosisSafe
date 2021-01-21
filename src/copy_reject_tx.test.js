@@ -16,7 +16,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Reject Tx flow", ()=>{
+describe.skip("Reject Tx flow", ()=>{
     let currentBalance = 0.0
     
     const errorMsg = sels.errorMsg

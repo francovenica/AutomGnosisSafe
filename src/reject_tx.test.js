@@ -1,6 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup-copy"
+import { load_wallet } from "../utils/testSetup"
 
 let browser;
 let metamask;
@@ -16,7 +16,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Reject Tx flow", ()=>{
+describe.skip("Reject Tx flow", ()=>{
     const safe_hub = sels.xpSelectors.safe_hub
     const send_funds_modal = sels.xpSelectors.send_funds_modal
     const homepage = sels.xpSelectors.homepage

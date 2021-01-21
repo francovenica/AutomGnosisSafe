@@ -19,7 +19,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Loading an Existing safe", () => {
+describe.skip("Loading an Existing safe", () => {
     const load_safe = sels.xpSelectors.load_safe
     const welcomePage = sels.testIdSelectors.welcome_page
     const loadPage = sels.testIdSelectors.load_safe_page

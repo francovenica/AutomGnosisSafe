@@ -17,7 +17,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Create New Safe", () =>{
+describe.skip("Create New Safe", () =>{
     const errorMsg = sels.errorMsg
     const welcomePage = sels.testIdSelectors.welcome_page
     const createPage = sels.testIdSelectors.create_safe_page

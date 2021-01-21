@@ -1,6 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup-copy"
+import { load_wallet } from "../utils/testSetup"
 import { connect } from "puppeteer";
 
 let browser;
@@ -17,7 +17,7 @@ afterAll(async () => {
     await browser.close();
 })
 
-describe("Change Policies", ()=>{
+describe.skip("Change Policies", ()=>{
     const modify_policies = sels.xpSelectors.modify_policies
     const safe_hub = sels.xpSelectors.safe_hub
     let owner_amount = false //amount of owners, will be taken from the owners tab in the settings
