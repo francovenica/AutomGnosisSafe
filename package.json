@@ -12,13 +12,13 @@
     "jest": "^25.1.0",
     "jest-puppeteer": "^4.4.0",
     "pptr-testing-library": "^0.6.4",
-    "puppeteer": "^2.1.1"
+    "puppeteer": "^1.6.0"
   },
   "scripts": {
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "dappeteer": "^0.6.0",
+    "dappeteer": "^1.0.0",
     "jest-cli": "^25.1.0"
   },
   "jest": {
