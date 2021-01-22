@@ -48,30 +48,30 @@ describe('Adding and removing owners', () => {
       done(error)
     }
   }, 60000)
-//   test('First step of the form: name and address', async (done) => {
-//     console.log('First step of the form: name and address')
-//     const existing_owner_hash = sels.testAccountsHash.acc1
-//     try {
-//       await gFunc.clickSomething(setting_owners.add_new_owner_btn, gnosisPage)
-//       await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)
-//       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
-//       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
-//       await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, new_owner_name)
-//       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
-//       await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, '0xInvalidHash')
-//       await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage)
-//       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-//       await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, existing_owner_hash)
-//       await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage)
-//       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-//       await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, new_owner_address)
-//       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
-//       done()
-//     } catch (error) {
-//       console.log(error)
-//       done(error)
-//     }
-//   }, 60000)
+  test.skip('First step of the form: name and address', async (done) => {
+    console.log('First step of the form: name and address')
+    const existing_owner_hash = sels.testAccountsHash.acc1
+    try {
+      await gFunc.clickSomething(setting_owners.add_new_owner_btn, gnosisPage)
+      await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)
+      await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
+      await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
+      await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, new_owner_name)
+      await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
+      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, '0xInvalidHash')
+      await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage)
+      await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
+      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, existing_owner_hash)
+      await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage)
+      await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
+      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, new_owner_address)
+      await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
+      done()
+    } catch (error) {
+      console.log(error)
+      done(error)
+    }
+  }, 60000)
 //   test('Second step of the form: Req Confirmations', async (done) => {
 //     console.log('Second step of the form: Req Confirmations')
 //     try {

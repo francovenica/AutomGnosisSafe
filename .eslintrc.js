@@ -7,7 +7,8 @@ module.exports = {
   plugins: [
     'eslint-plugin-import',
     'eslint-plugin-node',
-    'eslint-plugin-promise'
+    'eslint-plugin-promise',
+    'eslint-plugin-jest'
   ],
   parserOptions: {
     ecmaVersion: 12,

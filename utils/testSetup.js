@@ -15,14 +15,17 @@ export const init = async () => {
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
     args: ['--start-maximized', ENV] // maximized browser, URL for the base page
   })
-  console.log('Browser Init')
-  const metamask = await dappeteer.getMetamask(browser)
-  console.log('This is metamask', metamask)
-  metamask.importAccount(sels.wallet.seed, [sels.wallet.password])
-  console.log('MM init')
 
-  await metamask.switchNetwork('Rinkeby')
+  const metamask = await dappeteer.getMetamask(browser, {
+    seed: sels.wallet.seed,
+    password: sels.wallet.password
+  })
+
+  await metamask.switchNetwork('rinkeby')
   const [gnosisPage, MMpage] = await browser.pages() // get a grip on both tabs
+  // Reload Gnosis Safe to ensure Metamask info is loaded
+  await gnosisPage.reload({ waitUntil: ['networkidle0', 'domcontentloaded'] })
+
   gnosisPage.setDefaultTimeout(60000)
   MMpage.setDefaultTimeout(60000)
 
@@ -36,10 +39,7 @@ export const init = async () => {
 
 export const walletConnect = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await init()
-  console.log('This is returned by init')
-  console.log('Browser', browser)
-  console.log('Metamask', metamask)
-  console.log('Gnosis Page', gnosisPage)
+
   const homepage = sels.xpSelectors.homepage
   const cssTopBar = sels.testIdSelectors.top_bar
   const welcomePage = sels.testIdSelectors.welcome_page
@@ -50,13 +50,19 @@ export const walletConnect = async (importMultipleAccounts = false) => {
   }
 
   await gnosisPage.bringToFront()
-  if (ENV != ENVIRONMENT.local) // for local env there is no Cookies to accept
+  if (ENV !== ENVIRONMENT.local) // for local env there is no Cookies to accept
   {
     await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+    console.log('Accept cookies')
   }
   await gFunc.clickElement(cssTopBar.not_connected_network, gnosisPage)
+  console.log('Click not connected network')
   await gFunc.clickElement(welcomePage.connect_btn, gnosisPage)
+  console.log('Click connected button')
+
   await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
+  console.log('Click metamask wallet')
+
   await gFunc.assertElementPresent(cssTopBar.connected_network, gnosisPage, 'css')
   // try {
   //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
@@ -71,6 +77,7 @@ export const walletConnect = async (importMultipleAccounts = false) => {
 
 export const load_wallet = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await walletConnect(importMultipleAccounts)
+  console.log('Wallet Connected')
   const welcomePage = sels.testIdSelectors.welcome_page
   const loadPage = sels.testIdSelectors.load_safe_page
 
