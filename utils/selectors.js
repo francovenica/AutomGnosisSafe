@@ -218,7 +218,7 @@ export const sels = {
       disconnect_btn: "button[data-testid='disconnect-btn']"
     },
     welcome_page: {
-      connect_btn: "button[data-testid='connect-btn']",
+      connect_btn: "//p[contains(text(),'Load existing Safe')]",
       create_safe_btn: "a[data-testid='create-new-safe-btn']",
       load_safe_btn: "a[data-testid='load-existing-safe-btn']",
       accept_preferences: "span[data-testid='accept-preferences']"
@@ -231,7 +231,7 @@ export const sels = {
       step_two: "p[data-testid='load-safe-step-two']",
       owner_row: "div[data-testid='owner-row']", // all the rows, to count
       owner_name: (index = 0) => `input[data-testid='load-safe-owner-name-${index}']`,
-      step_trhee: "p[data-testid='load-safe-step-three']",
+      step_three: "p[data-testid='load-safe-step-three']",
       review_safe_name: "p[data-testid='load-form-review-safe-name']",
       review_owner_name: "p[data-testid='load-safe-review-owner-name']",
       submit_btn: "button[type='submit']",

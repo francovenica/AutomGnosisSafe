@@ -9,7 +9,6 @@ const { SLOWMO, ENVIRONMENT } = config
 const ENV = ENVIRONMENT.dev
 
 export const init = async () => {
-  console.log('Init is called')
   const browser = await dappeteer.launch(puppeteer, {
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
@@ -50,10 +49,8 @@ export const walletConnect = async (importMultipleAccounts = false) => {
   }
 
   await gnosisPage.bringToFront()
-  if (ENV !== ENVIRONMENT.local) // for local env there is no Cookies to accept
-  {
+  if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
     await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
-    console.log('Accept cookies')
   }
   await gFunc.clickElement(cssTopBar.not_connected_network, gnosisPage)
   console.log('Click not connected network')
@@ -75,7 +72,7 @@ export const walletConnect = async (importMultipleAccounts = false) => {
   ]
 }
 
-export const load_wallet = async (importMultipleAccounts = false) => {
+export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await walletConnect(importMultipleAccounts)
   console.log('Wallet Connected')
   const welcomePage = sels.testIdSelectors.welcome_page
@@ -95,7 +92,7 @@ export const load_wallet = async (importMultipleAccounts = false) => {
     await gFunc.clickAndType(selector, gnosisPage, name, 'css')
   }
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
-  await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, 'css')
+  await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
   await gnosisPage.waitFor(2000)
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
 

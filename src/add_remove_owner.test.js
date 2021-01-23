@@ -1,6 +1,6 @@
 import * as gFunc from '../utils/global_func'
 import { sels } from '../utils/selectors'
-import { load_wallet } from '../utils/testSetup'
+import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
 let metamask
@@ -8,7 +8,7 @@ let gnosisPage
 let MMpage
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await load_wallet(true)
+  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe(true)
 }, 60000)
 
 // afterAll(async () => {

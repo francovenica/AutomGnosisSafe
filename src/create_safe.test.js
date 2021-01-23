@@ -35,7 +35,7 @@ describe('Create New Safe', () => {
     await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, 'css')
     await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
   }, 60000)
-  test('Adding Owners', async() => {
+  test('Adding Owners', async () => {
     console.log('Adding Owners\n')
     await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
     await gFunc.clickSomething(create_safe.add_owner, gnosisPage)
@@ -58,7 +58,7 @@ describe('Create New Safe', () => {
   test('Reviewing Safe Info', async () => {
     console.log('Reviewing Safe Info\n')
     await gnosisPage.waitFor(2000)
-    await gFunc.clickSomething(create_safe.submit_btn,gnosisPage)
+    await gFunc.clickSomething(create_safe.submit_btn, gnosisPage)
     await gnosisPage.waitFor(2000)
     await metamask.confirmTransaction()
     await MMpage.waitFor(1000)
@@ -77,9 +77,9 @@ describe('Create New Safe', () => {
     // save the address in a file for manual use later if needed
     const safe_adrs = await gFunc.getInnerText(sels.xpSelectors.safe_hub.safe_address, gnosisPage)
     const save_text = 'safe : ' + safe_adrs + '\n'
-    fs.appendFile('./createdSafes/safes.txt', save_text, function(err) {
+    fs.appendFile('./createdSafes/safes.txt', save_text, function (err) {
       if (err) {
-        fs.writeFile('./createdSafes/safes.txt', save_text,{ flag: 'wx' }, function(err) {
+        fs.writeFile('./createdSafes/safes.txt', save_text, { flag: 'wx' }, function (err) {
           if (err) console.log('\nAlready exist\n')
         })
       };
