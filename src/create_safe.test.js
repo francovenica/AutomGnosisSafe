@@ -1,7 +1,7 @@
 import fs from 'fs'
 import * as gFunc from '../utils/global_func'
 import { sels } from '../utils/selectors'
-import { walletConnect } from '../utils/testSetup'
+import { initWithWalletConnected } from '../utils/testSetup'
 
 let browser
 let metamask
@@ -9,7 +9,7 @@ let gnosisPage
 let MMpage
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await walletConnect()
+  [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected()
 }, 60000)
 
 afterAll(async () => {

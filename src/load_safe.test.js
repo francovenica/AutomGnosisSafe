@@ -1,6 +1,6 @@
 import * as gFunc from '../utils/global_func'
 import { sels } from '../utils/selectors'
-import { walletConnect } from '../utils/testSetup'
+import { initWithWalletConnected } from '../utils/testSetup'
 const { getDocument, queries, waitFor } = require('pptr-testing-library')
 
 const { getByTestId, getByLabelText, getByText } = queries
@@ -11,7 +11,7 @@ let gnosisPage
 let MMpage
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await walletConnect()
+  [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected()
 }, 60000)
 
 afterAll(async () => {

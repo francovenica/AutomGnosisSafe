@@ -36,7 +36,7 @@ export const init = async () => {
   ]
 }
 
-export const walletConnect = async (importMultipleAccounts = false) => {
+export const initWithWalletConnected = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await init()
 
   const homepage = sels.xpSelectors.homepage
@@ -73,7 +73,7 @@ export const walletConnect = async (importMultipleAccounts = false) => {
 }
 
 export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
-  const [browser, metamask, gnosisPage, MMpage] = await walletConnect(importMultipleAccounts)
+  const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
   console.log('Wallet Connected')
   const welcomePage = sels.testIdSelectors.welcome_page
   const loadPage = sels.testIdSelectors.load_safe_page
