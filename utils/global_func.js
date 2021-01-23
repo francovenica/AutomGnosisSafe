@@ -13,13 +13,11 @@ const elementSelector = async (selector, page, type, timeout) => {
       await page.waitForXPath(selector, { timeout })
       const elementHandle = await page.$x(selector)
       return elementHandle[0]
-    }
-    else {
+    } else {
       await page.waitForSelector(selector, { timeout })
       return await page.$(selector)
     }
-  }
-  catch (error) {
+  } catch (error) {
     return 'Selector Not Found'
   }
 }
@@ -72,14 +70,13 @@ export const openDropdown = async function (selector, page, type = 'Xpath') {
 
 export const clickAndType = async function (selector, page, text = '', type = 'Xpath') {
   if (type === 'Xpath') {
-    let forTyping = await clickSomething(selector, page, type)
+    const forTyping = await clickSomething(selector, page, type)
     try {
       await forTyping.type(text)
     } catch (error) {
       console.log("ClickAndType Error: Couldn't type Xpath= ", selector, '\n', error)
     }
-  }
-  else {
+  } else {
     try {
       await page.type(selector, text)
     } catch (error) {
@@ -111,7 +108,7 @@ export const assertElementPresent = async function (selector, page, type = 'Xpat
   }
   try {
     const expectHandler = expect(element)
-    type != 'Xpath' ? expectHandler.not.toBeNull() : expectHandler.toBeDefined() // for Css there is a different condition to make
+    type !== 'Xpath' ? expectHandler.not.toBeNull() : expectHandler.toBeDefined() // for Css there is a different condition to make
     console.log('Found = ', selector, '\n')
     return element
   } catch (error) {
@@ -121,7 +118,7 @@ export const assertElementPresent = async function (selector, page, type = 'Xpat
 }
 
 export const assertTextPresent = async function (selector, page, textPresent, type = 'Xpath') {
-  const element = await assertElementPresent(selector, page, type != 'Xpath' ? type : 'Xpath')
+  const element = await assertElementPresent(selector, page, type !== 'Xpath' ? type : 'Xpath')
   try {
     const elementText = await page.evaluate(x => x.innerText, element)
     expect(elementText).toMatch(textPresent)
@@ -137,11 +134,12 @@ export const assertAllElementPresent = async function (selectors, page, type = '
 }
 
 export const getInnerText = async function (selector, page, type = 'Xpath') {
-  const element = await assertElementPresent(selector, page, type != 'Xpath' ? type : 'Xpath')
+  const element = await assertElementPresent(selector, page, type !== 'Xpath' ? type : 'Xpath')
   try {
     let elementText = await page.evaluate(x => x.innerText, element)
-    if (elementText === '')
+    if (elementText === '') {
       elementText = await page.evaluate(x => x.value, element)
+    }
     return elementText
   } catch (error) {
     console.log('getInnerText Error: Selector = ', selector, '\n', error)
@@ -168,16 +166,14 @@ export const selectorChildren = async function (selector, page, operation, index
     switch (operation) {
       case 'text':
         return text
-        break
       case 'number':
         return parseFloat(text.match(/\d+.?\d+|\d+/)[0])
-        break
       case 'assert':
         return 'Found'
+      default:
         break
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.log('Error = ', error)
     return 'Not Found'
   }
@@ -210,10 +206,11 @@ export const importAccounts = async function (metamask) {
 
 export const amountOfElements = async (selector, page, type = 'Xpath') => {
   let amount = ''
-  if (type === 'Xpath')
+  if (type === 'Xpath') {
     amount = await page.$x(selector)
-  else
+  } else {
     amount = await page.$$(selector)
+  }
   try {
     return amount.length
   } catch (error) {

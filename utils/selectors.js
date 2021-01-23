@@ -196,10 +196,10 @@ export const sels = {
       approve_tx_btn: "button[data-testid='approve-tx-modal-submit-btn']",
     },
     transaction_tab: {
-      tx_status: (status ='') => `p[data-testid='tx-status-${status}']`,
+      tx_status: (status = '') => `p[data-testid='tx-status-${status}']`,
       confirmed_tx_check: "img[data-testid='confirmed-tx-check']",
       not_confirmed_tx_check: "img[data-testid='not-confirmed-tx-check']",
-      confirmed_counter: (owners) =>  `div[data-testid='confirmed-${owners}-out-of-2']`,
+      confirmed_counter: (owners) => `div[data-testid='confirmed-${owners}-out-of-2']`,
       rejected_counter: (owners) => `div[data-testid='rejected-${owners}-out-of-2']`,
       confirm_tx_btn: "button[data-testid='confirm-btn']",
       reject_tx_btn: "button[data-testid='reject-btn']:enabled",
@@ -218,9 +218,9 @@ export const sels = {
       disconnect_btn: "button[data-testid='disconnect-btn']"
     },
     welcome_page: {
-      connect_btn: "//p[contains(text(),'Load existing Safe')]",
+      connect_btn: "button[data-testid='heading-connect-btn']",
       create_safe_btn: "a[data-testid='create-new-safe-btn']",
-      load_safe_btn: "a[data-testid='load-existing-safe-btn']",
+      load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
       accept_preferences: "span[data-testid='accept-preferences']"
     },
     load_safe_page: {
