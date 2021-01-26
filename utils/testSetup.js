@@ -49,16 +49,17 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   }
 
   await gnosisPage.bringToFront()
-  if(ENV !== ENVIRONMENT.local) // for local env there is no Cookies to accept
+  if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
     await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+  }
   await gFunc.clickElement(cssTopBar.not_connected_network, gnosisPage)
   await gFunc.clickElement(welcomePage.connect_btn, gnosisPage)
   const navigation = new Promise(res => browser.on('targetcreated', res)) // To later wait for a memtamask popUp to confirm the connection
   await gFunc.clickSomething(homepage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
   await navigation // Waiting...
 
-  const pages = await browser.pages();
-  const MMnotification = pages[pages.length-1] // Capturing the notification popUp
+  const pages = await browser.pages()
+  const MMnotification = pages[pages.length - 1] // Capturing the notification popUp
   await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification) // The 2 buttons in the popUp have the same class. Clicking twice
   await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification)
   await gFunc.assertElementPresent(cssTopBar.connected_network, gnosisPage, 'css')

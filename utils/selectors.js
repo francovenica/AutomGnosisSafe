@@ -57,7 +57,7 @@ export const sels = {
         confirmed_counter: (owners) => `div[data-testid='confirmed-${owners}-out-of-2']`,
         rejected_counter: (owners) => `div[data-testid='rejected-${owners}-out-of-2']`,
         confirm_tx_btn: "button[data-testid='confirm-btn']",
-        reject_tx_btn: "button[data-testid='reject-btn']:enabled", 
+        reject_tx_btn: "button[data-testid='reject-btn']:enabled",
         tx_description_send: "div[data-testid='tx-description-send']",
         transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
       },
@@ -74,7 +74,7 @@ export const sels = {
       },
       welcome_page: {
         connect_btn: "button[data-testid='connect-btn']",
-        create_safe_btn: "a[data-testid='create-new-safe-btn']", 
+        create_safe_btn: "a[data-testid='create-new-safe-btn']",
         load_safe_btn: "a[data-testid='load-existing-safe-btn']",
         accept_preferences: "span[data-testid='accept-preferences']",
         mm_next_btn: 'button.btn-primary'
