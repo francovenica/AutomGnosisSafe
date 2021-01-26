@@ -93,7 +93,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
     await gFunc.clickAndType(selector, gnosisPage, name, 'css')
   }
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
-  await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, 'css')
+  await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
   await gnosisPage.waitFor(2000)
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
 

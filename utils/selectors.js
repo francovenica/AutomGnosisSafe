@@ -87,7 +87,7 @@ export const sels = {
         step_two: "p[data-testid='load-safe-step-two']",
         owner_row: "div[data-testid='owner-row']", // all the rows, to count
         owner_name: (index = 0) => `input[data-testid='load-safe-owner-name-${index}']`,
-        step_trhee: "p[data-testid='load-safe-step-three']",
+        step_three: "p[data-testid='load-safe-step-three']",
         review_safe_name: "p[data-testid='load-form-review-safe-name']",
         review_owner_name: "p[data-testid='load-safe-review-owner-name']",
         submit_btn: "button[type='submit']",

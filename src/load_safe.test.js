@@ -40,7 +40,7 @@ describe('Loading an Existing safe', () => {
   }, 60000)
   test('Load safe Review Details', async () => {
     console.log('Load safe Review Details\n')
-    await gFunc.assertElementPresent(loadPage.step_trhee, gnosisPage, 'css')
+    await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
     await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, 'css')
     await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, 'css')
     await gnosisPage.waitFor(2000)
