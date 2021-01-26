@@ -1,6 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup-copy"
+import { load_wallet } from "../utils/testSetup"
 
 let browser;
 let metamask;
@@ -22,19 +22,32 @@ describe("Adding and removing owners", () =>{
     const errorMsg = sels.errorMsg
     const safe_hub = sels.xpSelectors.safe_hub
     
+    const modify_policies = sels.testIdSelectors.settings_tabs
+    const mainHub = sels.testIdSelectors.main_hub
+    const general = sels.testIdSelectors.general
+    const sendFunds = sels.testIdSelectors.send_funds_form
+    const txTab = sels.testIdSelectors.transaction_tab
+    const assetTab = sels.testIdSelectors.asset_tab
+    const send_funds_modal = sels.xpSelectors.send_funds_modal
+
     let owner_replaced_address
     let owner_for_replacement_address
-    let owner_for_replacement_name    
+    let owner_for_replacement_name
+    let flag    
 
     test("Enter in settings. Checking which owner replace", async (done) => {
         console.log("Enter in settings. Checking which owner replace")
-        let flag = true
+        flag = true
+        owner_for_replacement_name = "Cory Barlog"
         try {
-            await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
-            await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
+            await gFunc.isTextPresent(general.sidebar, "SETTINGS", gnosisPage)
+            await gFunc.clickByText("span", "SETTINGS", gnosisPage)
+            await gFunc.isTextPresent("body", "Safe Version", gnosisPage)
+            await gFunc.clickByText("p", "Owners", gnosisPage)
+            await gFunc.isTextPresent("body", "Manage Safe Owners", gnosisPage)
             try {
                 //I check which user replace, I check if owner 3 is present
-                await gnosisPage.waitForXPath('//p[contains(text(),"0x6E45d69a383CECa3d54688e833Bd0e1388747e6B")]', {timeout:2000})
+                await gnosisPage.waitForXPath('//span[contains(text(),"0x6E45d69a383CECa3d54688e833Bd0e1388747e6B")]', {timeout:2000})
             } catch (e) {
                 flag = false
             }
@@ -47,7 +60,7 @@ describe("Adding and removing owners", () =>{
                 owner_replaced_address = sels.testAccountsHash.acc5
                 owner_for_replacement_address = sels.testAccountsHash.acc3
             }    
-            owner_for_replacement_name = "Cory Barlog"
+            
             console.log("Owner_replaced_address = ", owner_replaced_address, "\nOwner_for_replacement_address = ", owner_for_replacement_address)
             done()
         } catch (error) {

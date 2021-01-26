@@ -184,8 +184,23 @@ export const selectorChildren = async function(selector, page, operation, index)
 }
 
 export const clickByText = async function(tag, text, page){
-  await page.$$eval( tag, (nodes, text) => nodes.forEach ( singleNode => { if(singleNode.innerText === text) singleNode.click()})
+  await page.$$eval( tag, (nodes, text) => {
+    if(nodes.length > 0) 
+      nodes.forEach ( singleNode => { if(singleNode.innerText === text) singleNode.click()})
+    else
+      console.log('No nodes found')
+    }
   , text)
+}
+
+export const isTextPresent = async function (selector, text, page){
+  try {
+    await page.waitForFunction(
+        (selector, text) => document.querySelector(selector).innerText.includes(text), {timeout:10000}, selector, text
+    );
+  } catch (error) {
+      console.log(`Text ${text} was not found`)
+  }
 }
 
 //------------------Stand alone functions

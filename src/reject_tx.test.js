@@ -1,6 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
-import { load_wallet } from "../utils/testSetup-copy"
+import { load_wallet } from "../utils/testSetup"
 
 let browser;
 let metamask;
@@ -17,21 +17,24 @@ afterAll(async () => {
 })
 
 describe("Reject Tx flow", ()=>{
-    const safe_hub = sels.xpSelectors.safe_hub
+    let currentBalance = 0.0
+    
+    const errorMsg = sels.errorMsg
+    const mainHub = sels.testIdSelectors.main_hub
+    const sendFunds = sels.testIdSelectors.send_funds_form
+    const txTab = sels.testIdSelectors.transaction_tab
+    const assetTab = sels.testIdSelectors.asset_tab
     const send_funds_modal = sels.xpSelectors.send_funds_modal
     const homepage = sels.xpSelectors.homepage
-    let currentBalance = 0.0
+    const labels = sels.statusToLabel
     test("Open the Send Funds Form", async (done) => {
         try {
             console.log("Open the Send Funds Form")
-            currentBalance = await gFunc.getNumberInString(safe_hub.balance_ETH, gnosisPage)
-            console.log("Current balance = " ,currentBalance)
-            try {
-                await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
-            } catch (error) {}
-            await gnosisPage.waitFor(2000)
-            await gFunc.clickSomething(safe_hub.send_btn, gnosisPage)
-            await gFunc.clickSomething(safe_hub.send_funds_btn, gnosisPage)
+            await gFunc.assertElementPresent(assetTab.balance_value("eth"), gnosisPage, "css")
+            currentBalance = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
+            await gFunc.clickByText("button", "New Transaction", gnosisPage)
+            await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
+            await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, "css")
             done()
         } catch (error) {
             console.log(error)
@@ -41,14 +44,13 @@ describe("Reject Tx flow", ()=>{
     test("Filling the Form", async (done) => {
         try {
             console.log("Filling the Form")
-            await gFunc.assertElementPresent(sels.cssSelectors.send_funds_recep, gnosisPage, "css")
-            await gFunc.clickAndType(sels.cssSelectors.send_funds_recep, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
-            await gFunc.clickSomething(send_funds_modal.token_selec, gnosisPage)
-            await gFunc.clickSomething(send_funds_modal.ether_selection, gnosisPage)
-            await gFunc.clearInput(send_funds_modal.amount_input, gnosisPage)
-            await gFunc.clickAndType(send_funds_modal.amount_input, gnosisPage, "0.5")
-            await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)
-            await gFunc.clickSomething(sels.cssSelectors.review_send_fund_btn, gnosisPage, "css")
+            await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, "css")
+            await gFunc.openDropdown(sendFunds.select_token, gnosisPage, "css")
+            await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
+            await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, "0.5", "css")
+            await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)  
+            await gnosisPage.waitFor(2000)
+            await gFunc.clickElement(sendFunds.review_btn, gnosisPage)
             done()
         } catch (error) {
             console.log(error)
@@ -58,9 +60,9 @@ describe("Reject Tx flow", ()=>{
     test("Approving the Tx with the owner 1", async (done) => {
         try {
             console.log("Approving the Tx with the owner 1")
-            await gnosisPage.waitFor(5000)
-            await gFunc.clickSomething(send_funds_modal.submit_btn, gnosisPage)
-            await gnosisPage.waitFor(2000)
+            await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, "css")
+            await gFunc.clickElement(sendFunds.submit_btn, gnosisPage)
+            await gnosisPage.waitFor(3000)
             await metamask.sign()
             done()
         } catch (error) {
@@ -73,10 +75,24 @@ describe("Reject Tx flow", ()=>{
             console.log("Rejecting with the 1st  owner")
             //await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
-            await gFunc.clickSomething(safe_hub.awaiting_confirmations, gnosisPage)
-            await gFunc.assertElementPresent(safe_hub.confirmed_counter(1), gnosisPage)
-            await gFunc.clickSomething(safe_hub.reject_btn, gnosisPage)
-            await gFunc.clickSomething(safe_hub.reject_tx_btn, gnosisPage)
+            await gFunc.assertElementPresent(txTab.tx_status(labels.awaiting_confirmations), gnosisPage, "css")
+            await gnosisPage.evaluate(() => {
+                const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
+                firstTx && firstTx.click()
+              })
+            //Can't click an element by the label because notifications block the click
+            //await gFunc.clickElement(txTab.tx_status(labels.awaiting_confirmations), gnosisPage)
+            await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage, "css")
+            await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, "css")
+            await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
+            await gnosisPage.waitForFunction(
+                'document.querySelector("body").innerText.includes("Reject Transaction")'
+                //making sure that a "Reject transaction" text exist in the page first
+            );
+            await gnosisPage.$$eval('button', allElements => {
+                allElements.forEach( element => { if(element.innerText === "Reject Transaction") element.click()})
+                //finding and clicking on the first button with the Reject Transaction text
+            })
             await gnosisPage.waitFor(2000)
             await metamask.sign()
             done()
@@ -88,33 +104,20 @@ describe("Reject Tx flow", ()=>{
     test("Rejecting the Tx with the owner 2", async (done) => {
         console.log("Rejecting the Tx with the owner 2")
         try {
-            await MMpage.waitFor(5000)
             await gnosisPage.bringToFront()
-            await gFunc.assertElementPresent(safe_hub.rejected_counter(1), gnosisPage)
-            await metamask.switchAccount(1) //currently in account4, changing to account 1
+            await gFunc.assertElementPresent(txTab.rejected_counter(1), gnosisPage, "css")
+            await metamask.switchAccount(1) //changing to account 1
             await gnosisPage.waitFor(2000)
             await gnosisPage.bringToFront()
-            await gFunc.clickSomething(safe_hub.reject_btn, gnosisPage)
-            await gFunc.clickSomething(safe_hub.execute_reject_tx_btn, gnosisPage)
+            await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, "css")
             await gnosisPage.waitFor(2000)
-            await metamask.sign()
-            done()
-        } catch (error) {
-            console.log(error)
-            done(error)
-        }
-    }, 90000)
-    test("Rejecting the Tx with the owner 3", async (done) => {
-        console.log("Rejecting the Tx with the owner 3")
-        try {
-            await MMpage.waitFor(5000)
-            await gnosisPage.bringToFront()
-            await gFunc.assertElementPresent(safe_hub.rejected_counter(2), gnosisPage)
-            await metamask.switchAccount(2)
-            await gnosisPage.bringToFront()
-            await gnosisPage.waitFor(5000)
-            await gFunc.clickSomething(safe_hub.reject_btn, gnosisPage)
-            await gFunc.clickSomething(safe_hub.execute_reject_tx_btn, gnosisPage)
+            await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
+            await gnosisPage.waitForFunction(
+                'document.querySelector("body").innerText.includes("Execute Transaction Rejection")'
+            );
+            await gnosisPage.$$eval('button', allElements => {
+                allElements.forEach( element => { if(element.innerText === "Execute Transaction Rejection") element.click()})
+            })
             await gnosisPage.waitFor(2000)
             await metamask.confirmTransaction()
             done()
@@ -127,17 +130,14 @@ describe("Reject Tx flow", ()=>{
         console.log("Verifying Execution of the Tx")
         try {
             await gnosisPage.bringToFront()
-            await gFunc.assertAllElementPresent([
-                safe_hub.executor_tag,
-                safe_hub.executor_hash,
-                safe_hub.rejected_counter(3),
-                safe_hub.top_tx_cancelled_label
-            ], gnosisPage)
-            //await gFunc.assertElementPresent(safe_hub.top_tx_cancelled_label, gnosisPage)
-            await gFunc.clickSomething(safe_hub.assets_tab, gnosisPage)
+            await gFunc.assertElementPresent(txTab.rejected_counter(2), gnosisPage, "css")
+            await gnosisPage.waitForFunction(
+                'document.querySelector("table[class^=MuiTable-root]").innerText.includes("Executor")'
+            );
+            await gFunc.clickByText("span", "ASSETS", gnosisPage)
             await gnosisPage.waitFor(3000) //Numbers flicker for a bit when you enter in this tab
-            const post_test_balance = await gFunc.getNumberInString(safe_hub.balance_ETH, gnosisPage)
-            expect(post_test_balance).toBe(currentBalance)
+            const post_test_balance = await gFunc.getNumberInString(assetTab.balance_value("eth"), gnosisPage, "css")
+            expect(post_test_balance).toBe(currentBalance) //balance should not have changed
             done()
         } catch (error) {
             console.log(error)

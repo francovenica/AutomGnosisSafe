@@ -174,7 +174,8 @@ export const sels = {
     },
     testIdSelectors: {
         general: { //id's that are on items that are spread through the site
-            qr_icon: "img[data-testid='qr-icon']"
+            qr_icon: "img[data-testid='qr-icon']",
+            sidebar: "[data-testid='sidebar']"
         },
         main_hub: {
             safe_name_heading : "h2[data-testid='safe-name-heading']",
@@ -221,7 +222,8 @@ export const sels = {
             connect_btn: "button[data-testid='connect-btn']",
             create_safe_btn: "a[data-testid='create-new-safe-btn']", 
             load_safe_btn: "a[data-testid='load-existing-safe-btn']",
-            accept_preferences: "span[data-testid='accept-preferences']"
+            accept_preferences: "span[data-testid='accept-preferences']",
+            mm_next_btn: "button.btn-primary"
         },
         load_safe_page: {
             form: "form[data-testid='load-safe-form']",
@@ -262,7 +264,7 @@ export const sels = {
         send_funds_form:{
             modal_title_send_funds : "div[data-testid='modal-title-send-funds']",
             current_eth_balance : "b[data-testid='current-eth-balance']",
-            recipient_input : "input[id='free-solo-demo']",
+            recipient_input : "[id='address-book-input']",
             select_token : "div[id='mui-component-select-token']",
             review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", //send funds review button initially disabled
             review_btn: "button[data-testid='review-tx-btn']",

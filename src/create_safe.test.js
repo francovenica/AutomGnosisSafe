@@ -18,71 +18,90 @@ afterAll(async () => {
 })
 
 describe("Create New Safe", () =>{
-    const homepage = sels.xpSelectors.homepage
-    const create_safe = sels.xpSelectors.create_safe
     const errorMsg = sels.errorMsg
+    const welcomePage = sels.testIdSelectors.welcome_page
+    const createPage = sels.testIdSelectors.create_safe_page
+    const mainHub = sels.testIdSelectors.main_hub
+
+    let rows_amount = ""
+    const new_safe_name = sels.safeNames.create_safe_name
+    const owner_2_name = sels.accountNames.owner2_name
+    const owner_2_address = sels.testAccountsHash.acc2
     test("Open Create Safe Form", async ()=>{
         console.log("Open Create Safe Form\n")
-        await gFunc.assertElementPresent(homepage.home_btn, gnosisPage, "css")
-        await gFunc.clickSomething(homepage.home_btn, gnosisPage)
-        await gFunc.clickSomething(homepage.create_safe_btn, gnosisPage)
-        await gFunc.assertElementPresent(sels.cssSelectors.create_safe_name_input, gnosisPage, "css")        
+        // console.log('Waiting')
+        // await gFunc.waitFor(2000)
+        // console.log('Done Waiting')
+        await gFunc.clickByText("p", "+ Create New Safe", gnosisPage)
+        await gFunc.assertElementPresent(createPage.form, gnosisPage, "css")
     },  60000)
     test("Naming The Safe", async () =>{
         console.log("Naming The Safe\n")
-        await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
-        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
-        await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
-        await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
+        await gFunc.clickElement(createPage.submit_btn, gnosisPage) //click with empty safe field
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //check error message        
+        await gFunc.clickAndType(createPage.safe_name_field, gnosisPage, new_safe_name, "css")
+        await gFunc.clickElement(createPage.submit_btn, gnosisPage)
     },  60000)
     test("Adding Owners", async() =>{
         console.log("Adding Owners\n")
-        await gFunc.assertElementPresent(create_safe.add_owner, gnosisPage)
-        await gFunc.clickSomething(create_safe.add_owner, gnosisPage)
-        await gFunc.clickSomething(create_safe.review_btn, gnosisPage)
-        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
-        await gFunc.clickAndType(create_safe.second_owner_name_input, gnosisPage, sels.accountNames.owner2_name)
-        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage)
-        await gFunc.clickAndType(create_safe.second_owner_address_input, gnosisPage, sels.testAccountsHash.acc2)
-        const req_conf_limit = await gFunc.getNumberInString(create_safe.req_conf_info_text, gnosisPage)
-        const owner_rows = await gnosisPage.$x(create_safe.current_rows)
-        expect(req_conf_limit).toBe(owner_rows.length)
-    },  30000);
+        await gFunc.assertElementPresent(createPage.step_two, gnosisPage, "css")
+        await gFunc.clickElement(createPage.add_owner_btn, gnosisPage) //adding new row
+        await gnosisPage.waitFor(1000)
+        await gFunc.clickElement(createPage.submit_btn, gnosisPage) //making "Required error" show up for the new owner fields
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //check first "required" error in name field
+        await gFunc.clickAndType(createPage.owner_name_field(1), gnosisPage, owner_2_name,  "css") //filling name field
+        await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) //checking "required" error in address field
+        await gFunc.clickAndType(createPage.address_field(1), gnosisPage, owner_2_address, "css")
+        await gFunc.assertElementPresent(createPage.valid_address(1), gnosisPage, "css")
+        rows_amount = await gnosisPage.$$eval(createPage.owner_row, x=>x.length) //see how many owner I've created
+        await gFunc.assertElementPresent(createPage.req_conf_limit(rows_amount), gnosisPage, "css") //that amount should be in the text "out of X owners"
+    },  60000);
     test("Setting Required Confirmation", async () => {
         console.log("Setting Required Confirmation")
-        await gFunc.openDropdown(sels.cssSelectors.req_conf_dropdown, gnosisPage, "css")
-        await gFunc.clickSomething(sels.cssSelectors.req_conf_value_2, gnosisPage, "css")
-        await gnosisPage.waitFor(2000);
-        await gFunc.clickSomething(create_safe.review_btn, gnosisPage)    
-    },  30000);
+        await gFunc.clickElement(createPage.threshold_select_input, gnosisPage)
+        await gFunc.clickElement(createPage.select_input(rows_amount), gnosisPage)
+        await gnosisPage.waitFor(2000) //gotta wait before clickin review_btn or doesn't work
+        await gFunc.clickElement(createPage.submit_btn, gnosisPage) 
+    },  60000);
     test("Reviewing Safe Info", async () => {
         console.log("Reviewing Safe Info\n")
-        await gnosisPage.waitFor(2000)
-        await gFunc.clickSomething(create_safe.submit_btn,gnosisPage)
-        await gnosisPage.waitFor(2000)
+        await gFunc.assertElementPresent(createPage.step_three, gnosisPage, "css")
+        await gFunc.assertTextPresent(createPage.review_safe_name, gnosisPage, new_safe_name, "css")
+        await gFunc.assertElementPresent(createPage.review_req_conf(rows_amount), gnosisPage, "css")
+        await gFunc.assertTextPresent(createPage.review_owner_name(1), gnosisPage, owner_2_name, "css")
+        await gFunc.assertTextPresent(createPage.review_owner_address(1), gnosisPage, owner_2_address, "css")
+        await gFunc.clickElement(createPage.submit_btn, gnosisPage)
+        await MMpage.bringToFront()
+        await MMpage.waitFor(2000)
         await metamask.confirmTransaction()
-        await MMpage.waitFor(1000)
-    },  30000)
+    },  60000)
     test("Assert Safe Creation", async () => {
         console.log("Assert Safe Creation\n")
         await gnosisPage.bringToFront()
-        await gnosisPage.waitForXPath(create_safe.continue_btn)
-        await gFunc.clickSomething(create_safe.continue_btn, gnosisPage)
-        await gnosisPage.waitForNavigation({waitUntil:'domcontentloaded'})
-        await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
-        const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")
-        expect(safeName).toMatch(sels.safeNames.create_safe_name)
-        expect(sels.xpSelectors.safe_hub.safe_address).toBeTruthy()
+        await gFunc.assertElementPresent(createPage.back_btn,gnosisPage, "css")
+        await gFunc.assertElementPresent(createPage.etherscan_link,gnosisPage, "css")
+        await gFunc.assertElementPresent(createPage.continue_btn,gnosisPage, "css")
+        await gFunc.clickElement(createPage.continue_btn, gnosisPage)
+        await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.create_safe_name, gnosisPage)
         
-        // save the address in a file for manual use later if needed
-        const safe_adrs = await gFunc.getInnerText(sels.xpSelectors.safe_hub.safe_address, gnosisPage)
-        const save_text = "safe : " + safe_adrs + "\n"
-        fs.appendFile("./createdSafes/safes.txt", save_text, function(err){
-            if (err) {
-                fs.writeFile("./createdSafes/safes.txt", save_text,{flag: 'wx'}, function(err){
-                    if (err) console.log("\nAlready exist\n");
-                })
-            };
-        })
-    },  60000);
+        // await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
+        // await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
+        // await gFunc.assertAllElementPresent([
+        //     mainHub.receiver_modal_safe_name,
+        //     mainHub.receiver_modal_safe_address
+        // ], gnosisPage, "css")
+        // const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
+        // expect(safeName).toMatch(new_safe_name)
+        
+        // // save the address in a file for manual use later if needed
+        // const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
+        // const save_text = "safe : " + safeAddress + "\n"
+        // fs.appendFile("./createdSafes/safes.txt", save_text, function(err){
+        //     if (err) {
+        //         fs.writeFile("./createdSafes/safes.txt", save_text,{flag: 'wx'}, function(err){
+        //             if (err) console.log("\nFile already exist\n");
+        //         })
+        //     };
+        // })
+    },  180000);
 })

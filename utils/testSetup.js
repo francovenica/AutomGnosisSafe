@@ -36,6 +36,7 @@ export const walletConnect = async (importMultipleAccounts = false) => {
     const welcomePage = sels.testIdSelectors.welcome_page
 
     if(importMultipleAccounts){
+        console.log('importando')
         await gFunc.importAccounts(metamask);
         await MMpage.waitFor(1000)
     }
@@ -45,7 +46,14 @@ export const walletConnect = async (importMultipleAccounts = false) => {
         await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
     await gFunc.clickElement(cssTopBar.not_connected_network, gnosisPage)
     await gFunc.clickElement(welcomePage.connect_btn, gnosisPage)
-    await gFunc.clickSomething(homepage.metamask_option, gnosisPage)
+    const navigation = new Promise(res => browser.on('targetcreated', res)) //To later wait for a memtamask popUp to confirm the connection
+    await gFunc.clickSomething(homepage.metamask_option, gnosisPage) //Clicking the MM icon in the onboardjs
+    await navigation //Waiting...
+    
+    const pages = await browser.pages();
+    const MMnotification = pages[pages.length-1] //Capturing the notification popUp
+    await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification) //The 2 buttons in the popUp have the same class. Clicking twice
+    await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification)
     await gFunc.assertElementPresent(cssTopBar.connected_network, gnosisPage, "css")
     // try {
     //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
@@ -64,14 +72,14 @@ export const load_wallet = async (importMultipleAccounts = false) =>{
     const welcomePage = sels.testIdSelectors.welcome_page
     const loadPage = sels.testIdSelectors.load_safe_page
 
-    await gFunc.clickElement(welcomePage.load_safe_btn, gnosisPage)
+    await gFunc.clickByText("p", "Load Existing Safe", gnosisPage)
     await gFunc.assertElementPresent(loadPage.form, gnosisPage, "css")
     await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, "css")
     await gFunc.clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, "css")
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
     await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, "css")
     const keys = Object.keys(sels.accountNames)
-    for(let i = 0; i < keys.length ; i++) { //only names on the first 2 owners
+    for(let i = 0; i < 2/*keys.length*/ ; i++) { //only names on the first 2 owners
         let selector = loadPage.owner_name(i)
         let name = sels.accountNames[keys[i]]
         await gFunc.clearInput(selector, gnosisPage, "css")

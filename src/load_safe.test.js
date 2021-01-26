@@ -1,9 +1,6 @@
 import * as gFunc from "../utils/global_func"
 import { sels } from "../utils/selectors"
 import { walletConnect } from "../utils/testSetup"
-const { getDocument, queries, waitFor } = require('pptr-testing-library')
-
-const { getByTestId, getByLabelText, getByText } = queries
 
 let browser;
 let metamask;
@@ -26,7 +23,7 @@ describe("Loading an Existing safe", () => {
     const mainHub = sels.testIdSelectors.main_hub
     test("Open Load Safe Form", async () => {
         console.log("Open Load Safe Form\n")
-        await gFunc.clickElement(welcomePage.load_safe_btn, gnosisPage)
+        await gFunc.clickByText("p", "Load Existing Safe", gnosisPage)
         await gFunc.assertElementPresent(loadPage.form, gnosisPage, "css")
         await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, "css")
         await gFunc.assertTextPresent(load_safe.valid_safe_name, gnosisPage, sels.assertions.valid_safe_name_field)
@@ -50,10 +47,7 @@ describe("Loading an Existing safe", () => {
         await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
         await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
         await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
-        const $name = await getByText(sels.safeNames.load_safe_name)
-        console.log('$name type = ', typeof($name))
-        console.log('$name content = ', $name)
-
+        await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.load_safe_name, gnosisPage)
         // await gFunc.assertAllElementPresent([
         //     mainHub.receiver_modal_safe_name,
         //     mainHub.receiver_modal_safe_address

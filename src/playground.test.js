@@ -1,8 +1,4 @@
 const puppeteer = require('puppeteer');
-const { getDocument, queries, waitFor } = require('pptr-testing-library')
-
-const { getByTestId, getByLabelText, getByText } = queries
-
 
 test("Test name", async(done) => {
 
@@ -11,11 +7,12 @@ test("Test name", async(done) => {
         const browser = await puppeteer.launch({headless: false});
         const page = await browser.newPage();
         await page.goto('https://example.com', {waitUntil: 'networkidle2'});
-        console.log('Done loading')
-        await page.waitFor(2000);
-        const button = getByText('More information...')
-        console.log('button = ', button)
-        button.click
+        console.log('-----------------Done loading-----------------')
+        //await page.waitFor(2000);
+        await page.waitForFunction(
+            'document.querySelectorAll("a").forEach(element => { if(element.innerText.includes("More information...")) return true})'
+        );
+        console.log('-----------------Done with wating-----------------')
         // const handle = await page.evaluate(() => {
         //     [...document.querySelectorAll('a')].find(element => element.textContent === 'More information...').click();
         // });
