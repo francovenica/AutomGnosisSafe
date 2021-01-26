@@ -87,8 +87,8 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, 'css')
   const keys = Object.keys(sels.accountNames)
   for (let i = 0; i < 2/* keys.length */ ; i++) { // only names on the first 2 owners
-    let selector = loadPage.owner_name(i)
-    let name = sels.accountNames[keys[i]]
+    const selector = loadPage.owner_name(i)
+    const name = sels.accountNames[keys[i]]
     await gFunc.clearInput(selector, gnosisPage, 'css')
     await gFunc.clickAndType(selector, gnosisPage, name, 'css')
   }
