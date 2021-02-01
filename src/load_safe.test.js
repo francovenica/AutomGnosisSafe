@@ -12,7 +12,7 @@ beforeAll(async () => {
 }, 60000)
 
 afterAll(async () => {
-  await gnosisPage.waitFor(2000)
+  await gnosisPage.waitForTimeout(2000)
   await browser.close()
 })
 
@@ -45,7 +45,7 @@ describe('Loading an Existing safe', () => {
     await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
     await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, 'css')
     await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, 'css')
-    await gnosisPage.waitFor(2000)
+    await gnosisPage.waitForTimeout(2000)
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
     await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
     await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)

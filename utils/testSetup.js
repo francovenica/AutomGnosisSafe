@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import * as dappeteer from 'dappeteer'
+import * as dappeteer from '@dasanra/dappeteer'
 
 import config from './config'
 import { sels } from './selectors'
@@ -40,11 +40,10 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   const [browser, metamask, gnosisPage, MMpage] = await init()
   const homepage = sels.xpSelectors.homepage
   const topBar = sels.testIdSelectors.top_bar
-  const welcomePage = sels.testIdSelectors.welcome_page
 
   if (importMultipleAccounts) {
     await gFunc.importAccounts(metamask)
-    await MMpage.waitFor(1000)
+    await MMpage.waitForTimeout(1000)
   }
 
   await gnosisPage.bringToFront()
@@ -53,15 +52,14 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   }
   await gFunc.clickElement(topBar.not_connected_network, gnosisPage)
   await gFunc.clickElement(topBar.connect_btn, gnosisPage)
-  const navigation = new Promise(res => browser.on('targetcreated', res)) // To later wait for a memtamask popUp to confirm the connection
   await gFunc.clickSomething(homepage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
-  await navigation // Waiting...
 
-  const pages = await browser.pages()
-  const MMnotification = pages[pages.length - 1] // Capturing the notification popUp
-  await MMnotification.bringToFront()
-  await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification) // The 2 buttons in the popUp have the same class. Clicking twice
-  await gFunc.clickElement(welcomePage.mm_next_btn, MMnotification)
+  // FIXME remove MMpage.reload() when updated version of dappeteer
+  await MMpage.reload()
+  // --- end of FIXME
+  await metamask.approve()
+  await gnosisPage.bringToFront()
+
   await gFunc.assertElementPresent(topBar.connected_network, gnosisPage, 'css')
   // try {
   //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
@@ -93,7 +91,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   }
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
   await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
-  await gnosisPage.waitFor(2000)
+  await gnosisPage.waitForTImeout(2000)
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
 
   return [
