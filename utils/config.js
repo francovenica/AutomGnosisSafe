@@ -1,5 +1,5 @@
 const config = {
-  SLOWMO: 50,
+  SLOWMO: 40,
   ENVIRONMENT: {
     rinkeby: 'https://rinkeby.gnosis-safe.io/app/',
     dev: 'https://safe-team.dev.gnosisdev.com/app/',

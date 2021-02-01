@@ -70,12 +70,13 @@ export const sels = {
         connected_network: "p[data-testid='connected-wallet']",
         cut_address: "p[data-testid='cut-address']",
         not_connected_network: "p[data-testid='not-connected-wallet']",
+        connect_btn: "button[data-testid='heading-connect-btn']",
         disconnect_btn: "button[data-testid='disconnect-btn']"
       },
       welcome_page: {
         connect_btn: "button[data-testid='connect-btn']",
         create_safe_btn: "a[data-testid='create-new-safe-btn']",
-        load_safe_btn: "a[data-testid='load-existing-safe-btn']",
+        load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
         accept_preferences: "span[data-testid='accept-preferences']",
         mm_next_btn: 'button.btn-primary'
       },
@@ -311,13 +312,15 @@ export const sels = {
       connected_network: "p[data-testid='connected-wallet']",
       cut_address: "p[data-testid='cut-address']",
       not_connected_network: "p[data-testid='not-connected-wallet']",
+      connect_btn: "button[data-testid='heading-connect-btn']",
       disconnect_btn: "button[data-testid='disconnect-btn']"
     },
     welcome_page: {
-      connect_btn: "button[data-testid='heading-connect-btn']",
+      connect_btn: "button[data-testid='connect-btn']",
       create_safe_btn: "a[data-testid='create-new-safe-btn']",
       load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
-      accept_preferences: "span[data-testid='accept-preferences']"
+      accept_preferences: "span[data-testid='accept-preferences']",
+      mm_next_btn: 'button.btn-primary'
     },
     load_safe_page: {
       form: "form[data-testid='load-safe-form']",

@@ -16,7 +16,7 @@ afterAll(async () => {
   await browser.close()
 })
 
-describe('Adding and removing owners', () => {
+describe.skip('Adding and removing owners', () => {
   const setting_owners = sels.xpSelectors.setting_owners
   const replace_owner = sels.xpSelectors.replace_owner
   const errorMsg = sels.errorMsg

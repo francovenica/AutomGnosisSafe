@@ -29,6 +29,7 @@ describe('Send Funds', () => {
   let amount_success_status = ''
   let current_eth_funds = ''
   let current_eth_funds_on_text = ''
+
   test('Open the Send Funds Form', async (done) => {
     console.log('Open the Send Funds Form\n')
     try {
@@ -40,13 +41,14 @@ describe('Send Funds', () => {
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
       await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
       await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
-      await gnosisPage.waitFor(5000000)
+      await gnosisPage.waitFor(10000)
       done()
     } catch (error) {
       console.log(error)
       done()
     }
-  }, 50000000)
+  }, 50000)
+
   test('Filling the Form', async (done) => {
     console.log('Filling the Form\n')
     try {
@@ -84,6 +86,7 @@ describe('Send Funds', () => {
       done(error)
     }
   }, 15000)
+
   test('Review Info and submit', async (done) => {
     console.log('Review Info and submit')
     try {
@@ -107,6 +110,7 @@ describe('Send Funds', () => {
       done(error)
     }
   }, 15000)
+
   test('Approving the Tx with the owner 2', async (done) => {
     console.log('Approving the Tx with the owner 2')
     try {
@@ -142,6 +146,7 @@ describe('Send Funds', () => {
       done(error)
     }
   }, 90000)
+
   test('Verifying Execution of the Tx', async (done) => {
     console.log('Verifying Execution of the Tx')
     try {

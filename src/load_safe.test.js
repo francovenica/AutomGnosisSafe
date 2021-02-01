@@ -18,9 +18,9 @@ afterAll(async () => {
 
 describe('Loading an Existing safe', () => {
   const load_safe = sels.xpSelectors.load_safe
-  const welcomePage = sels.testIdSelectors.welcome_page
   const loadPage = sels.testIdSelectors.load_safe_page
   const mainHub = sels.testIdSelectors.main_hub
+
   test('Open Load Safe Form', async () => {
     console.log('Open Load Safe Form\n')
     await gFunc.clickByText('p', 'Load Existing Safe', gnosisPage)
@@ -31,6 +31,7 @@ describe('Loading an Existing safe', () => {
     await gFunc.assertElementPresent(loadPage.valid_address, gnosisPage, 'css')
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
   }, 60000)
+
   test('Load Safe Owner edition', async () => {
     console.log('Load Safe Owner edition\n')
     await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, 'css')
@@ -38,6 +39,7 @@ describe('Loading an Existing safe', () => {
     await gFunc.clickAndType(loadPage.owner_name(), gnosisPage, sels.accountNames.owner_name, 'css')
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
   }, 60000)
+
   test('Load safe Review Details', async () => {
     console.log('Load safe Review Details\n')
     await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
