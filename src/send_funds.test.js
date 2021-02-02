@@ -8,11 +8,11 @@ let gnosisPage
 let MMpage
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe()
+  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe(true)
 }, 60000)
 
 afterAll(async () => {
-  await gnosisPage.waitFor(2000)
+  await gnosisPage.waitForTimeout(2000)
   await browser.close()
 })
 
@@ -41,7 +41,7 @@ describe('Send Funds', () => {
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
       await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
       await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
-      await gnosisPage.waitFor(10000)
+      await gnosisPage.waitForTimeout(5000)
       done()
     } catch (error) {
       console.log(error)
@@ -57,7 +57,7 @@ describe('Send Funds', () => {
       await gFunc.openDropdown(sendFunds.select_token, gnosisPage, 'css')
       await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
 
-      await gnosisPage.waitFor(1000)
+      await gnosisPage.waitForTimeout(1000)
 
       await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, '0', 'ccs')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.greater_than_0), gnosisPage)
@@ -93,16 +93,19 @@ describe('Send Funds', () => {
       await gFunc.assertAllElementPresent([
         sendFunds.send_funds_review,
         sendFunds.recipient_address_review,
-        sendFunds.amount_eth_review,
-        sendFunds.fee_msg_review
+        // sendFunds.amount_eth_review,
+        // sendFunds.fee_msg_review
       ], gnosisPage, 'css')
       const recipientHash = await gFunc.getInnerText(sendFunds.recipient_address_review, gnosisPage, 'css')
       expect(recipientHash).toMatch(sels.testAccountsHash.non_owner_acc)
       const tokenAmount = await gFunc.getInnerText(sendFunds.amount_eth_review, gnosisPage, 'css')
       expect(tokenAmount).toMatch('0.01')
-      await gnosisPage.waitFor(3000)
+
+      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
+      await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, 'css')
       await gFunc.clickElement(sendFunds.submit_btn, gnosisPage)
-      await gnosisPage.waitFor(3000)
+
+      await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
       done()
     } catch (error) {
@@ -114,7 +117,7 @@ describe('Send Funds', () => {
   test('Approving the Tx with the owner 2', async (done) => {
     console.log('Approving the Tx with the owner 2')
     try {
-      await MMpage.waitFor(2000)
+      // await MMpage.waitForTimeout(2000)
       await gnosisPage.bringToFront()
       // checking amount of "Success and awaiting conf status for final review"
       await gFunc.assertElementPresent(txTab.tx_status('Awaiting confirmations'), gnosisPage, 'css')
@@ -136,9 +139,12 @@ describe('Send Funds', () => {
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.tx_status('Awaiting your confirmation'), gnosisPage, 'css')
       await gFunc.clickElement(txTab.confirm_tx_btn, gnosisPage)
+
       await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
+      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
+
       await gFunc.clickElement(mainHub.approve_tx_btn, gnosisPage)
-      await gnosisPage.waitFor(2000)
+      await gnosisPage.waitForTimeout(2000)
       await metamask.confirmTransaction()
       done()
     } catch (error) {

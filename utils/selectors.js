@@ -373,7 +373,8 @@ export const sels = {
       amount_eth_review: "p[data-testid='amount-ETH-review-step']",
       fee_msg_review: "p[data-testid='fee-meg-review-step']",
       submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-      submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
+      submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
+      advanced_options: "//p[contains(text(),'Advanced options')]"
     },
     settings_tabs: {
       req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
