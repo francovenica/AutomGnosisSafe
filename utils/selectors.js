@@ -119,7 +119,7 @@ export const sels = {
       send_funds_form: {
         modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
         current_eth_balance: "b[data-testid='current-eth-balance']",
-        recipient_input: "[id='address-book-input']",
+        recipient_input: "input[id='address-book-input']",
         select_token: "div[id='mui-component-select-token']",
         review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
         review_btn: "button[data-testid='review-tx-btn']",
@@ -361,7 +361,7 @@ export const sels = {
     send_funds_form: {
       modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
       current_eth_balance: "b[data-testid='current-eth-balance']",
-      recipient_input: "input[id='free-solo-demo']",
+      recipient_input: "input[id='address-book-input']",
       select_token: "div[id='mui-component-select-token']",
       review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
       review_btn: "button[data-testid='review-tx-btn']",

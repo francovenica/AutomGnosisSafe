@@ -16,7 +16,8 @@
     "puppeteer": "^5.5.0"
   },
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "test-local": "TESTING_ENV=local yarn test"
   },
   "dependencies": {
     "@dasanra/dappeteer": "^2.0.0",

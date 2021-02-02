@@ -5,8 +5,10 @@ import config from './config'
 import { sels } from './selectors'
 import * as gFunc from './global_func'
 
+const TESTING_ENV = process.env.TESTING_ENV || 'dev'
+
 const { SLOWMO, ENVIRONMENT } = config
-const ENV = ENVIRONMENT.dev
+const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
 
 export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
@@ -47,9 +49,9 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   }
 
   await gnosisPage.bringToFront()
-  if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
-    await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
-  }
+  // if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
+  await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+  // }
   await gFunc.clickElement(topBar.not_connected_network, gnosisPage)
   await gFunc.clickElement(topBar.connect_btn, gnosisPage)
   await gFunc.clickSomething(homepage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
@@ -57,7 +59,7 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   // FIXME remove MMpage.reload() when updated version of dappeteer
   await MMpage.reload()
   // --- end of FIXME
-  await metamask.approve()
+  await metamask.approve({ allAccounts: true })
   await gnosisPage.bringToFront()
 
   await gFunc.assertElementPresent(topBar.connected_network, gnosisPage, 'css')
@@ -91,7 +93,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   }
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
   await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
-  await gnosisPage.waitForTImeout(2000)
+  await gnosisPage.waitForTimeout(2000)
   await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
 
   return [
