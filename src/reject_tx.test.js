@@ -74,9 +74,9 @@ describe('Reject Tx flow', () => {
     }
   }, 60000)
 
-  test('Rejecting with the 1st  owner', async (done) => {
+  test('Rejecting with the 1st owner', async (done) => {
     try {
-      console.log('Rejecting with the 1st  owner')
+      console.log('Rejecting with the 1st owner')
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.tx_status(labels.awaiting_confirmations), gnosisPage, 'css')
       await gnosisPage.evaluate(() => {
@@ -94,8 +94,7 @@ describe('Reject Tx flow', () => {
         document.querySelector('body').innerText.includes('Reject Transaction')
       )
 
-      // FIXME detect and wait until Execute button is enabled
-      await gnosisPage.waitForTimeout(5000)
+      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
       await gFunc.clickByText('button', 'Reject Transaction', gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
@@ -122,8 +121,7 @@ describe('Reject Tx flow', () => {
         document.querySelector('body').innerText.includes('Execute Transaction Rejection')
       )
 
-      // FIXME detect and wait until Execute button is enabled
-      await gnosisPage.waitForTimeout(5000)
+      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
 
       await gFunc.clickByText('button', 'Execute Transaction Rejection', gnosisPage)
 
