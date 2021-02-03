@@ -20,7 +20,7 @@
     "test-local": "TESTING_ENV=local yarn test"
   },
   "dependencies": {
-    "@dasanra/dappeteer": "^2.0.0",
+    "@dasanra/dappeteer": "^2.0.1",
     "jest-cli": "^26.6.3"
   },
   "jest": {

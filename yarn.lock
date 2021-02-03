@@ -849,10 +849,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dasanra/dappeteer@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@dasanra/dappeteer/-/dappeteer-2.0.0.tgz#b7a3c41a29bbfc5e0d1c85aef85e6d7cd9b8d6ec"
-  integrity sha512-s0qUo639XFRfHLxZ5o04VRBhioe6hkDQgEy0v3PWWfO+S9SZhQqzAsDLImBMSlJalOQFx4x0Uj0r9u1neLc0cg==
+"@dasanra/dappeteer@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@dasanra/dappeteer/-/dappeteer-2.0.1.tgz#e62de908c0d316e0c8217f27ae1e97ef5dcbcc1d"
+  integrity sha512-8pD8FNGweyQIC0O0geQ1mjMcBHH8DmrcgyDwiolS0cuSO89+V82MP4516Bogh/Xh6wHbEX3Hm9SqJTlz8XnGYg==
 
 "@eslint/eslintrc@^0.3.0":
   version "0.3.0"
