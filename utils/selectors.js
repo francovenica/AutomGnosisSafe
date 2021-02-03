@@ -195,7 +195,7 @@ export const sels = {
       owner_limit: '//form//div[2]/p', // this is the full message, getNumberInString has to be used to get the number
     },
     setting_owners: {
-      settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
+      settings_tab: "//span[contains(text(),'Settings')]/ancestor::a",
       owners_tab: "//div[contains(text(),'Owners')]",
       owner_amount: '//div[5]//div[3]/p',
       owner_table: '//table/tbody/tr', // to apply .lengnth and know the amount of owners

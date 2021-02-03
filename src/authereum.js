@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-import * as gFunc from '../utils/global_func'
+import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 
 const { ENVIRONMENT, SLOWMO } = require('../utils/config').default

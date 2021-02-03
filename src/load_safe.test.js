@@ -1,4 +1,4 @@
-import * as gFunc from '../utils/global_func'
+import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { initWithWalletConnected } from '../utils/testSetup'
 

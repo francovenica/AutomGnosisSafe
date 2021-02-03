@@ -1,4 +1,4 @@
-import * as gFunc from '../utils/global_func'
+import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
@@ -32,7 +32,7 @@ describe('Adding and removing owners', () => {
 
   let new_owner_name = sels.otherAccountNames.owner6_name
   let new_owner_address = sels.testAccountsHash.non_owner_acc
-  test.skip('Checking owner amount and current policies', async (done) => {
+  test('Checking owner amount and current policies', async (done) => {
     console.log('Checking owner amount current policies')
     try {
       await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
