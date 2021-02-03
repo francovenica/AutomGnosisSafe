@@ -11,10 +11,10 @@ beforeAll(async () => {
   [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe(true)
 }, 60000)
 
-// afterAll(async () => {
-//   await gnosisPage.waitFor(2000)
-//   await browser.close()
-// })
+afterAll(async () => {
+  await gnosisPage.waitFor(2000)
+  await browser.close()
+})
 
 describe('Adding and removing owners', () => {
   const modify_policies = sels.xpSelectors.modify_policies
