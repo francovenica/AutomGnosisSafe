@@ -1,0 +1,23 @@
+name: Puppeteer Headful CI
+on: push
+jobs:
+  end_to_end_tests:
+    name: Run Headful End-to-End Tests 
+    runs-on: ubuntu-latest
+    env:
+      CI: 'true'
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Install node 
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install stuff 
+      run: npm install 
+      env:
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+    - name: Run headful puppeteer tests
+      uses: djp3/puppeteer-headful@master
+      with:
+        args: npm test

@@ -15,7 +15,7 @@ export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--start-maximized', ENV], // maximized browser, URL for the base page
+    args: ['--no-sandbox', '--start-maximized', ENV], // maximized browser, URL for the base page
     executablePath: process.env.PUPPETEER_EXEC_PATH // set by docker container
   })
 
