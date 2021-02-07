@@ -9,8 +9,6 @@ jobs:
     - name: Install Dependencies
       uses: actions/setup-node@v2
     - run: npm install
-      env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
     - name: Test Code
       uses: mujo-code/puppeteer-headful@master
       env:
