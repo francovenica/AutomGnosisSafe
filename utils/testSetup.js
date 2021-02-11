@@ -12,6 +12,8 @@ const { SLOWMO, ENVIRONMENT } = config
 const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
 
 export const init = async () => {
+  console.log('Im starting puppeteer')
+  console.log('I have this executablePath: ', process.env.PUPPETEER_EXEC_PATH)
   const browser = await dappeteer.launch(puppeteer, {
     executablePath: process.env.PUPPETEER_EXEC_PATH, // set by docker container
     defaultViewport: null, // this extends the page to the size of the browser
