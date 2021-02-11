@@ -33,7 +33,7 @@ describe('Reject Tx flow', () => {
       await gFunc.assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       startBalance = await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
-      await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
+      await gFunc.clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
       await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
       done()
     } catch (error) {
@@ -47,11 +47,11 @@ describe('Reject Tx flow', () => {
       console.log('Filling the Form')
       await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
       await gFunc.openDropdown(sendFunds.select_token, gnosisPage, 'css')
-      await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.select_token_ether }, gnosisPage)
       await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, '0.5', 'css')
       await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
-      await gFunc.clickElement(sendFunds.review_btn, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.review_btn }, gnosisPage)
       done()
     } catch (error) {
       console.log(error)
@@ -63,7 +63,7 @@ describe('Reject Tx flow', () => {
     try {
       console.log('Approving the Tx with the owner 1')
       await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, 'css')
-      await gFunc.clickElement(sendFunds.submit_btn, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.submit_btn }, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -84,10 +84,10 @@ describe('Reject Tx flow', () => {
         firstTx && firstTx.click()
       })
       // Can't click an element by the label because notifications block the click
-      // await gFunc.clickElement(txTab.tx_status(labels.awaiting_confirmations), gnosisPage)
+      // await gFunc.clickElement({ selector: txTab.tx_status(labels.awaiting_confirmations) }, gnosisPage)
       await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage, 'css')
       await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, 'css')
-      await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: txTab.reject_tx_btn }, gnosisPage)
 
       // making sure that a "Reject Transaction" text exist in the page first
       await gnosisPage.waitForFunction(() =>
@@ -116,7 +116,7 @@ describe('Reject Tx flow', () => {
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.reject_tx_btn, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(2000)
-      await gFunc.clickElement(txTab.reject_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: txTab.reject_tx_btn }, gnosisPage)
       await gnosisPage.waitForFunction(() =>
         document.querySelector('body').innerText.includes('Execute Transaction Rejection')
       )

@@ -1,4 +1,4 @@
-import { sels } from './selectors'
+import { accountsSelectors } from './selectors/accounts'
 
 // $$(".MuiCollapse-container").forEach((element) => element.remove())
 // console.log(await gnosisPage.$$eval(loadPage.owner_row, x=>x.length)) Count amount of elements with the same selector
@@ -22,7 +22,7 @@ const elementSelector = async (selector, page, type, timeout) => {
   }
 }
 
-export const clickElement = async function (selector, page, type = 'css') {
+export const clickElement = async function ({ selector, type = 'css' }, page) {
   const element = await elementSelector(selector, page, type, 20000)
   try {
     expect(element).not.toBe('Selector Not Found')
@@ -96,6 +96,21 @@ export const clearInput = async function (selector, page, type = 'Xpath') {
   const field = await elementSelector(selector, page, type, 20000)
   await field.click({ clickCount: 3 })
   page.keyboard.press('Backspace')
+}
+
+export const waitUntilElementPresent = async function (selector, page, type = 'Xpath') {
+  if (type === 'Xpath') {
+    return page.waitForXPath(selector).then(element => {
+      console.log('Wait For Xpath element success', selector)
+      return element
+    })
+  }
+  if (type === 'css') {
+    return page.waitForSelector(selector).then(element => {
+      console.log('Wait For css element success', selector)
+      return element
+    })
+  }
 }
 
 export const assertElementPresent = async function (selector, page, type = 'Xpath') {
@@ -202,7 +217,7 @@ export const isTextPresent = async function (selector, text, page) {
 
 // ------------------Stand alone functions
 export const closeIntercom = async function (selector, page) {
-  await page.waitFor(3000)
+  await page.waitForTimeout(3000)
   try {
     const frame = await page.frames().find(frame => frame.name() === 'intercom-note-frame')
     const button = await frame.$(selector)
@@ -214,9 +229,9 @@ export const closeIntercom = async function (selector, page) {
 
 export const importAccounts = async function (metamask) {
   console.log('<<Importing accounts>>')
-  const keys = Object.keys(sels.privateKeys)
+  const keys = Object.keys(accountsSelectors.privateKeys)
   for (let i = 0; i < 1; i++) { // forEach doesnt work with async functions, you have to use a regular for()
-    await metamask.importPK(sels.privateKeys[keys[i]])
+    await metamask.importPK(accountsSelectors.privateKeys[keys[i]])
   }
 }
 

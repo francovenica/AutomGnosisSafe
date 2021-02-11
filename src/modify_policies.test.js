@@ -52,7 +52,7 @@ describe.skip('Change Policies', () => {
     const errorMsg = sels.errorMsg
     try {
       await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
-      await gFunc.clickElement('[data-value="1"]', gnosisPage)
+      await gFunc.clickElement({ selector: '[data-value="1"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.sign()
@@ -80,9 +80,9 @@ describe.skip('Change Policies', () => {
       await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.tx_status('Awaiting your confirmation'), gnosisPage, 'css')
-      await gFunc.clickElement(txTab.confirm_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: txTab.confirm_tx_btn }, gnosisPage)
       await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await gFunc.clickElement(mainHub.approve_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.confirmTransaction()
       done()
@@ -115,7 +115,7 @@ describe.skip('Change Policies', () => {
       await gFunc.clickByText('span', 'Modify', gnosisPage)
       await gFunc.isTextPresent('body', 'Change required confirmations', gnosisPage)
       await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
-      await gFunc.clickElement('[data-value="2"]', gnosisPage)
+      await gFunc.clickElement({ selector: '[data-value="2"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.confirmTransaction()

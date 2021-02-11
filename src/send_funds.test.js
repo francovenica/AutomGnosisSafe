@@ -39,9 +39,9 @@ describe('Send funds and sign with two owners', () => {
       current_eth_funds_on_text = await gFunc.getInnerText(assetTab.balance_value('eth'), gnosisPage, 'css')
       current_eth_funds = parseFloat((await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')).toFixed(3))
       // await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
-      // await gFunc.clickElement(mainHub.new_transaction_btn, gnosisPage)
+      // await gFunc.clickElement({ selector: mainHub.new_transaction_btn }, gnosisPage)
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
-      await gFunc.clickElement(mainHub.modal_send_funds_btn, gnosisPage)
+      await gFunc.clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
       await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(5000)
       done()
@@ -57,7 +57,7 @@ describe('Send funds and sign with two owners', () => {
       await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
 
       await gFunc.openDropdown(sendFunds.select_token, gnosisPage, 'css')
-      await gFunc.clickElement(sendFunds.select_token_ether, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.select_token_ether }, gnosisPage)
 
       await gnosisPage.waitForTimeout(1000)
 
@@ -77,14 +77,14 @@ describe('Send funds and sign with two owners', () => {
       await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
 
       // Checking that the value set by the "Send max" button is the same as the current balance
-      await gFunc.clickElement(sendFunds.send_max_btn, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.send_max_btn }, gnosisPage)
       const maxInputValue = await gFunc.getNumberInString(sendFunds.amount_input, gnosisPage, 'css')
       expect(parseFloat(maxInputValue)).toBe(current_eth_funds)
       await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
 
       await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, TOKEN_AMOUNT.toString(), 'css')
       await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)
-      await gFunc.clickElement(sendFunds.review_btn, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.review_btn }, gnosisPage)
       done()
     } catch (error) {
       console.log(error)
@@ -108,7 +108,7 @@ describe('Send funds and sign with two owners', () => {
 
       await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
       await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, 'css')
-      await gFunc.clickElement(sendFunds.submit_btn, gnosisPage)
+      await gFunc.clickElement({ selector: sendFunds.submit_btn }, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -132,7 +132,7 @@ describe('Send funds and sign with two owners', () => {
       amount_await_conf_status = '' // reset
 
       // Notifications are blocking the click ot the tx, I had to click it in another way now
-      // await gFunc.clickElement(txTab.tx_status("Awaiting confirmations"), gnosisPage)
+      // await gFunc.clickElement({ selector: txTab.tx_status("Awaiting confirmations") }, gnosisPage)
       await gnosisPage.evaluate(() => {
         const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
         firstTx && firstTx.click()
@@ -142,12 +142,12 @@ describe('Send funds and sign with two owners', () => {
       await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.tx_status('Awaiting your confirmation'), gnosisPage, 'css')
-      await gFunc.clickElement(txTab.confirm_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: txTab.confirm_tx_btn }, gnosisPage)
 
       await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
       await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
 
-      await gFunc.clickElement(mainHub.approve_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       await metamask.confirmTransaction()
       done()
@@ -177,7 +177,7 @@ describe('Send funds and sign with two owners', () => {
       const recipientAddress = await gFunc.selectorChildren(txTab.tx_description_send, gnosisPage, 'text', 1)
       // regex to match an address hash
       expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)
-      // await gFunc.clickElement(mainHub.assets_tab, gnosisPage)
+      // await gFunc.clickElement({ selector: mainHub.assets_tab }, gnosisPage)
       await gFunc.clickByText('span', 'ASSETS', gnosisPage)
       await gFunc.assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       const array = ['[data-testid="balance-ETH"]', current_eth_funds_on_text]

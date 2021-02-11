@@ -36,17 +36,17 @@ describe.skip('Create New Safe', () => {
   }, 60000)
   test('Naming The Safe', async () => {
     console.log('Naming The Safe\n')
-    await gFunc.clickElement(createPage.submit_btn, gnosisPage) // click with empty safe field
+    await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage) // click with empty safe field
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // check error message
     await gFunc.clickAndType(createPage.safe_name_field, gnosisPage, new_safe_name, 'css')
-    await gFunc.clickElement(createPage.submit_btn, gnosisPage)
+    await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage)
   }, 60000)
   test('Adding Owners', async() => {
     console.log('Adding Owners\n')
     await gFunc.assertElementPresent(createPage.step_two, gnosisPage, 'css')
-    await gFunc.clickElement(createPage.add_owner_btn, gnosisPage) // adding new row
+    await gFunc.clickElement({ selector: createPage.add_owner_btn }, gnosisPage) // adding new row
     await gnosisPage.waitFor(1000)
-    await gFunc.clickElement(createPage.submit_btn, gnosisPage) // making "Required error" show up for the new owner fields
+    await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage) // making "Required error" show up for the new owner fields
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // check first "required" error in name field
     await gFunc.clickAndType(createPage.owner_name_field(1), gnosisPage, owner_2_name, 'css') // filling name field
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // checking "required" error in address field
@@ -57,10 +57,10 @@ describe.skip('Create New Safe', () => {
   }, 60000)
   test('Setting Required Confirmation', async () => {
     console.log('Setting Required Confirmation')
-    await gFunc.clickElement(createPage.threshold_select_input, gnosisPage)
-    await gFunc.clickElement(createPage.select_input(rows_amount), gnosisPage)
+    await gFunc.clickElement({ selector: createPage.threshold_select_input }, gnosisPage)
+    await gFunc.clickElement({ selector: createPage.select_input(rows_amount) }, gnosisPage)
     await gnosisPage.waitFor(2000) // gotta wait before clickin review_btn or doesn't work
-    await gFunc.clickElement(createPage.submit_btn, gnosisPage)
+    await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage)
   }, 60000)
   test('Reviewing Safe Info', async () => {
     console.log('Reviewing Safe Info\n')
@@ -69,7 +69,7 @@ describe.skip('Create New Safe', () => {
     await gFunc.assertElementPresent(createPage.review_req_conf(rows_amount), gnosisPage, 'css')
     await gFunc.assertTextPresent(createPage.review_owner_name(1), gnosisPage, owner_2_name, 'css')
     await gFunc.assertTextPresent(createPage.review_owner_address(1), gnosisPage, owner_2_address, 'css')
-    await gFunc.clickElement(createPage.submit_btn, gnosisPage)
+    await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage)
     await MMpage.bringToFront()
     await MMpage.waitFor(2000)
     await metamask.confirmTransaction()
@@ -77,14 +77,14 @@ describe.skip('Create New Safe', () => {
   test('Assert Safe Creation', async () => {
     console.log('Assert Safe Creation\n')
     await gnosisPage.bringToFront()
-    await gFunc.assertElementPresent(createPage.back_btn,gnosisPage, 'css')
-    await gFunc.assertElementPresent(createPage.etherscan_link,gnosisPage, 'css')
-    await gFunc.assertElementPresent(createPage.continue_btn,gnosisPage, 'css')
-    await gFunc.clickElement(createPage.continue_btn, gnosisPage)
+    await gFunc.assertElementPresent(createPage.back_btn, gnosisPage, 'css')
+    await gFunc.assertElementPresent(createPage.etherscan_link, gnosisPage, 'css')
+    await gFunc.assertElementPresent(createPage.continue_btn, gnosisPage, 'css')
+    await gFunc.clickElement({ selector: createPage.continue_btn }, gnosisPage)
     await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.create_safe_name, gnosisPage)
 
     // await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
-    // await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
+    // await gFunc.clickElement({ selector: mainHub.show_qr_btn }, gnosisPage)
     // await gFunc.assertAllElementPresent([
     //     mainHub.receiver_modal_safe_name,
     //     mainHub.receiver_modal_safe_address

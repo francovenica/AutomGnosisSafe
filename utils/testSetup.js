@@ -3,6 +3,10 @@ import * as dappeteer from '@dasanra/dappeteer'
 
 import config from './config'
 import { sels } from './selectors'
+import { accountsSelectors } from './selectors/accounts'
+import { topBar } from './selectors/topBar'
+import { homePage } from './selectors/welcomePage'
+import { loadSafeForm } from './selectors/loadSafeForm'
 import * as gFunc from './selectorsHelpers'
 import { assertElementPresent, clearInput, clickAndType, clickByText, clickElement } from './selectorsHelpers'
 
@@ -19,8 +23,8 @@ export const init = async () => {
   })
 
   const metamask = await dappeteer.getMetamask(browser, {
-    seed: sels.wallet.seed,
-    password: sels.wallet.password
+    seed: accountsSelectors.wallet.seed,
+    password: accountsSelectors.wallet.password
   })
 
   await metamask.switchNetwork('rinkeby')
@@ -47,8 +51,6 @@ export const init = async () => {
  */
 export const initWithWalletConnected = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await init()
-  const homepage = sels.xpSelectors.homepage
-  const topBar = sels.testIdSelectors.top_bar
 
   if (importMultipleAccounts) {
     await gFunc.importAccounts(metamask)
@@ -57,11 +59,11 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
 
   await gnosisPage.bringToFront()
   // if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
-  await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+  await clickElement(homePage.accept_cookies, gnosisPage)
   // }
   await clickElement(topBar.not_connected_network, gnosisPage)
   await clickElement(topBar.connect_btn, gnosisPage)
-  await gFunc.clickSomething(homepage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
+  await clickElement(homePage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
 
   // FIXME remove MMpage.reload() when updated version of dappeteer
   await MMpage.reload()
@@ -70,9 +72,7 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   await gnosisPage.bringToFront()
 
   await assertElementPresent(topBar.connected_network, gnosisPage, 'css')
-  // try {
-  //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
-  // } catch (e) { }
+
   return [
     browser,
     metamask,
@@ -90,30 +90,29 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
  */
 export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
-  const loadPage = sels.testIdSelectors.load_safe_page
 
   // Open load safe form
   await clickByText('p', 'Load Existing Safe', gnosisPage)
-  await assertElementPresent(loadPage.form, gnosisPage, 'css')
-  await clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, 'css')
-  await clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, 'css')
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
+  await clickAndType(loadSafeForm.safe_name_field.selector, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
+  await clickAndType(loadSafeForm.safe_address_field.selector, gnosisPage, accountsSelectors.testAccountsHash.safe1, 'css')
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   // Second step, review owners
-  await assertElementPresent(loadPage.step_two, gnosisPage, 'css')
-  const keys = Object.keys(sels.accountNames)
+  await assertElementPresent(loadSafeForm.step_two.selector, gnosisPage, 'css')
+  const keys = Object.keys(accountsSelectors.accountNames)
   for (let i = 0; i < 2/* keys.length */; i++) { // only names on the first 2 owners
-    const selector = loadPage.owner_name(i)
-    const name = sels.accountNames[keys[i]]
+    const selector = loadSafeForm.owner_name(i)
+    const name = accountsSelectors.accountNames[keys[i]]
     await clearInput(selector, gnosisPage, 'css')
     await clickAndType(selector, gnosisPage, name, 'css')
   }
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   // Third step, review information and submit
-  await assertElementPresent(loadPage.step_three, gnosisPage, 'css')
+  await assertElementPresent(loadSafeForm.step_three.selector, gnosisPage, 'css')
   await gnosisPage.waitForTimeout(2000)
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   return [
     browser,
