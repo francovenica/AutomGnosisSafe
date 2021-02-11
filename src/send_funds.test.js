@@ -18,7 +18,7 @@ afterAll(async () => {
   await browser.close()
 })
 
-describe('Send funds and sign with two owners', () => {
+describe.skip('Send funds and sign with two owners', () => {
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
   const sendFunds = sels.testIdSelectors.send_funds_form
