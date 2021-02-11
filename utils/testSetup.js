@@ -12,34 +12,38 @@ const { SLOWMO, ENVIRONMENT } = config
 const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
 
 export const init = async () => {
-  console.log('Im starting puppeteer')
-  console.log('I have this executablePath: ', process.env.PUPPETEER_EXEC_PATH)
-  const browser = await dappeteer.launch(puppeteer, {
-    executablePath: process.env.PUPPETEER_EXEC_PATH, // set by docker container
-    defaultViewport: null, // this extends the page to the size of the browser
-    slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--no-sandbox', '--start-maximized', ENV] // maximized browser, URL for the base page
-  })
+  try {
+    const browser = await dappeteer.launch(puppeteer, {
+      executablePath: process.env.PUPPETEER_EXEC_PATH, // set by docker container
+      defaultViewport: null, // this extends the page to the size of the browser
+      slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
+      args: ['--no-sandbox', '--start-maximized', ENV] // maximized browser, URL for the base page
+    })
 
-  const metamask = await dappeteer.getMetamask(browser, {
-    seed: sels.wallet.seed,
-    password: sels.wallet.password
-  })
+    const metamask = await dappeteer.getMetamask(browser, {
+      seed: sels.wallet.seed,
+      password: sels.wallet.password
+    })
 
-  await metamask.switchNetwork('rinkeby')
-  const [gnosisPage, MMpage] = await browser.pages() // get a grip on both tabs
-  // Reload Gnosis Safe to ensure Metamask info is loaded
-  await gnosisPage.reload({ waitUntil: ['networkidle0', 'domcontentloaded'] })
+    await metamask.switchNetwork('rinkeby')
+    const [gnosisPage, MMpage] = await browser.pages() // get a grip on both tabs
+    // Reload Gnosis Safe to ensure Metamask info is loaded
+    await gnosisPage.reload({ waitUntil: ['networkidle0', 'domcontentloaded'] })
 
-  gnosisPage.setDefaultTimeout(60000)
-  MMpage.setDefaultTimeout(60000)
+    gnosisPage.setDefaultTimeout(60000)
+    MMpage.setDefaultTimeout(60000)
 
-  return [
-    browser,
-    metamask,
-    gnosisPage,
-    MMpage
-  ]
+    return [
+      browser,
+      metamask,
+      gnosisPage,
+      MMpage
+    ]
+  } catch (e) {
+    console.log('Im starting puppeteer')
+    console.log('I have this executablePath: ', process.env.PUPPETEER_EXEC_PATH)
+    throw e
+  }
 }
 
 /**
