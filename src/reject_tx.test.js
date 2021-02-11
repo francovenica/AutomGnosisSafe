@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -21,10 +22,8 @@ describe('Reject Tx flow', () => {
 
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
-  const sendFunds = sels.testIdSelectors.send_funds_form
   const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
-  const send_funds_modal = sels.xpSelectors.send_funds_modal
   const labels = sels.statusToLabel
 
   test('Open the Send Funds Form', async (done) => {
@@ -34,7 +33,7 @@ describe('Reject Tx flow', () => {
       startBalance = await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
       await gFunc.clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
-      await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
+      await gFunc.assertElementPresent(sendFundsForm.review_btn_disabled.selector, gnosisPage, 'css')
       done()
     } catch (error) {
       console.log(error)
@@ -45,13 +44,13 @@ describe('Reject Tx flow', () => {
   test('Filling the Form', async (done) => {
     try {
       console.log('Filling the Form')
-      await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
-      await gFunc.openDropdown(sendFunds.select_token, gnosisPage, 'css')
-      await gFunc.clickElement({ selector: sendFunds.select_token_ether }, gnosisPage)
-      await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, '0.5', 'css')
-      await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)
+      await gFunc.clickAndType(sendFundsForm.recipient_input.selector, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
+      await gFunc.openDropdown(sendFundsForm.select_token.selector, gnosisPage, 'css')
+      await gFunc.clickElement(sendFundsForm.select_token_ether, gnosisPage)
+      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, '0.5', 'css')
+      await gFunc.assertElementPresent(sendFundsForm.valid_amount_msg.selector, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
-      await gFunc.clickElement({ selector: sendFunds.review_btn }, gnosisPage)
+      await gFunc.clickElement(sendFundsForm.review_btn, gnosisPage)
       done()
     } catch (error) {
       console.log(error)
@@ -62,8 +61,8 @@ describe('Reject Tx flow', () => {
   test('Approving the Tx with the owner 1', async (done) => {
     try {
       console.log('Approving the Tx with the owner 1')
-      await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, 'css')
-      await gFunc.clickElement({ selector: sendFunds.submit_btn }, gnosisPage)
+      await gFunc.assertElementPresent(sendFundsForm.submit_btn.selector, gnosisPage, 'css')
+      await gFunc.clickElement(sendFundsForm.submit_btn, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -94,7 +93,7 @@ describe('Reject Tx flow', () => {
         document.querySelector('body').innerText.includes('Reject Transaction')
       )
 
-      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
+      await gFunc.assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
       await gFunc.clickByText('button', 'Reject Transaction', gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
@@ -121,7 +120,7 @@ describe('Reject Tx flow', () => {
         document.querySelector('body').innerText.includes('Execute Transaction Rejection')
       )
 
-      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
+      await gFunc.assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
 
       await gFunc.clickByText('button', 'Execute Transaction Rejection', gnosisPage)
 

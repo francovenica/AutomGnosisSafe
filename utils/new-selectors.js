@@ -1,8 +1,5 @@
 const assertions = {
-  wallet_connection: 'RINKEBY',
-  load_safe_title: 'Load existing Safe',
-  valid_safe_name_field: 'Safe name',
-  second_step_load_safe: 'This Safe has'
+  valid_safe_name_field: 'Safe name'
 }
 
 const errorMsg = {
@@ -29,20 +26,8 @@ const statusToLabel = {
 
 
 
-
 export const sels = {
   xpSelectors: {
-    homepage: {
-      home_btn: '//div/a/img', // done
-      connect_btn: "//span[contains(text(),'Connect')]/parent::button", // done, separated in connected and not-connected
-      metamask_option: "//span[contains(text(),'MetaMask')]/parent::button", // cant be done
-      accept_cookies: "//span[contains(text(),'Accept selection')]", // done, cannot be used in local
-      loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]", // done
-      safes_counter: "//div[contains(text(),'Safes')]/p", // done
-      load_safe_btn: "//div[contains(text(),'Load existing Safe')]", // done
-      create_safe_btn: "//div[contains(text(),'Create new Safe')]", // done
-      close_rinkeby_notif: '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button' // do i need it?
-    },
     testIdSelectors: {
       general: { // id's that are on items that are spread through the site
         qr_icon: "img[data-testid='qr-icon']",
@@ -81,13 +66,6 @@ export const sels = {
       asset_tab: {
         balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
       },
-      welcome_page: {
-        connect_btn: "button[data-testid='connect-btn']",
-        create_safe_btn: "a[data-testid='create-new-safe-btn']",
-        load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
-        accept_preferences: "span[data-testid='accept-preferences']",
-        mm_next_btn: 'button.btn-primary'
-      },
       create_safe_page: {
         form: "form[data-testid='create-safe-form']",
         safe_name_field: "input[data-testid='create-safe-name-field']",
@@ -110,23 +88,6 @@ export const sels = {
         continue_btn: "button[data-testid='continue-btn']",
         submit_btn: "button[type='submit']",
         etherscan_link: "a[data-testid='safe-create-explorer-link']",
-      },
-      send_funds_form: {
-        modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-        current_eth_balance: "b[data-testid='current-eth-balance']",
-        recipient_input: "input[id='address-book-input']",
-        select_token: "div[id='mui-component-select-token']",
-        review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-        review_btn: "button[data-testid='review-tx-btn']",
-        select_token_ether: "div[data-testid='select-token-Ether']",
-        send_max_btn: "button[data-testid='send-max-btn']",
-        amount_input: "input[data-testid='amount-input']",
-        send_funds_review: "div[data-testid='send-funds-review-step']",
-        recipient_address_review: "p[data-testid='recipient-address-review-step']",
-        amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-        fee_msg_review: "p[data-testid='fee-meg-review-step']",
-        submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-        submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
       },
       settings_tabs: {
         req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
@@ -154,26 +115,6 @@ export const sels = {
       execute_reject_tx_btn: "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
       assets_tab: "//span[contains(text(),'Assets')]/ancestor::button",
       top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
-    },
-    send_funds_modal: {
-      modal_title: "//p[contains(text(),'Send Funds')]",
-      step_number: (step) => `//p[contains(text(),'${step} of 2')]`,
-      safe_name: (name) => `//p[contains(text(), '${name}')]`,
-      balance: "//p[contains(text(),'Balance')]",
-      balance_number: '//form/div[1]/div[1]/div[2]/div[2]/p/b',
-      // token_selec: "//div/div/div/div/li",
-      token_selec: '#mui-component-select-token',
-      ether_selection: "//div/span[contains(text(),'Ether')]/parent::div",
-      required_error_input: "//div/p[contains(text(), 'Required')]",
-      amount_input: '//div[6]/div/div/div/input',
-      valid_amount_msg: "//div/p[contains(text(), 'Amount*')]",
-      send_max: "//button[contains(text(),'Send max')]",
-      // 2nd step
-      recipient_hash: '//div[4]/div[2]/div/p',
-      token_icon: '//div[6]/img',
-      token_amount: '//div[6]/p',
-      fee_msg: '//div[7]/p',
-      submit_btn: "//span[contains(text(),'Submit')]/parent::button",
     },
     modify_policies: {
       settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
@@ -301,13 +242,6 @@ export const sels = {
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
     },
-    welcome_page: {
-      connect_btn: "button[data-testid='connect-btn']",
-      create_safe_btn: "a[data-testid='create-new-safe-btn']",
-      load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
-      accept_preferences: "span[data-testid='accept-preferences']",
-      mm_next_btn: 'button.btn-primary'
-    },
     create_safe_page: {
       form: "form[data-testid='create-safe-form']",
       safe_name_field: "input[data-testid='create-safe-name-field']",
@@ -330,24 +264,6 @@ export const sels = {
       continue_btn: "button[data-testid='continue-btn']",
       submit_btn: "button[type='submit']",
       etherscan_link: "a[data-testid='safe-create-explorer-link']",
-    },
-    send_funds_form: {
-      modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-      current_eth_balance: "b[data-testid='current-eth-balance']",
-      recipient_input: "input[id='address-book-input']",
-      select_token: "div[id='mui-component-select-token']",
-      review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-      review_btn: "button[data-testid='review-tx-btn']",
-      select_token_ether: "div[data-testid='select-token-Ether']",
-      send_max_btn: "button[data-testid='send-max-btn']",
-      amount_input: "input[data-testid='amount-input']",
-      send_funds_review: "div[data-testid='send-funds-review-step']",
-      recipient_address_review: "p[data-testid='recipient-address-review-step']",
-      amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-      fee_msg_review: "p[data-testid='fee-meg-review-step']",
-      submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-      submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
-      advanced_options: "//p[contains(text(),'Advanced options')]"
     },
     settings_tabs: {
       req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form

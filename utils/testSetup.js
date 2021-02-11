@@ -2,7 +2,6 @@ import puppeteer from 'puppeteer'
 import * as dappeteer from '@dasanra/dappeteer'
 
 import config from './config'
-import { sels } from './selectors'
 import { accountsSelectors } from './selectors/accounts'
 import { topBar } from './selectors/topBar'
 import { homePage } from './selectors/welcomePage'

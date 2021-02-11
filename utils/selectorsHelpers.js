@@ -27,12 +27,12 @@ export const clickElement = async function ({ selector, type = 'css' }, page) {
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {
-    console.log('ClickSomething Error: Empty element Selector = ', selector, '\n', error)
+    console.log('ClickElement Error: Empty element Selector = ', selector, '\n', error)
   }
   try {
     await element.click()
   } catch (error) {
-    console.log("ClickSomething Error: Couldn't click = ", selector, '\n', error)
+    console.log("ClickElement Error: Couldn't click = ", selector, '\n', error)
   }
   return element
 }
@@ -70,7 +70,7 @@ export const openDropdown = async function (selector, page, type = 'Xpath') {
 
 export const clickAndType = async function (selector, page, text = '', type = 'Xpath') {
   if (type === 'Xpath') {
-    const forTyping = await clickSomething(selector, page, type)
+    const forTyping = await clickElement({ selector, type }, page)
     try {
       await forTyping.type(text)
     } catch (error) {

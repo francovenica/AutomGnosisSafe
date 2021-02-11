@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -21,11 +22,8 @@ afterAll(async () => {
 describe('Send funds and sign with two owners', () => {
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
-  const sendFunds = sels.testIdSelectors.send_funds_form
   const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
-  const send_funds_modal = sels.xpSelectors.send_funds_modal
-  // const homepage = sels.xpSelectors.homepage
 
   let amount_await_conf_status = ''
   let amount_success_status = ''
@@ -35,14 +33,13 @@ describe('Send funds and sign with two owners', () => {
   test('Open the send funds form', async (done) => {
     console.log('Open the Send Funds Form\n')
     try {
-      // await gFunc.clickSomething(homepage.close_rinkeby_notif, gnosisPage)
       current_eth_funds_on_text = await gFunc.getInnerText(assetTab.balance_value('eth'), gnosisPage, 'css')
       current_eth_funds = parseFloat((await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')).toFixed(3))
       // await gFunc.assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
       // await gFunc.clickElement({ selector: mainHub.new_transaction_btn }, gnosisPage)
       await gFunc.clickByText('button', 'New Transaction', gnosisPage)
       await gFunc.clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
-      await gFunc.assertElementPresent(sendFunds.review_btn_disabled, gnosisPage, 'css')
+      await gFunc.assertElementPresent(sendFundsForm.review_btn_disabled.selector, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(5000)
       done()
     } catch (error) {
@@ -54,37 +51,37 @@ describe('Send funds and sign with two owners', () => {
   test('Fill the form and check error messages when inpus are wrong', async (done) => {
     console.log('Filling the Form\n')
     try {
-      await gFunc.clickAndType(sendFunds.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
+      await gFunc.clickAndType(sendFundsForm.recipient_input.selector, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
 
-      await gFunc.openDropdown(sendFunds.select_token, gnosisPage, 'css')
-      await gFunc.clickElement({ selector: sendFunds.select_token_ether }, gnosisPage)
+      await gFunc.openDropdown(sendFundsForm.select_token.selector, gnosisPage, 'css')
+      await gFunc.clickElement(sendFundsForm.select_token_ether, gnosisPage)
 
       await gnosisPage.waitForTimeout(1000)
 
       // Checking that 0 amount triggers an error
-      await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, '0', 'ccs')
+      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, '0', 'ccs')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.greater_than_0), gnosisPage)
-      await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
+      await gFunc.clearInput(sendFundsForm.amount_input.selector, gnosisPage, 'css')
 
       // Checking that any string returns an error
-      await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, 'abc', 'css')
+      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, 'abc', 'css')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.not_a_number), gnosisPage)
-      await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
+      await gFunc.clearInput(sendFundsForm.amount_input.selector, gnosisPage, 'css')
 
       // Checking that an amount over balance triggers an error
-      await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, '99999', 'css')
+      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, '99999', 'css')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.max_amount_tokens(current_eth_funds)), gnosisPage)
-      await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
+      await gFunc.clearInput(sendFundsForm.amount_input.selector, gnosisPage, 'css')
 
       // Checking that the value set by the "Send max" button is the same as the current balance
-      await gFunc.clickElement({ selector: sendFunds.send_max_btn }, gnosisPage)
-      const maxInputValue = await gFunc.getNumberInString(sendFunds.amount_input, gnosisPage, 'css')
+      await gFunc.clickElement(sendFundsForm.send_max_btn, gnosisPage)
+      const maxInputValue = await gFunc.getNumberInString(sendFundsForm.amount_input.selector, gnosisPage, 'css')
       expect(parseFloat(maxInputValue)).toBe(current_eth_funds)
-      await gFunc.clearInput(sendFunds.amount_input, gnosisPage, 'css')
+      await gFunc.clearInput(sendFundsForm.amount_input.selector, gnosisPage, 'css')
 
-      await gFunc.clickAndType(sendFunds.amount_input, gnosisPage, TOKEN_AMOUNT.toString(), 'css')
-      await gFunc.assertElementPresent(send_funds_modal.valid_amount_msg, gnosisPage)
-      await gFunc.clickElement({ selector: sendFunds.review_btn }, gnosisPage)
+      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, TOKEN_AMOUNT.toString(), 'css')
+      await gFunc.assertElementPresent(sendFundsForm.valid_amount_msg.selector, gnosisPage)
+      await gFunc.clickElement(sendFundsForm.review_btn, gnosisPage)
       done()
     } catch (error) {
       console.log(error)
@@ -96,19 +93,19 @@ describe('Send funds and sign with two owners', () => {
     console.log('Review Info and submit')
     try {
       await gFunc.assertAllElementPresent([
-        sendFunds.send_funds_review,
-        sendFunds.recipient_address_review,
-        // sendFunds.amount_eth_review,
-        // sendFunds.fee_msg_review
+        sendFundsForm.send_funds_review.selector,
+        sendFundsForm.recipient_address_review.selector,
+        // sendFundsForm.amount_eth_review.selector,
+        // sendFundsForm.fee_msg_review.selector
       ], gnosisPage, 'css')
-      const recipientHash = await gFunc.getInnerText(sendFunds.recipient_address_review, gnosisPage, 'css')
+      const recipientHash = await gFunc.getInnerText(sendFundsForm.recipient_address_review.selector, gnosisPage, 'css')
       expect(recipientHash).toMatch(sels.testAccountsHash.non_owner_acc)
-      const tokenAmount = await gFunc.getInnerText(sendFunds.amount_eth_review, gnosisPage, 'css')
+      const tokenAmount = await gFunc.getInnerText(sendFundsForm.amount_eth_review.selector, gnosisPage, 'css')
       expect(tokenAmount).toMatch(TOKEN_AMOUNT.toString())
 
-      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
-      await gFunc.assertElementPresent(sendFunds.submit_btn, gnosisPage, 'css')
-      await gFunc.clickElement({ selector: sendFunds.submit_btn }, gnosisPage)
+      await gFunc.assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
+      await gFunc.assertElementPresent(sendFundsForm.submit_btn.selector, gnosisPage, 'css')
+      await gFunc.clickElement(sendFundsForm.submit_btn, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -145,7 +142,7 @@ describe('Send funds and sign with two owners', () => {
       await gFunc.clickElement({ selector: txTab.confirm_tx_btn }, gnosisPage)
 
       await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await gFunc.assertElementPresent(sendFunds.advanced_options, gnosisPage, 'Xpath')
+      await gFunc.assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
 
       await gFunc.clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
       await gnosisPage.waitForTimeout(2000)

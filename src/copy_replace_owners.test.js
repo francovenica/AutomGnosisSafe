@@ -25,10 +25,8 @@ describe.skip('Adding and removing owners', () => {
   const modify_policies = sels.testIdSelectors.settings_tabs
   const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const sendFunds = sels.testIdSelectors.send_funds_form
   const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
-  const send_funds_modal = sels.xpSelectors.send_funds_modal
 
   let owner_replaced_address
   let owner_for_replacement_address
