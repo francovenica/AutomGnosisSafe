@@ -47,6 +47,7 @@ describe('Loading an Existing safe', () => {
     await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, 'css')
     await gnosisPage.waitForTimeout(2000)
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
+    await gnosisPage.waitForTimeout(2000)
     await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
     await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
     await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.load_safe_name, gnosisPage)
