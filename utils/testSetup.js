@@ -13,10 +13,10 @@ const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
 
 export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
+    executablePath: process.env.PUPPETEER_EXEC_PATH, // set by docker container
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--no-sandbox', '--start-maximized', ENV], // maximized browser, URL for the base page
-    executablePath: process.env.PUPPETEER_EXEC_PATH // set by docker container
+    args: ['--no-sandbox', '--start-maximized', ENV] // maximized browser, URL for the base page
   })
 
   const metamask = await dappeteer.getMetamask(browser, {

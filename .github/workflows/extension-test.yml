@@ -15,6 +15,8 @@ jobs:
         node-version: 12.x
     - name: Install stuff 
       run: npm install 
+      env:
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
     - name: Run headful puppeteer tests
       uses: djp3/puppeteer-headful@master
       with:
