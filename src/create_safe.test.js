@@ -38,7 +38,7 @@ describe.skip('Create New Safe', () => {
     console.log('Naming The Safe\n')
     await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage) // click with empty safe field
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // check error message
-    await gFunc.clickAndType(createPage.safe_name_field, gnosisPage, new_safe_name, 'css')
+    await gFunc.clickAndType({ selector: createPage.safe_name_field, type: 'css' }, gnosisPage, new_safe_name)
     await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage)
   }, 60000)
   test('Adding Owners', async() => {
@@ -48,7 +48,7 @@ describe.skip('Create New Safe', () => {
     await gnosisPage.waitFor(1000)
     await gFunc.clickElement({ selector: createPage.submit_btn }, gnosisPage) // making "Required error" show up for the new owner fields
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // check first "required" error in name field
-    await gFunc.clickAndType(createPage.owner_name_field(1), gnosisPage, owner_2_name, 'css') // filling name field
+    await gFunc.clickAndType({ selector: createPage.owner_name_field(1), type: 'css' }, gnosisPage, owner_2_name) // filling name field
     await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // checking "required" error in address field
     await gFunc.clickAndType(createPage.address_field(1), gnosisPage, owner_2_address, 'css')
     await gFunc.assertElementPresent(createPage.valid_address(1), gnosisPage, 'css')

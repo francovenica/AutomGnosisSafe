@@ -1,5 +1,7 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { txTab } from '../utils/selectors/transactionsTab'
+
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -21,7 +23,6 @@ describe.skip('Change Policies', () => {
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
   // const modify_policies = sels.xpSelectors.modify_policies
   // const safe_hub = sels.xpSelectors.safe_hub
@@ -47,9 +48,9 @@ describe.skip('Change Policies', () => {
   }, 60000)
   test('Creating and approving Tx with owner 1', async (done) => {
     console.log('Verifying modification options')
-    const errorMsg = sels.errorMsg
+
     try {
-      await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
+      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
       await gFunc.clickElement({ selector: '[data-value="1"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)
@@ -112,7 +113,7 @@ describe.skip('Change Policies', () => {
     try {
       await gFunc.clickByText('span', 'Modify', gnosisPage)
       await gFunc.isTextPresent('body', 'Change required confirmations', gnosisPage)
-      await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
+      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
       await gFunc.clickElement({ selector: '[data-value="2"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)

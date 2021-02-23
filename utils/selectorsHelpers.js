@@ -54,7 +54,7 @@ export const clickSomething = async function (selector, page, type = 'Xpath') {
   return element
 }
 
-export const openDropdown = async function (selector, page, type = 'Xpath') {
+export const openDropdown = async function ({ selector, type = 'Xpath' }, page) {
   const element = await elementSelector(selector, page, type, 20000)
   try {
     expect(element).not.toBe('Selector Not Found')
@@ -68,7 +68,7 @@ export const openDropdown = async function (selector, page, type = 'Xpath') {
   return element
 }
 
-export const clickAndType = async function (selector, page, text = '', type = 'Xpath') {
+export const clickAndType = async function ({ selector, type = 'Xpath' }, page, text = '') {
   if (type === 'Xpath') {
     const forTyping = await clickElement({ selector, type }, page)
     try {
@@ -115,7 +115,7 @@ export const waitUntilElementPresent = async function (selector, page, type = 'X
 
 export const assertElementPresent = async function (selector, page, type = 'Xpath') {
   await removeNotifications(page)
-  const element = await elementSelector(selector, page, type, 60000)
+  const element = await elementSelector(selector, page, type, 30000)
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {
@@ -133,7 +133,7 @@ export const assertElementPresent = async function (selector, page, type = 'Xpat
 }
 
 export const assertTextPresent = async function (selector, page, textPresent, type = 'Xpath') {
-  const element = await assertElementPresent(selector, page, type !== 'Xpath' ? type : 'Xpath')
+  const element = await assertElementPresent(selector, page, type)
   try {
     const elementText = await page.evaluate(x => x.innerText, element)
     expect(elementText).toMatch(textPresent)
@@ -149,7 +149,7 @@ export const assertAllElementPresent = async function (selectors, page, type = '
 }
 
 export const getInnerText = async function (selector, page, type = 'Xpath') {
-  const element = await assertElementPresent(selector, page, type !== 'Xpath' ? type : 'Xpath')
+  const element = await assertElementPresent(selector, page, type)
   try {
     let elementText = await page.evaluate(x => x.innerText, element)
     if (elementText === '') {

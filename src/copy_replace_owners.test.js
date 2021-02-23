@@ -25,7 +25,6 @@ describe.skip('Adding and removing owners', () => {
   const modify_policies = sels.testIdSelectors.settings_tabs
   const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
 
   let owner_replaced_address
@@ -74,12 +73,12 @@ describe.skip('Adding and removing owners', () => {
       await gFunc.assertElementPresent(replace_owner.onwer_replaced_address(owner_replaced_address),gnosisPage)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
-      await gFunc.clickAndType(replace_owner.owner_name_input, gnosisPage, owner_for_replacement_name)
+      await gFunc.clickAndType({ selector: replace_owner.owner_name_input }, gnosisPage, owner_for_replacement_name)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
-      await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, '0xInvalidHash')
+      await gFunc.clickAndType({ selector: replace_owner.owner_address_input }, gnosisPage, '0xInvalidHash')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage) // assert invalid address error
       await gFunc.clearInput(replace_owner.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, existing_owner_address)
+      await gFunc.clickAndType({ selector: replace_owner.owner_address_input }, gnosisPage, existing_owner_address)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage) // assert duplicated address error
       await gFunc.clearInput(replace_owner.owner_address_input, gnosisPage)
       await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, owner_for_replacement_address)

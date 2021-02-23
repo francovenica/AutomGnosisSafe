@@ -1,6 +1,7 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
+import { txTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -20,9 +21,7 @@ afterAll(async () => {
 describe('Reject Tx flow', () => {
   let startBalance = 0.0
 
-  const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
-  const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
   const labels = sels.statusToLabel
 
@@ -44,10 +43,10 @@ describe('Reject Tx flow', () => {
   test('Filling the Form', async (done) => {
     try {
       console.log('Filling the Form')
-      await gFunc.clickAndType(sendFundsForm.recipient_input.selector, gnosisPage, sels.testAccountsHash.non_owner_acc, 'css')
-      await gFunc.openDropdown(sendFundsForm.select_token.selector, gnosisPage, 'css')
+      await gFunc.clickAndType(sendFundsForm.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc)
+      await gFunc.openDropdown(sendFundsForm.select_token, gnosisPage)
       await gFunc.clickElement(sendFundsForm.select_token_ether, gnosisPage)
-      await gFunc.clickAndType(sendFundsForm.amount_input.selector, gnosisPage, '0.5', 'css')
+      await gFunc.clickAndType(sendFundsForm.amount_input, gnosisPage, '0.5')
       await gFunc.assertElementPresent(sendFundsForm.valid_amount_msg.selector, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       await gFunc.clickElement(sendFundsForm.review_btn, gnosisPage)

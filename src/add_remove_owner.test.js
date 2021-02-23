@@ -56,15 +56,15 @@ describe('Adding and removing owners', () => {
       await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
-      await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, new_owner_name)
+      await gFunc.clickAndType({ selector: setting_owners.owner_name_input }, gnosisPage, new_owner_name)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, '0xInvalidHash')
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, '0xInvalidHash')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage)
       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, existing_owner_hash)
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, existing_owner_hash)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage)
       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, new_owner_address)
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, new_owner_address)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       done()
     } catch (error) {
@@ -184,7 +184,7 @@ describe('Adding and removing owners', () => {
 //       await gFunc.clearInput(setting_owners.edit_name_input, gnosisPage)
 //       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
 //       const name_edited = new_owner_name + ' edited'
-//       await gFunc.clickAndType(setting_owners.edit_name_input, gnosisPage, name_edited)
+//       await gFunc.clickAndType({ selector: setting_owners.edit_name_input }, gnosisPage, name_edited)
 //       const input_innertext = await gFunc.getInnerText(setting_owners.edit_name_input, gnosisPage)
 //       expect(input_innertext).toMatch(name_edited)
 //       await gFunc.clickSomething(setting_owners.save_btn, gnosisPage)
