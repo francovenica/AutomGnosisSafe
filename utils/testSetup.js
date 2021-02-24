@@ -93,7 +93,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   const loadPage = sels.testIdSelectors.load_safe_page
 
   // Open load safe form
-  await clickByText('p', 'Load Existing Safe', gnosisPage)
+  await clickByText('p', 'Load existing Safe', gnosisPage)
   await assertElementPresent(loadPage.form, gnosisPage, 'css')
   await clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, 'css')
   await clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, 'css')
