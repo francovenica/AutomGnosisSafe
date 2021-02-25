@@ -23,10 +23,10 @@ describe('Loading an Existing safe', () => {
 
   test('Open Load Safe Form', async () => {
     console.log('Open Load Safe Form\n')
-    await gFunc.clickByText('p', 'Load Existing Safe', gnosisPage)
+    await gFunc.clickByText('p', 'load existing safe', gnosisPage)
     await gFunc.assertElementPresent(loadPage.form, gnosisPage, 'css')
     await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, 'css')
-    await gFunc.assertTextPresent(load_safe.valid_safe_name, gnosisPage, sels.assertions.valid_safe_name_field)
+    await gFunc.assertTextPresent(load_safe.valid_safe_name, sels.assertions.valid_safe_name_field, gnosisPage)
     await gFunc.clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, 'css')
     await gFunc.assertElementPresent(loadPage.valid_address, gnosisPage, 'css')
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
@@ -43,8 +43,8 @@ describe('Loading an Existing safe', () => {
   test('Load safe Review Details', async () => {
     console.log('Load safe Review Details\n')
     await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
-    await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, 'css')
-    await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, 'css')
+    await gFunc.assertTextPresent(loadPage.review_safe_name, sels.safeNames.load_safe_name, gnosisPage, 'css')
+    await gFunc.assertTextPresent(loadPage.review_owner_name, sels.accountNames.owner_name, gnosisPage, 'css')
     await gnosisPage.waitForTimeout(2000)
     await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
     await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')

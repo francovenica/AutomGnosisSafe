@@ -18,3 +18,9 @@ await gnosisPage.$$eval('p', selectorMatched => {
             break;//Remove this line (break statement) if you want to click on all matched elements otherwise the first element only is clicked  
         }
     });
+
+    //to click a certain element in the page with just the selector
+    await gnosisPage.evaluate(() => {
+        const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
+        firstTx && firstTx.click()
+      })
