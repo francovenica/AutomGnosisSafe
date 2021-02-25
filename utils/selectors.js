@@ -4,7 +4,7 @@ export const sels = {
       home_btn: '//div/a/img', // done
       connect_btn: "//span[contains(text(),'Connect')]/parent::button", // done, separated in connected and not-connected
       metamask_option: "//span[contains(text(),'MetaMask')]/parent::button", // cant be done
-      accept_cookies: "//span[contains(text(),'Accept preferences')]", // done, cannot be used in local
+      accept_cookies: "//span[contains(text(),'Accept selection')]", // done, cannot be used in local
       loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]", // done
       safes_counter: "//div[contains(text(),'Safes')]/p", // done
       load_safe_btn: "//div[contains(text(),'Load existing Safe')]", // done
@@ -302,6 +302,13 @@ export const sels = {
       reject_tx_btn: "button[data-testid='reject-btn']:enabled",
       tx_description_send: "div[data-testid='tx-description-send']",
       transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
+    },
+    tx2_tab: {
+      tx_nonce: "div.tx-nonce",
+      tx_type: "div.tx-type",
+      tx_info: "div.tx-info",
+      tx_votes: "div.tx-votes",
+      tx_status: "div.tx-status"
     },
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,

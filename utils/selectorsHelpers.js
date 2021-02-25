@@ -85,12 +85,14 @@ export const clickAndType = async function ({ selector, type = 'Xpath' }, page, 
   }
 }
 
+// Deprecated
 const removeNotifications = async function (page) {
   await page.evaluate(() => {
     const memoRoot = document.querySelector('[class^="memo-root-"]')
     memoRoot && memoRoot.remove()
   })
 }
+// Deprecated
 
 export const clearInput = async function (selector, page, type = 'Xpath') {
   const field = await elementSelector(selector, page, type, 20000)
@@ -114,8 +116,8 @@ export const waitUntilElementPresent = async function (selector, page, type = 'X
 }
 
 export const assertElementPresent = async function (selector, page, type = 'Xpath') {
-  await removeNotifications(page)
-  const element = await elementSelector(selector, page, type, 30000)
+  // await removeNotifications(page) // Notif cannot be removed anymore
+  const element = await elementSelector(selector, page, type, 60000)
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {
@@ -132,7 +134,7 @@ export const assertElementPresent = async function (selector, page, type = 'Xpat
   }
 }
 
-export const assertTextPresent = async function (selector, page, textPresent, type = 'Xpath') {
+export const assertTextPresent = async function (selector, textPresent, page, type = 'Xpath') {
   const element = await assertElementPresent(selector, page, type)
   try {
     const elementText = await page.evaluate(x => x.innerText, element)
@@ -197,7 +199,7 @@ export const selectorChildren = async function (selector, page, operation, index
 export const clickByText = async function (tag, text, page) {
   await page.$$eval(tag, (nodes, text) => {
     if (nodes.length > 0) {
-      nodes.forEach(singleNode => { if (singleNode.innerText === text) singleNode.click() })
+      nodes.forEach(singleNode => { if (singleNode.innerText.toLocaleLowerCase() === text.toLocaleLowerCase()) singleNode.click() })
     } else {
       console.log('No nodes found')
     }
@@ -208,7 +210,7 @@ export const clickByText = async function (tag, text, page) {
 export const isTextPresent = async function (selector, text, page) {
   try {
     await page.waitForFunction(
-      (selector, text) => document.querySelector(selector).innerText.includes(text), { timeout: 10000 }, selector, text
+      (selector, text) => document.querySelector(selector).innerText.includes(text), { timeout: 60000 }, selector, text
     )
   } catch (error) {
     console.log(`Text ${text} was not found`)

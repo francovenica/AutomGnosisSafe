@@ -91,7 +91,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
 
   // Open load safe form
-  await clickByText('p', 'Load Existing Safe', gnosisPage)
+  await clickByText('p', 'Load existing Safe', gnosisPage)
   await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
   await clickAndType(loadSafeForm.safe_name_field.selector, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
   await clickAndType(loadSafeForm.safe_address_field.selector, gnosisPage, accountsSelectors.testAccountsHash.safe1, 'css')
