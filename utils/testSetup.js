@@ -93,8 +93,8 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   // Open load safe form
   await clickByText('p', 'Load existing Safe', gnosisPage)
   await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
-  await clickAndType(loadSafeForm.safe_name_field.selector, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
-  await clickAndType(loadSafeForm.safe_address_field.selector, gnosisPage, accountsSelectors.testAccountsHash.safe1, 'css')
+  await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name)
+  await clickAndType(loadSafeForm.safe_address_field, gnosisPage, accountsSelectors.testAccountsHash.safe1)
   await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   // Second step, review owners
@@ -104,7 +104,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
     const selector = loadSafeForm.owner_name(i)
     const name = accountsSelectors.accountNames[keys[i]]
     await clearInput(selector, gnosisPage, 'css')
-    await clickAndType(selector, gnosisPage, name, 'css')
+    await clickAndType({ selector: selector, type: 'css' }, gnosisPage, name)
   }
   await clickElement(loadSafeForm.submit_btn, gnosisPage)
 

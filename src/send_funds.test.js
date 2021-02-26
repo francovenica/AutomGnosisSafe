@@ -6,7 +6,7 @@ import {
   clickByText,
   clickElement,
   openDropdown
-} from './selectorsHelpers'
+} from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { txTab } from '../utils/selectors/transactionsTab'
@@ -31,7 +31,6 @@ afterAll(async () => {
 describe('Send funds and sign with two owners', () => {
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
-  const tx2_tab = sels.testIdSelectors.tx2_tab
   const assetTab = sels.testIdSelectors.asset_tab
 
   let amount_await_conf_status = ''
@@ -128,15 +127,15 @@ describe('Send funds and sign with two owners', () => {
     console.log('Approving the Tx with the owner 2')
     try {
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(tx2_tab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await gFunc.assertTextPresent(txTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
       current_nonce = await gFunc.getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', current_nonce)
       await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(tx2_tab.tx_status, 'Awaiting your confirmation', gnosisPage, 'css')
+      await gFunc.assertTextPresent(txTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
       await gFunc.assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
-      await clickElement({ selector: tx2_tab.tx_type }, gnosisPage)
+      await clickElement({ selector: txTab.tx_type }, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
       await gFunc.clickByText('button > span', 'Confirm', gnosisPage)
       await assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
@@ -156,17 +155,17 @@ describe('Send funds and sign with two owners', () => {
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(tx2_tab.tx_status, 'Pending', gnosisPage, 'css')
+      await gFunc.assertTextPresent(txTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await gFunc.assertElementPresent("[alt='No Transactions yet']", gnosisPage, 'css')
       await gFunc.clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
-      // await gFunc.isTextPresent(tx2_tab.tx_nonce, current_nonce, gnosisPage, "css")
-      const nonce = await gFunc.getNumberInString(tx2_tab.tx_nonce, gnosisPage, 'css') 
+      // await gFunc.isTextPresent(txTab.tx_nonce, current_nonce, gnosisPage, "css")
+      const nonce = await gFunc.getNumberInString(txTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(current_nonce)
-      const sentAmount = await gFunc.selectorChildren(tx2_tab.tx_info, gnosisPage, 'number', 0)
+      const sentAmount = await gFunc.selectorChildren(txTab.tx_info, gnosisPage, 'number', 0)
       expect(sentAmount).toBe(TOKEN_AMOUNT)
-      await gFunc.clickElement(tx2_tab.tx_type, gnosisPage)
+      await gFunc.clickElement(txTab.tx_type, gnosisPage)
       const recipientAddress = await gFunc.getInnerText('div.tx-details > div p', gnosisPage, 'css')
       // regex to match an address hash
       expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)

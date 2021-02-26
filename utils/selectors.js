@@ -304,11 +304,11 @@ export const sels = {
       transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
     },
     tx2_tab: {
-      tx_nonce: "div.tx-nonce",
-      tx_type: "div.tx-type",
-      tx_info: "div.tx-info",
-      tx_votes: "div.tx-votes",
-      tx_status: "div.tx-status"
+      tx_nonce: 'div.tx-nonce',
+      tx_type: 'div.tx-type',
+      tx_info: 'div.tx-info',
+      tx_votes: 'div.tx-votes',
+      tx_status: 'div.tx-status'
     },
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,

@@ -7,5 +7,10 @@ export const transactionsTab = {
   confirm_tx_btn: "button[data-testid='confirm-btn']",
   reject_tx_btn: "button[data-testid='reject-btn']:enabled",
   tx_description_send: "div[data-testid='tx-description-send']",
-  transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`
+  transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
+  tx_nonce: 'div.tx-nonce',
+  tx_type: 'div.tx-type',
+  tx_info: 'div.tx-info',
+  tx_votes: 'div.tx-votes',
+  tx2_status: 'div.tx-status'
 }

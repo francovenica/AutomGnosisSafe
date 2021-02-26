@@ -7,7 +7,7 @@ import {
   clickElement,
   isTextPresent,
   waitUntilElementPresent
-} from './selectorsHelpers'
+} from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
 import { loadSafeForm } from '../utils/selectors/loadSafeForm'
