@@ -17,7 +17,8 @@
   },
   "scripts": {
     "test": "jest --detectOpenHandles",
-    "test-local": "TESTING_ENV=local yarn test"
+    "test-local": "TESTING_ENV=local yarn test",
+    "test-pr": "TESTING_ENV=PR yarn test"
   },
   "dependencies": {
     "@dasanra/dappeteer": "^2.0.1",

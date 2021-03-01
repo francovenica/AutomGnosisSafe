@@ -12,13 +12,23 @@ import { assertElementPresent, clearInput, clickAndType, clickByText, clickEleme
 const TESTING_ENV = process.env.TESTING_ENV || 'dev'
 
 const { SLOWMO, ENVIRONMENT } = config
-const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
+
+let envUrl
+if (TESTING_ENV === 'PR') {
+  const pullRequestNumber = process.env.PR
+  if (!pullRequestNumber) {
+    throw Error('You have to define PR env variable')
+  }
+  envUrl = ENVIRONMENT[TESTING_ENV.toUpperCase()](pullRequestNumber)
+} else {
+  envUrl = ENVIRONMENT[TESTING_ENV.toLowerCase()]
+}
 
 export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--start-maximized', ENV] // maximized browser, URL for the base page
+    args: ['--start-maximized', envUrl] // maximized browser, URL for the base page
   })
 
   const metamask = await dappeteer.getMetamask(browser, {
@@ -112,6 +122,26 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   await assertElementPresent(loadSafeForm.step_three.selector, gnosisPage, 'css')
   await gnosisPage.waitForTimeout(2000)
   await clickElement(loadSafeForm.submit_btn, gnosisPage)
+
+  return [
+    browser,
+    metamask,
+    gnosisPage,
+    MMpage,
+  ]
+}
+
+/**
+ * This method returns a clean environment with a connected account and one imported Safe Multisig wallet.
+ * With default configuration the connected account is an owner of the Safe
+ *
+ * @param {boolean} importMultipleAccounts by default is false so only 1 accounts is imported to Metamask
+ * if more than one account is needed this parameter should be used with `true`
+ */
+export const initWithDefaultSafeDirectNavigation = async (importMultipleAccounts = false) => {
+  const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
+  await gnosisPage.goto(envUrl + '#/safes/' + accountsSelectors.testAccountsHash.safe1)
+  await gnosisPage.waitForTimeout(2000)
 
   return [
     browser,

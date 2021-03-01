@@ -9,8 +9,8 @@ import {
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
-import { txTab } from '../utils/selectors/transactionsTab'
-import { initWithDefaultSafe } from '../utils/testSetup'
+import { transactionsTab } from '../utils/selectors/transactionsTab'
+import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
 
 let browser
 let metamask
@@ -20,7 +20,7 @@ let MMpage
 const TOKEN_AMOUNT = 0.01
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe(true)
+  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafeDirectNavigation(true)
 }, 60000)
 
 afterAll(async () => {
@@ -127,17 +127,17 @@ describe('Send funds and sign with two owners', () => {
     console.log('Approving the Tx with the owner 2')
     try {
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(txTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
       current_nonce = await gFunc.getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', current_nonce)
       await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(txTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
+      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
       await gFunc.assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
-      await clickElement({ selector: txTab.tx_type }, gnosisPage)
+      await clickElement({ selector: transactionsTab.tx_type }, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.clickByText('button > span', 'Confirm', gnosisPage)
+      await clickByText('button > span', 'Confirm', gnosisPage)
       await assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
       await clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
@@ -155,17 +155,17 @@ describe('Send funds and sign with two owners', () => {
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(txTab.tx2_status, 'Pending', gnosisPage, 'css')
+      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await gFunc.assertElementPresent("[alt='No Transactions yet']", gnosisPage, 'css')
-      await gFunc.clickByText('button > span > p', 'History', gnosisPage)
+      await clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
-      // await gFunc.isTextPresent(txTab.tx_nonce, current_nonce, gnosisPage, "css")
-      const nonce = await gFunc.getNumberInString(txTab.tx_nonce, gnosisPage, 'css')
+      // await gFunc.isTextPresent(transactionsTab.tx_nonce, current_nonce, gnosisPage, "css")
+      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(current_nonce)
-      const sentAmount = await gFunc.selectorChildren(txTab.tx_info, gnosisPage, 'number', 0)
+      const sentAmount = await gFunc.selectorChildren(transactionsTab.tx_info, gnosisPage, 'number', 0)
       expect(sentAmount).toBe(TOKEN_AMOUNT)
-      await gFunc.clickElement(txTab.tx_type, gnosisPage)
+      await gFunc.clickElement(transactionsTab.tx_type, gnosisPage)
       const recipientAddress = await gFunc.getInnerText('div.tx-details > div p', gnosisPage, 'css')
       // regex to match an address hash
       expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)

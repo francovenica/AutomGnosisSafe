@@ -196,10 +196,14 @@ export const selectorChildren = async function (selector, page, operation, index
   }
 }
 
-export const clickByText = async function (tag, text, page) {
+export const clickByText = async function (tag, text, page, index) {
   await page.$$eval(tag, (nodes, text) => {
     if (nodes.length > 0) {
-      nodes.forEach(singleNode => { if (singleNode.innerText.toLocaleLowerCase() === text.toLocaleLowerCase()) singleNode.click() })
+      if (index !== undefined && (nodes.length - 1) >= index) {
+        nodes[index].click()
+      } else {
+        nodes.forEach(singleNode => { if (singleNode.innerText.toLocaleLowerCase() === text.toLocaleLowerCase()) singleNode.click() })
+      }
     } else {
       console.log('No nodes found')
     }
