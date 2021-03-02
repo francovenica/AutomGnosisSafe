@@ -148,9 +148,10 @@ describe('Reject Tx flow', () => {
     console.log('Verifying Execution of the Tx')
     try {
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
+      await gnosisPage.waitForTimeout(3000)
+      // await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
-      await gFunc.assertElementPresent("[alt='No Transactions yet']", gnosisPage, 'css')
+      await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
       await gnosisPage.waitForTimeout(4000)
       // await assertElementPresent(transactionsTab.rejected_counter(2), gnosisPage, 'css')

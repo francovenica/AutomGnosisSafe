@@ -6,19 +6,29 @@ import { accountsSelectors } from './selectors/accounts'
 // await page.evaluate(x=>x.style.outline = '', element)
 
 const elementSelector = async (selector, page, type, timeout) => {
-  /* handling Xpath and Css selectors is different. Since may functions require
+  /* handling Xpath and css selectors is different. Since many functions require
   to make this distinction this function was created to do it */
   try {
     if (type === 'Xpath') {
-      await page.waitForXPath(selector, { timeout })
-      const elementHandle = await page.$x(selector)
-      return elementHandle[0]
+      return await page.waitForXPath(selector, { timeout })
     } else {
-      await page.waitForSelector(selector, { timeout })
-      return await page.$(selector)
+      return await page.waitForSelector(selector, { timeout })
     }
   } catch (error) {
     return 'Selector Not Found'
+  }
+}
+
+/** Returns a list of elements that match a selector. If no element is found and empty array is returned */
+const elementsSelector = async (selector, page, type, timeout) => {
+  /* handling Xpath and css selectors is different. Since many functions require
+  to make this distinction this function was created to do it */
+  if (type === 'Xpath') {
+    await page.waitForXPath(selector, { timeout })
+    return await page.$x(selector)
+  } else {
+    await page.waitForSelector(selector, { timeout })
+    return await page.$$(selector)
   }
 }
 
@@ -98,21 +108,6 @@ export const clearInput = async function (selector, page, type = 'Xpath') {
   const field = await elementSelector(selector, page, type, 20000)
   await field.click({ clickCount: 3 })
   page.keyboard.press('Backspace')
-}
-
-export const waitUntilElementPresent = async function (selector, page, type = 'Xpath') {
-  if (type === 'Xpath') {
-    return page.waitForXPath(selector).then(element => {
-      console.log('Wait For Xpath element success', selector)
-      return element
-    })
-  }
-  if (type === 'css') {
-    return page.waitForSelector(selector).then(element => {
-      console.log('Wait For css element success', selector)
-      return element
-    })
-  }
 }
 
 export const assertElementPresent = async function (selector, page, type = 'Xpath') {
@@ -239,15 +234,6 @@ export const importAccounts = async function (metamask) {
 }
 
 export const amountOfElements = async (selector, page, type = 'Xpath') => {
-  let amount = ''
-  if (type === 'Xpath') {
-    amount = await page.$x(selector)
-  } else {
-    amount = await page.$$(selector)
-  }
-  try {
-    return amount.length
-  } catch (error) {
-    console.log('amountOfElements Error: selector = ', selector, '\n', error)
-  }
+  const elements = await elementsSelector(selector, page, type, 20000)
+  return elements.length
 }

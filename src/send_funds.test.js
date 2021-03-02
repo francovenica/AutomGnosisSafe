@@ -156,7 +156,7 @@ describe('Send funds and sign with two owners', () => {
       await gnosisPage.waitForTimeout(3000)
       await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
-      await gFunc.assertElementPresent("[alt='No Transactions yet']", gnosisPage, 'css')
+      await gFunc.assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
       // await gFunc.isTextPresent(transactionsTab.tx_nonce, current_nonce, gnosisPage, "css")

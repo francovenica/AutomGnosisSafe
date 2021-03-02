@@ -8,6 +8,7 @@ export const transactionsTab = {
   reject_tx_btn: "button[data-testid='reject-btn']:enabled",
   tx_description_send: "div[data-testid='tx-description-send']",
   transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
+  no_tx_in_queue: '[alt=\'No Transactions yet\']',
   tx_nonce: 'div.tx-nonce',
   tx_type: 'div.tx-type',
   tx_info: 'div.tx-info',

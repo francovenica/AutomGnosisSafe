@@ -5,8 +5,7 @@ import {
   clickAndType,
   clickByText,
   clickElement,
-  isTextPresent,
-  waitUntilElementPresent
+  isTextPresent
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
@@ -56,7 +55,7 @@ describe('Loading an Existing safe', () => {
     await assertTextPresent(loadSafeForm.review_owner_name.selector, accountsSelectors.accountNames.owner_name, gnosisPage, 'css')
     await gnosisPage.waitForTimeout(2000)
     await clickElement(loadSafeForm.submit_btn, gnosisPage)
-    await waitUntilElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
+    await assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
     await clickElement({ selector: mainHub.show_qr_btn }, gnosisPage)
     await isTextPresent(sels.xpSelectors.testIdSelectors.general.sidebar, accountsSelectors.safeNames.load_safe_name, gnosisPage)
     // await gFunc.assertAllElementPresent([
