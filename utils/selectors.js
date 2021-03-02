@@ -53,13 +53,6 @@ export const sels = {
       asset_tab: {
         balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
       },
-      welcome_page: {
-        connect_btn: "button[data-testid='connect-btn']",
-        create_safe_btn: "a[data-testid='create-new-safe-btn']",
-        load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
-        accept_preferences: "span[data-testid='accept-preferences']",
-        mm_next_btn: 'button.btn-primary'
-      },
       load_safe_page: {
         form: "form[data-testid='load-safe-form']",
         safe_name_field: "input[data-testid='load-safe-name-field']",
@@ -274,13 +267,6 @@ export const sels = {
     },
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
-    },
-    welcome_page: {
-      connect_btn: "button[data-testid='connect-btn']",
-      create_safe_btn: "a[data-testid='create-new-safe-btn']",
-      load_safe_btn: "//p[contains(text(),'Load existing Safe')]",
-      accept_preferences: "span[data-testid='accept-preferences']",
-      mm_next_btn: 'button.btn-primary'
     },
     load_safe_page: {
       form: "form[data-testid='load-safe-form']",
