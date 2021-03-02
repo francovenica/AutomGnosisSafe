@@ -35,7 +35,7 @@ describe('Loading an Existing safe', () => {
     await clickByText('p', 'Load existing Safe', gnosisPage)
     await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
     await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
-    await assertTextPresent(loadSafeForm.valid_safe_name, sels.assertions.valid_safe_name_field, gnosisPage)
+    await assertTextPresent(loadSafeForm.valid_safe_name.selector, sels.assertions.valid_safe_name_field, gnosisPage)
     await clickAndType(loadSafeForm.safe_address_field, gnosisPage, accountsSelectors.testAccountsHash.safe1, 'css')
     await assertElementPresent(loadSafeForm.valid_address.selector, gnosisPage, 'css')
     await clickElement(loadSafeForm.submit_btn, gnosisPage)

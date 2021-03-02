@@ -10,5 +10,5 @@ export const loadSafeForm = {
   review_safe_name: { selector: "p[data-testid='load-form-review-safe-name']", type: 'css' },
   review_owner_name: { selector: "p[data-testid='load-safe-review-owner-name']", type: 'css' },
   submit_btn: { selector: "button[type='submit']", type: 'css ' },
-  valid_safe_name: { selector: "//p[contains(text(),'Safe name')]", type: 'xpath' }
+  valid_safe_name: { selector: "//p[contains(text(),'Safe name')]", type: 'Xpath' }
 }

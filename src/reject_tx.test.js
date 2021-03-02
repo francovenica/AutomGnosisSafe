@@ -124,8 +124,8 @@ describe('Reject Tx flow', () => {
       // await gFunc.assertElementPresent(txtransactionsTabTab.reject_tx_btn, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(2000)
       await clickByText(transactionsTab.tx_type, 'Cancelling transaction', gnosisPage)
-      await clickByText('button > span', 'Confirm', gnosisPage, 1)
-      // await gFunc.clickElement({ selector: transactionsTab.reject_tx_btn }, gnosisPage)
+      await gnosisPage.waitForTimeout(1000)
+      await clickByText('button > span', 'Confirm', gnosisPage)
       await gnosisPage.waitForFunction(() =>
         document.querySelector('body').innerText.includes('Approve Transaction')
       )

@@ -80,7 +80,7 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   await metamask.approve({ allAccounts: true })
   await gnosisPage.bringToFront()
 
-  await assertElementPresent(topBar.connected_network, gnosisPage, 'css')
+  await assertElementPresent(topBar.connected_network.selector, gnosisPage, 'css')
 
   return [
     browser,
