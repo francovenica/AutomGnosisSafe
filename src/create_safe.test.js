@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { initWithWalletConnected } from '../utils/testSetup'
 
 let browser
@@ -23,9 +24,9 @@ describe.skip('Create New Safe', () => {
   const mainHub = sels.testIdSelectors.main_hub
 
   let rows_amount = ''
-  const new_safe_name = sels.safeNames.create_safe_name
-  const owner_2_name = sels.accountNames.owner2_name
-  const owner_2_address = sels.testAccountsHash.acc2
+  const new_safe_name = accountsSelectors.safeNames.create_safe_name
+  const owner_2_name = accountsSelectors.accountNames.owner2_name
+  const owner_2_address = accountsSelectors.testAccountsHash.acc2
   test('Open Create Safe Form', async () => {
     console.log('Open Create Safe Form\n')
     // console.log('Waiting')
@@ -81,7 +82,7 @@ describe.skip('Create New Safe', () => {
     await gFunc.assertElementPresent(createPage.etherscan_link, gnosisPage, 'css')
     await gFunc.assertElementPresent(createPage.continue_btn, gnosisPage, 'css')
     await gFunc.clickElement({ selector: createPage.continue_btn }, gnosisPage)
-    await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.create_safe_name, gnosisPage)
+    await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, accountsSelectors.safeNames.create_safe_name, gnosisPage)
 
     // await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, "css")
     // await gFunc.clickElement({ selector: mainHub.show_qr_btn }, gnosisPage)

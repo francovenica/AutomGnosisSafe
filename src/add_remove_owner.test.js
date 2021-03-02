@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -30,8 +31,8 @@ describe('Adding and removing owners', () => {
   let owner_selector // Will store the max required confirmation I can pick form the selector
   let new_req_conf // Once I change the req confirmation, this will save it
 
-  let new_owner_name = sels.otherAccountNames.owner6_name
-  let new_owner_address = sels.testAccountsHash.non_owner_acc
+  let new_owner_name = accountsSelectors.otherAccountNames.owner6_name
+  let new_owner_address = accountsSelectors.testAccountsHash.non_owner_acc
   test('Checking owner amount and current policies', async (done) => {
     console.log('Checking owner amount current policies')
     try {
@@ -50,7 +51,7 @@ describe('Adding and removing owners', () => {
   }, 60000)
   test.skip('First step of the form: name and address', async (done) => {
     console.log('First step of the form: name and address')
-    const existing_owner_hash = sels.testAccountsHash.acc1
+    const existing_owner_hash = accountsSelectors.testAccountsHash.acc1
     try {
       await gFunc.clickSomething(setting_owners.add_new_owner_btn, gnosisPage)
       await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)

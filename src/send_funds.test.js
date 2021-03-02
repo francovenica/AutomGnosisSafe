@@ -8,6 +8,7 @@ import {
   openDropdown
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
@@ -58,7 +59,7 @@ describe('Send funds and sign with two owners', () => {
   test('Fill the form and check error messages when inpus are wrong', async (done) => {
     console.log('Filling the Form\n')
     try {
-      await clickAndType(sendFundsForm.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc)
+      await clickAndType(sendFundsForm.recipient_input, gnosisPage, accountsSelectors.testAccountsHash.non_owner_acc)
 
       await openDropdown(sendFundsForm.select_token, gnosisPage)
       await clickElement(sendFundsForm.select_token_ether, gnosisPage)
@@ -104,7 +105,7 @@ describe('Send funds and sign with two owners', () => {
         sendFundsForm.recipient_address_review.selector,
       ], gnosisPage, 'css')
       const recipientHash = await gFunc.getInnerText(sendFundsForm.recipient_address_review.selector, gnosisPage, 'css')
-      expect(recipientHash).toMatch(sels.testAccountsHash.non_owner_acc)
+      expect(recipientHash).toMatch(accountsSelectors.testAccountsHash.non_owner_acc)
       const tokenAmount = await gFunc.getInnerText(sendFundsForm.amount_eth_review.selector, gnosisPage, 'css')
       expect(tokenAmount).toMatch(TOKEN_AMOUNT.toString())
 
@@ -166,7 +167,7 @@ describe('Send funds and sign with two owners', () => {
       await gFunc.clickElement(transactionsTab.tx_type, gnosisPage)
       const recipientAddress = await gFunc.getInnerText('div.tx-details > div p', gnosisPage, 'css')
       // regex to match an address hash
-      expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(sels.testAccountsHash.non_owner_acc)
+      expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(accountsSelectors.testAccountsHash.non_owner_acc)
       await clickByText('span', 'ASSETS', gnosisPage)
       await assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       const array = ['[data-testid="balance-ETH"]', current_eth_funds_on_text]

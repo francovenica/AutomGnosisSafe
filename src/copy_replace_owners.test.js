@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -50,11 +51,11 @@ describe.skip('Adding and removing owners', () => {
       }
       if (flag) {
         // if acc3 is pressent, that will be replaced, if not then acc5 will be replaced
-        owner_replaced_address = sels.testAccountsHash.acc3
-        owner_for_replacement_address = sels.testAccountsHash.acc5
+        owner_replaced_address = accountsSelectors.testAccountsHash.acc3
+        owner_for_replacement_address = accountsSelectors.testAccountsHash.acc5
       } else {
-        owner_replaced_address = sels.testAccountsHash.acc5
-        owner_for_replacement_address = sels.testAccountsHash.acc3
+        owner_replaced_address = accountsSelectors.testAccountsHash.acc5
+        owner_for_replacement_address = accountsSelectors.testAccountsHash.acc3
       }
 
       console.log('Owner_replaced_address = ', owner_replaced_address, '\nOwner_for_replacement_address = ', owner_for_replacement_address)

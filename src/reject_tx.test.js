@@ -7,6 +7,7 @@ import {
   openDropdown
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
@@ -50,7 +51,7 @@ describe('Reject Tx flow', () => {
   test('Filling the Form', async (done) => {
     try {
       console.log('Filling the Form')
-      await clickAndType(sendFundsForm.recipient_input, gnosisPage, sels.testAccountsHash.non_owner_acc)
+      await clickAndType(sendFundsForm.recipient_input, gnosisPage, accountsSelectors.testAccountsHash.non_owner_acc)
       await openDropdown(sendFundsForm.select_token, gnosisPage)
       await clickElement(sendFundsForm.select_token_ether, gnosisPage)
       await clickAndType(sendFundsForm.amount_input, gnosisPage, '0.5')
