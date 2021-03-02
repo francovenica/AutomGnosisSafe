@@ -33,8 +33,6 @@ describe('Send funds and sign with two owners', () => {
   const mainHub = sels.testIdSelectors.main_hub
   const assetTab = sels.testIdSelectors.asset_tab
 
-  let amount_await_conf_status = ''
-  let amount_success_status = ''
   let current_eth_funds = ''
   let current_eth_funds_on_text = ''
   let current_nonce = ''

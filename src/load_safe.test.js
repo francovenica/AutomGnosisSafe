@@ -32,7 +32,7 @@ describe('Loading an Existing safe', () => {
 
   test('Open Load Safe Form', async () => {
     console.log('Open Load Safe Form\n')
-    await clickByText('p', 'load existing safe', gnosisPage)
+    await clickByText('p', 'Load existing Safe', gnosisPage)
     await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
     await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
     await assertTextPresent(loadSafeForm.valid_safe_name, sels.assertions.valid_safe_name_field, gnosisPage)
