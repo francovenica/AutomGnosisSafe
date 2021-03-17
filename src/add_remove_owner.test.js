@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -30,8 +31,8 @@ describe.skip('Adding and removing owners', () => {
   let owner_selector // Will store the max required confirmation I can pick form the selector
   let new_req_conf // Once I change the req confirmation, this will save it
 
-  let new_owner_name = sels.otherAccountNames.owner6_name
-  let new_owner_address = sels.testAccountsHash.non_owner_acc
+  let new_owner_name = accountsSelectors.otherAccountNames.owner6_name
+  let new_owner_address = accountsSelectors.testAccountsHash.non_owner_acc
   test('Checking owner amount and current policies', async (done) => {
     console.log('Checking owner amount current policies')
     try {
@@ -50,21 +51,21 @@ describe.skip('Adding and removing owners', () => {
   }, 60000)
   test.skip('First step of the form: name and address', async (done) => {
     console.log('First step of the form: name and address')
-    const existing_owner_hash = sels.testAccountsHash.acc1
+    const existing_owner_hash = accountsSelectors.testAccountsHash.acc1
     try {
       await gFunc.clickSomething(setting_owners.add_new_owner_btn, gnosisPage)
       await gFunc.assertElementPresent(setting_owners.add_new_owner_title, gnosisPage)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
-      await gFunc.clickAndType(setting_owners.owner_name_input, gnosisPage, new_owner_name)
+      await gFunc.clickAndType({ selector: setting_owners.owner_name_input }, gnosisPage, new_owner_name)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, '0xInvalidHash')
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, '0xInvalidHash')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage)
       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, existing_owner_hash)
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, existing_owner_hash)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage)
       await gFunc.clearInput(setting_owners.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(setting_owners.owner_address_input, gnosisPage, new_owner_address)
+      await gFunc.clickAndType({ selector: setting_owners.owner_address_input }, gnosisPage, new_owner_address)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       done()
     } catch (error) {
@@ -184,7 +185,7 @@ describe.skip('Adding and removing owners', () => {
 //       await gFunc.clearInput(setting_owners.edit_name_input, gnosisPage)
 //       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
 //       const name_edited = new_owner_name + ' edited'
-//       await gFunc.clickAndType(setting_owners.edit_name_input, gnosisPage, name_edited)
+//       await gFunc.clickAndType({ selector: setting_owners.edit_name_input }, gnosisPage, name_edited)
 //       const input_innertext = await gFunc.getInnerText(setting_owners.edit_name_input, gnosisPage)
 //       expect(input_innertext).toMatch(name_edited)
 //       await gFunc.clickSomething(setting_owners.save_btn, gnosisPage)

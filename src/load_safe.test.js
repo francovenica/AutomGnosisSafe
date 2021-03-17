@@ -1,5 +1,15 @@
-import * as gFunc from '../utils/selectorsHelpers'
+import {
+  assertElementPresent,
+  assertTextPresent,
+  clearInput,
+  clickAndType,
+  clickByText,
+  clickElement,
+  isTextPresent
+} from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
+import { loadSafeForm } from '../utils/selectors/loadSafeForm'
 import { initWithWalletConnected } from '../utils/testSetup'
 
 let browser
@@ -17,47 +27,44 @@ afterAll(async () => {
 })
 
 describe('Loading an Existing safe', () => {
-  const load_safe = sels.xpSelectors.load_safe
-  const loadPage = sels.testIdSelectors.load_safe_page
   const mainHub = sels.testIdSelectors.main_hub
 
   test('Open Load Safe Form', async () => {
     console.log('Open Load Safe Form\n')
-    await gFunc.clickByText('p', 'Load Existing Safe', gnosisPage)
-    await gFunc.assertElementPresent(loadPage.form, gnosisPage, 'css')
-    await gFunc.clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, 'css')
-    await gFunc.assertTextPresent(load_safe.valid_safe_name, gnosisPage, sels.assertions.valid_safe_name_field)
-    await gFunc.clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, 'css')
-    await gFunc.assertElementPresent(loadPage.valid_address, gnosisPage, 'css')
-    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
+    await clickByText('p', 'Load existing Safe', gnosisPage)
+    await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
+    await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name, 'css')
+    await assertTextPresent(loadSafeForm.valid_safe_name.selector, sels.assertions.valid_safe_name_field, gnosisPage)
+    await clickAndType(loadSafeForm.safe_address_field, gnosisPage, accountsSelectors.testAccountsHash.safe1, 'css')
+    await assertElementPresent(loadSafeForm.valid_address.selector, gnosisPage, 'css')
+    await clickElement(loadSafeForm.submit_btn, gnosisPage)
   }, 60000)
 
   test('Load Safe Owner edition', async () => {
     console.log('Load Safe Owner edition\n')
-    await gFunc.assertElementPresent(loadPage.step_two, gnosisPage, 'css')
-    await gFunc.clearInput(loadPage.owner_name(), gnosisPage, 'css')
-    await gFunc.clickAndType(loadPage.owner_name(), gnosisPage, sels.accountNames.owner_name, 'css')
-    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
+    await assertElementPresent(loadSafeForm.step_two.selector, gnosisPage, 'css')
+    await clearInput(loadSafeForm.owner_name(), gnosisPage, 'css')
+    await clickAndType({ selector: loadSafeForm.owner_name(), type: 'css' }, gnosisPage, accountsSelectors.accountNames.owner_name)
+    await clickElement(loadSafeForm.submit_btn, gnosisPage)
   }, 60000)
 
   test('Load safe Review Details', async () => {
     console.log('Load safe Review Details\n')
-    await gFunc.assertElementPresent(loadPage.step_three, gnosisPage, 'css')
-    await gFunc.assertTextPresent(loadPage.review_safe_name, gnosisPage, sels.safeNames.load_safe_name, 'css')
-    await gFunc.assertTextPresent(loadPage.review_owner_name, gnosisPage, sels.accountNames.owner_name, 'css')
+    await assertElementPresent(loadSafeForm.step_three.selector, gnosisPage, 'css')
+    await assertTextPresent(loadSafeForm.review_safe_name.selector, accountsSelectors.safeNames.load_safe_name, gnosisPage, 'css')
+    await assertTextPresent(loadSafeForm.review_owner_name.selector, accountsSelectors.accountNames.owner_name, gnosisPage, 'css')
     await gnosisPage.waitForTimeout(2000)
-    await gFunc.clickElement(loadPage.submit_btn, gnosisPage)
-    await gnosisPage.waitForTimeout(2000)
-    await gFunc.assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
-    await gFunc.clickElement(mainHub.show_qr_btn, gnosisPage)
-    await gFunc.isTextPresent(sels.testIdSelectors.general.sidebar, sels.safeNames.load_safe_name, gnosisPage)
+    await clickElement(loadSafeForm.submit_btn, gnosisPage)
+    await assertElementPresent(mainHub.show_qr_btn, gnosisPage, 'css')
+    await clickElement({ selector: mainHub.show_qr_btn }, gnosisPage)
+    await isTextPresent(sels.xpSelectors.testIdSelectors.general.sidebar, accountsSelectors.safeNames.load_safe_name, gnosisPage)
     // await gFunc.assertAllElementPresent([
     //     mainHub.receiver_modal_safe_name,
     //     mainHub.receiver_modal_safe_address
     // ], gnosisPage, "css")
     // const safeName = await gFunc.getInnerText(mainHub.receiver_modal_safe_name, gnosisPage, "css")
     // const safeAddress = await gFunc.getInnerText(mainHub.receiver_modal_safe_address, gnosisPage, "css")
-    // expect(safeName).toBe(sels.safeNames.load_safe_name)
-    // expect(safeAddress).toBe(sels.testAccountsHash.safe1)
+    // expect(safeName).toBe(accountsSelectors.safeNames.load_safe_name)
+    // expect(safeAddress).toBe(accountsSelectors.testAccountsHash.safe1)
   }, 60000)
 })

@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer'
 
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 
 const { ENVIRONMENT, SLOWMO } = require('../utils/config').default
 const fs = require('fs')
@@ -80,12 +81,12 @@ describe.skip('Test using Authereum wallet', () => {
     await gnosisPage.screenshot({path: '1 Naming The Safe.png'})
     const textInp = await gnosisPage.$(sels.cssSelectors.create_safe_name_input)
     // await gnosisPage.evaluate(x=>x.click(), textInp)
-    await gnosisPage.type(sels.cssSelectors.create_safe_name_input, sels.safeNames.create_safe_name)
+    await gnosisPage.type(sels.cssSelectors.create_safe_name_input, accountsSelectors.safeNames.create_safe_name)
     const text = await gnosisPage.$eval(sels.cssSelectors.create_safe_name_input, x => x.value)
     await gnosisPage.screenshot({path: '2 Naming The Safe.png'})
     console.log('Texto escrito = ', text)
     try {
-      expect(text).toMatch(sels.safeNames.create_safe_name)
+      expect(text).toMatch(accountsSelectors.safeNames.create_safe_name)
     } catch (e) {
       done(e)
     }
@@ -107,7 +108,7 @@ describe.skip('Test using Authereum wallet', () => {
     }
   // await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
   // await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
-  // await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, sels.safeNames.create_safe_name, "css")
+  // await gFunc.clickAndType(sels.cssSelectors.create_safe_name_input, gnosisPage, accountsSelectors.safeNames.create_safe_name, "css")
   // await gFunc.clickSomething(create_safe.start_btn, gnosisPage)
   }, 60000)
   test('Adding Owners', async (done) => {
@@ -124,9 +125,9 @@ describe.skip('Test using Authereum wallet', () => {
     //     await gFunc.clickSomething(create_safe.review_btn, gnosisPage)
     //     await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
     //     // await gnosisPage.screenshot({path: '4Adding Owners.png'});
-    //     await gFunc.clickAndType(create_safe.second_owner_name_input, gnosisPage, sels.accountNames.owner2_name)
+    //     await gFunc.clickAndType(create_safe.second_owner_name_input, gnosisPage, accountsSelectors.accountNames.owner2_name)
     //     await gFunc.assertTextPresent(create_safe.required_error_input, gnosisPage, 'Required')
-    //     await gFunc.clickAndType(create_safe.second_owner_address_input, gnosisPage, sels.testAccountsHash.acc2)
+    //     await gFunc.clickAndType(create_safe.second_owner_address_input, gnosisPage, accountsSelectors.testAccountsHash.acc2)
     //     const req_conf_limit = await gFunc.getNumberInString(create_safe.req_conf_info_text, gnosisPage)
     //     const owner_rows = await gnosisPage.$x(create_safe.current_rows)
     //     expect(req_conf_limit).toBe(owner_rows.length)
@@ -166,7 +167,7 @@ describe.skip('Test using Authereum wallet', () => {
   //         await gnosisPage.bringToFront()
   //         await gnosisPage.waitForSelector(sels.cssSelectors.safe_name_heading);
   //         const safeName = await gFunc.getInnerText(sels.cssSelectors.safe_name_heading, gnosisPage, "css")
-  //         expect(safeName).toMatch(sels.safeNames.create_safe_name)
+  //         expect(safeName).toMatch(accountsSelectors.safeNames.create_safe_name)
   //         expect(sels.xpSelectors.safe_hub.safe_address).toBeTruthy()
 
   //         save the address in a file for manual use later if needed

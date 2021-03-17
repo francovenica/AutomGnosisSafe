@@ -1,31 +1,33 @@
+const assertions = {
+  valid_safe_name_field: 'Safe name'
+}
+
+const errorMsg = {
+  error: (msg) => `//p[contains(text(),"${msg}")]`,
+  required: 'Required',
+  greater_than_0: 'Should be greater than 0',
+  valid_ENS_name: 'Address should be a valid Ethereum address or ENS name',
+  duplicated_address: 'Address already introduced',
+  not_a_number: 'Must be a number',
+  max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
+  modify_policy: (value = 0) => `Value should be different than ${value}`,
+}
+
+const statusToLabel = {
+  success: 'Success',
+  cancelled: 'Cancelled',
+  failed: 'Failed',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
+  awaiting_confirmations: 'Awaiting confirmations',
+  awaiting_execution: 'Awaiting execution',
+  pending: 'Pending',
+}
+
+
+
+
 export const sels = {
   xpSelectors: {
-    homepage: {
-      home_btn: '//div/a/img', // done
-      connect_btn: "//span[contains(text(),'Connect')]/parent::button", // done, separated in connected and not-connected
-      metamask_option: "//span[contains(text(),'MetaMask')]/parent::button", // cant be done
-      accept_cookies: "//span[contains(text(),'Accept selection')]", // done, cannot be used in local
-      loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]", // done
-      safes_counter: "//div[contains(text(),'Safes')]/p", // done
-      load_safe_btn: "//div[contains(text(),'Load existing Safe')]", // done
-      create_safe_btn: "//div[contains(text(),'Create new Safe')]", // done
-      close_rinkeby_notif: '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button' // do i need it?
-    },
-    load_safe: {
-      form_title: "//h2[contains(text(),'Load existing Safe')]", // done, load-safe-form
-      name_input: "//input[@name='name']", // done
-      address_input: "//input[@name='address']", // done
-      valid_safe_name: "//p[contains(text(),'Safe name')]", // can't name errors
-      next_btn: "//span[contains(text(),'Next')]", // cant find it
-      second_step_description: "//p[contains(text(),'This Safe has')]", // done
-      first_owner_name_input: (index = 0) => `//input[@name='owner${index}Name']`, // done, can't do "first name" but all of them
-      required_error_input: "//p[contains(text(),'Required')]", // cant name errors
-      review_btn: "//button/span[contains(text(),'Review')]/parent::button", // cant find it
-      review_details_title: "//p[contains(text(),'Review details')]", // done
-      review_safe_name: "//p[contains(text(),'Name of the Safe')]/following-sibling::p", // done
-      review_owner_name: "//p[contains(text(),'Safe owners')]/ancestor::div[1]/following-sibling::div[2]//p", // done
-      load_btn: "//button/span[contains(text(),'Load')]", // cant find it
-    },
     testIdSelectors: {
       general: { // id's that are on items that are spread through the site
         qr_icon: "img[data-testid='qr-icon']",
@@ -53,19 +55,6 @@ export const sels = {
       asset_tab: {
         balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
       },
-      load_safe_page: {
-        form: "form[data-testid='load-safe-form']",
-        safe_name_field: "input[data-testid='load-safe-name-field']",
-        safe_address_field: "input[data-testid='load-safe-address-field']",
-        valid_address: "svg[data-testid='valid-address']",
-        step_two: "p[data-testid='load-safe-step-two']",
-        owner_row: "div[data-testid='owner-row']", // all the rows, to count
-        owner_name: (index = 0) => `input[data-testid='load-safe-owner-name-${index}']`,
-        step_three: "p[data-testid='load-safe-step-three']",
-        review_safe_name: "p[data-testid='load-form-review-safe-name']",
-        review_owner_name: "p[data-testid='load-safe-review-owner-name']",
-        submit_btn: "button[type='submit']",
-      },
       create_safe_page: {
         form: "form[data-testid='create-safe-form']",
         safe_name_field: "input[data-testid='create-safe-name-field']",
@@ -88,23 +77,6 @@ export const sels = {
         continue_btn: "button[data-testid='continue-btn']",
         submit_btn: "button[type='submit']",
         etherscan_link: "a[data-testid='safe-create-explorer-link']",
-      },
-      send_funds_form: {
-        modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-        current_eth_balance: "b[data-testid='current-eth-balance']",
-        recipient_input: "input[id='address-book-input']",
-        select_token: "div[id='mui-component-select-token']",
-        review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-        review_btn: "button[data-testid='review-tx-btn']",
-        select_token_ether: "div[data-testid='select-token-Ether']",
-        send_max_btn: "button[data-testid='send-max-btn']",
-        amount_input: "input[data-testid='amount-input']",
-        send_funds_review: "div[data-testid='send-funds-review-step']",
-        recipient_address_review: "p[data-testid='recipient-address-review-step']",
-        amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-        fee_msg_review: "p[data-testid='fee-meg-review-step']",
-        submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-        submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
       },
       settings_tabs: {
         req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
@@ -132,26 +104,6 @@ export const sels = {
       execute_reject_tx_btn: "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
       assets_tab: "//span[contains(text(),'Assets')]/ancestor::button",
       top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
-    },
-    send_funds_modal: {
-      modal_title: "//p[contains(text(),'Send Funds')]",
-      step_number: (step) => `//p[contains(text(),'${step} of 2')]`,
-      safe_name: (name) => `//p[contains(text(), '${name}')]`,
-      balance: "//p[contains(text(),'Balance')]",
-      balance_number: '//form/div[1]/div[1]/div[2]/div[2]/p/b',
-      // token_selec: "//div/div/div/div/li",
-      token_selec: '#mui-component-select-token',
-      ether_selection: "//div/span[contains(text(),'Ether')]/parent::div",
-      required_error_input: "//div/p[contains(text(), 'Required')]",
-      amount_input: '//div[6]/div/div/div/input',
-      valid_amount_msg: "//div/p[contains(text(), 'Amount*')]",
-      send_max: "//button[contains(text(),'Send max')]",
-      // 2nd step
-      recipient_hash: '//div[4]/div[2]/div/p',
-      token_icon: '//div[6]/img',
-      token_amount: '//div[6]/p',
-      fee_msg: '//div[7]/p',
-      submit_btn: "//span[contains(text(),'Submit')]/parent::button",
     },
     modify_policies: {
       settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
@@ -268,19 +220,6 @@ export const sels = {
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
     },
-    load_safe_page: {
-      form: "form[data-testid='load-safe-form']",
-      safe_name_field: "input[data-testid='load-safe-name-field']",
-      safe_address_field: "input[data-testid='load-safe-address-field']",
-      valid_address: "svg[data-testid='valid-address']",
-      step_two: "p[data-testid='load-safe-step-two']",
-      owner_row: "div[data-testid='owner-row']", // all the rows, to count
-      owner_name: (index = 0) => `input[data-testid='load-safe-owner-name-${index}']`,
-      step_three: "p[data-testid='load-safe-step-three']",
-      review_safe_name: "p[data-testid='load-form-review-safe-name']",
-      review_owner_name: "p[data-testid='load-safe-review-owner-name']",
-      submit_btn: "button[type='submit']",
-    },
     create_safe_page: {
       form: "form[data-testid='create-safe-form']",
       safe_name_field: "input[data-testid='create-safe-name-field']",
@@ -304,51 +243,8 @@ export const sels = {
       submit_btn: "button[type='submit']",
       etherscan_link: "a[data-testid='safe-create-explorer-link']",
     },
-    send_funds_form: {
-      modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-      current_eth_balance: "b[data-testid='current-eth-balance']",
-      recipient_input: "input[id='address-book-input']",
-      select_token: "div[id='mui-component-select-token']",
-      review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-      review_btn: "button[data-testid='review-tx-btn']",
-      select_token_ether: "div[data-testid='select-token-Ether']",
-      send_max_btn: "button[data-testid='send-max-btn']",
-      amount_input: "input[data-testid='amount-input']",
-      send_funds_review: "div[data-testid='send-funds-review-step']",
-      recipient_address_review: "p[data-testid='recipient-address-review-step']",
-      amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-      fee_msg_review: "p[data-testid='fee-meg-review-step']",
-      submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-      submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
-      advanced_options: "//p[contains(text(),'Advanced options')]"
-    },
     settings_tabs: {
       req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
     }
-  },
-  assertions: {
-    wallet_connection: 'RINKEBY',
-    load_safe_title: 'Load existing Safe',
-    valid_safe_name_field: 'Safe name',
-    second_step_load_safe: 'This Safe has'
-  },
-  errorMsg: {
-    error: (msg) => `//p[contains(text(),"${msg}")]`,
-    required: 'Required',
-    greater_than_0: 'Should be greater than 0',
-    valid_ENS_name: 'Address should be a valid Ethereum address or ENS name',
-    duplicated_address: 'Address already introduced',
-    not_a_number: 'Must be a number',
-    max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
-    modify_policy: (value = 0) => `Value should be different than ${value}`,
-  },
-  statusToLabel: {
-    success: 'Success',
-    cancelled: 'Cancelled',
-    failed: 'Failed',
-    awaiting_your_confirmation: 'Awaiting your confirmation',
-    awaiting_confirmations: 'Awaiting confirmations',
-    awaiting_execution: 'Awaiting execution',
-    pending: 'Pending',
   }
 }
