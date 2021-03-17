@@ -2,25 +2,38 @@ import puppeteer from 'puppeteer'
 import * as dappeteer from '@dasanra/dappeteer'
 
 import config from './config'
-import { sels } from './selectors'
+import { accountsSelectors } from './selectors/accounts'
+import { topBar } from './selectors/topBar'
+import { homePage } from './selectors/welcomePage'
+import { loadSafeForm } from './selectors/loadSafeForm'
 import * as gFunc from './selectorsHelpers'
 import { assertElementPresent, clearInput, clickAndType, clickByText, clickElement } from './selectorsHelpers'
 
 const TESTING_ENV = process.env.TESTING_ENV || 'dev'
 
 const { SLOWMO, ENVIRONMENT } = config
-const ENV = ENVIRONMENT[TESTING_ENV.toLowerCase()]
+
+let envUrl
+if (TESTING_ENV === 'PR') {
+  const pullRequestNumber = process.env.PR
+  if (!pullRequestNumber) {
+    throw Error('You have to define PR env variable')
+  }
+  envUrl = ENVIRONMENT[TESTING_ENV.toUpperCase()](pullRequestNumber)
+} else {
+  envUrl = ENVIRONMENT[TESTING_ENV.toLowerCase()]
+}
 
 export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--start-maximized', ENV] // maximized browser, URL for the base page
+    args: ['--start-maximized', envUrl] // maximized browser, URL for the base page
   })
 
   const metamask = await dappeteer.getMetamask(browser, {
-    seed: sels.wallet.seed,
-    password: sels.wallet.password
+    seed: accountsSelectors.wallet.seed,
+    password: accountsSelectors.wallet.password
   })
 
   await metamask.switchNetwork('rinkeby')
@@ -47,8 +60,6 @@ export const init = async () => {
  */
 export const initWithWalletConnected = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await init()
-  const homepage = sels.xpSelectors.homepage
-  const topBar = sels.testIdSelectors.top_bar
 
   if (importMultipleAccounts) {
     await gFunc.importAccounts(metamask)
@@ -57,11 +68,11 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
 
   await gnosisPage.bringToFront()
   // if (ENV !== ENVIRONMENT.local) { // for local env there is no Cookies to accept
-  await gFunc.clickSomething(homepage.accept_cookies, gnosisPage)
+  await clickElement(homePage.accept_cookies, gnosisPage)
   // }
   await clickElement(topBar.not_connected_network, gnosisPage)
   await clickElement(topBar.connect_btn, gnosisPage)
-  await gFunc.clickSomething(homepage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
+  await clickElement(homePage.metamask_option, gnosisPage) // Clicking the MM icon in the onboardjs
 
   // FIXME remove MMpage.reload() when updated version of dappeteer
   await MMpage.reload()
@@ -69,10 +80,8 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
   await metamask.approve({ allAccounts: true })
   await gnosisPage.bringToFront()
 
-  await assertElementPresent(topBar.connected_network, gnosisPage, 'css')
-  // try {
-  //     await gFunc.closeIntercom(sels.cssSelectors.intercom_close_btn, gnosisPage)
-  // } catch (e) { }
+  await assertElementPresent(topBar.connected_network.selector, gnosisPage, 'css')
+
   return [
     browser,
     metamask,
@@ -90,30 +99,49 @@ export const initWithWalletConnected = async (importMultipleAccounts = false) =>
  */
 export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
-  const loadPage = sels.testIdSelectors.load_safe_page
 
   // Open load safe form
   await clickByText('p', 'Load existing Safe', gnosisPage)
-  await assertElementPresent(loadPage.form, gnosisPage, 'css')
-  await clickAndType(loadPage.safe_name_field, gnosisPage, sels.safeNames.load_safe_name, 'css')
-  await clickAndType(loadPage.safe_address_field, gnosisPage, sels.testAccountsHash.safe1, 'css')
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
+  await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name)
+  await clickAndType(loadSafeForm.safe_address_field, gnosisPage, accountsSelectors.testAccountsHash.safe1)
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   // Second step, review owners
-  await assertElementPresent(loadPage.step_two, gnosisPage, 'css')
-  const keys = Object.keys(sels.accountNames)
+  await assertElementPresent(loadSafeForm.step_two.selector, gnosisPage, 'css')
+  const keys = Object.keys(accountsSelectors.accountNames)
   for (let i = 0; i < 2/* keys.length */; i++) { // only names on the first 2 owners
-    const selector = loadPage.owner_name(i)
-    const name = sels.accountNames[keys[i]]
+    const selector = loadSafeForm.owner_name(i)
+    const name = accountsSelectors.accountNames[keys[i]]
     await clearInput(selector, gnosisPage, 'css')
-    await clickAndType(selector, gnosisPage, name, 'css')
+    await clickAndType({ selector: selector, type: 'css' }, gnosisPage, name)
   }
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
 
   // Third step, review information and submit
-  await assertElementPresent(loadPage.step_three, gnosisPage, 'css')
+  await assertElementPresent(loadSafeForm.step_three.selector, gnosisPage, 'css')
   await gnosisPage.waitForTimeout(2000)
-  await clickElement(loadPage.submit_btn, gnosisPage)
+  await clickElement(loadSafeForm.submit_btn, gnosisPage)
+
+  return [
+    browser,
+    metamask,
+    gnosisPage,
+    MMpage,
+  ]
+}
+
+/**
+ * This method returns a clean environment with a connected account and one imported Safe Multisig wallet.
+ * With default configuration the connected account is an owner of the Safe
+ *
+ * @param {boolean} importMultipleAccounts by default is false so only 1 accounts is imported to Metamask
+ * if more than one account is needed this parameter should be used with `true`
+ */
+export const initWithDefaultSafeDirectNavigation = async (importMultipleAccounts = false) => {
+  const [browser, metamask, gnosisPage, MMpage] = await initWithWalletConnected(importMultipleAccounts)
+  await gnosisPage.goto(envUrl + '#/safes/' + accountsSelectors.testAccountsHash.safe1)
+  await gnosisPage.waitForTimeout(2000)
 
   return [
     browser,

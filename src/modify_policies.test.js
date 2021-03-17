@@ -1,5 +1,7 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { txTab } from '../utils/selectors/transactionsTab'
+
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -21,10 +23,7 @@ describe.skip('Change Policies', () => {
   const errorMsg = sels.errorMsg
   const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const sendFunds = sels.testIdSelectors.send_funds_form
-  const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
-  const send_funds_modal = sels.xpSelectors.send_funds_modal
   // const modify_policies = sels.xpSelectors.modify_policies
   // const safe_hub = sels.xpSelectors.safe_hub
   // let owner_amount = false //amount of owners, will be taken from the owners tab in the settings
@@ -49,10 +48,10 @@ describe.skip('Change Policies', () => {
   }, 60000)
   test('Creating and approving Tx with owner 1', async (done) => {
     console.log('Verifying modification options')
-    const errorMsg = sels.errorMsg
+
     try {
-      await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
-      await gFunc.clickElement('[data-value="1"]', gnosisPage)
+      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
+      await gFunc.clickElement({ selector: '[data-value="1"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.sign()
@@ -80,9 +79,9 @@ describe.skip('Change Policies', () => {
       await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gFunc.assertElementPresent(txTab.tx_status('Awaiting your confirmation'), gnosisPage, 'css')
-      await gFunc.clickElement(txTab.confirm_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: txTab.confirm_tx_btn }, gnosisPage)
       await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await gFunc.clickElement(mainHub.approve_tx_btn, gnosisPage)
+      await gFunc.clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.confirmTransaction()
       done()
@@ -114,8 +113,8 @@ describe.skip('Change Policies', () => {
     try {
       await gFunc.clickByText('span', 'Modify', gnosisPage)
       await gFunc.isTextPresent('body', 'Change required confirmations', gnosisPage)
-      await gFunc.openDropdown(modify_policies.req_conf_dropdown, gnosisPage, 'css')
-      await gFunc.clickElement('[data-value="2"]', gnosisPage)
+      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
+      await gFunc.clickElement({ selector: '[data-value="2"]' }, gnosisPage)
       await gFunc.clickByText('span', 'Change', gnosisPage)
       await gnosisPage.waitFor(2000)
       await metamask.confirmTransaction()

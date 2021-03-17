@@ -1,5 +1,6 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { accountsSelectors } from '../utils/selectors/accounts'
 import { initWithDefaultSafe } from '../utils/testSetup'
 
 let browser
@@ -25,10 +26,7 @@ describe.skip('Adding and removing owners', () => {
   const modify_policies = sels.testIdSelectors.settings_tabs
   const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const sendFunds = sels.testIdSelectors.send_funds_form
-  const txTab = sels.testIdSelectors.transaction_tab
   const assetTab = sels.testIdSelectors.asset_tab
-  const send_funds_modal = sels.xpSelectors.send_funds_modal
 
   let owner_replaced_address
   let owner_for_replacement_address
@@ -53,11 +51,11 @@ describe.skip('Adding and removing owners', () => {
       }
       if (flag) {
         // if acc3 is pressent, that will be replaced, if not then acc5 will be replaced
-        owner_replaced_address = sels.testAccountsHash.acc3
-        owner_for_replacement_address = sels.testAccountsHash.acc5
+        owner_replaced_address = accountsSelectors.testAccountsHash.acc3
+        owner_for_replacement_address = accountsSelectors.testAccountsHash.acc5
       } else {
-        owner_replaced_address = sels.testAccountsHash.acc5
-        owner_for_replacement_address = sels.testAccountsHash.acc3
+        owner_replaced_address = accountsSelectors.testAccountsHash.acc5
+        owner_for_replacement_address = accountsSelectors.testAccountsHash.acc3
       }
 
       console.log('Owner_replaced_address = ', owner_replaced_address, '\nOwner_for_replacement_address = ', owner_for_replacement_address)
@@ -76,12 +74,12 @@ describe.skip('Adding and removing owners', () => {
       await gFunc.assertElementPresent(replace_owner.onwer_replaced_address(owner_replaced_address),gnosisPage)
       await gFunc.clickSomething(setting_owners.next_btn, gnosisPage)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in name
-      await gFunc.clickAndType(replace_owner.owner_name_input, gnosisPage, owner_for_replacement_name)
+      await gFunc.clickAndType({ selector: replace_owner.owner_name_input }, gnosisPage, owner_for_replacement_name)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.required), gnosisPage) // asserts error "required" in address
-      await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, '0xInvalidHash')
+      await gFunc.clickAndType({ selector: replace_owner.owner_address_input }, gnosisPage, '0xInvalidHash')
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.valid_ENS_name), gnosisPage) // assert invalid address error
       await gFunc.clearInput(replace_owner.owner_address_input, gnosisPage)
-      await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, existing_owner_address)
+      await gFunc.clickAndType({ selector: replace_owner.owner_address_input }, gnosisPage, existing_owner_address)
       await gFunc.assertElementPresent(errorMsg.error(errorMsg.duplicated_address), gnosisPage) // assert duplicated address error
       await gFunc.clearInput(replace_owner.owner_address_input, gnosisPage)
       await gFunc.clickAndType(replace_owner.owner_address_input, gnosisPage, owner_for_replacement_address)
