@@ -105,9 +105,6 @@ export const sels = {
         fee_msg_review: "p[data-testid='fee-meg-review-step']",
         submit_btn: "button[data-testid='submit-tx-btn']:enabled",
         submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
-      },
-      settings_tabs: {
-        req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
       }
     },
     safe_hub: {
@@ -244,7 +241,8 @@ export const sels = {
   },
   testIdSelectors: {
     general: { // id's that are on items that are spread through the site
-      qr_icon: "img[data-testid='qr-icon']"
+      qr_icon: "img[data-testid='qr-icon']",
+      sidebar: "[data-testid='sidebar']"
     },
     main_hub: {
       safe_name_heading: "h2[data-testid='safe-name-heading']",
@@ -321,9 +319,6 @@ export const sels = {
       submit_btn: "button[data-testid='submit-tx-btn']:enabled",
       submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
       advanced_options: "//p[contains(text(),'Advanced options')]"
-    },
-    settings_tabs: {
-      req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
     }
   },
   assertions: {
