@@ -1,10 +1,15 @@
 import * as gFunc from '../utils/selectorsHelpers'
 import {
   assertElementPresent,
+  assertAllElementPresent,
+  selectorChildren,
+  assertTextPresent,
   clearInput,
   clickAndType,
   clickByText,
   clickElement,
+  getNumberInString,
+  getInnerText,
   openDropdown
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
@@ -41,8 +46,8 @@ describe('Send funds and sign with two owners', () => {
   test('Open the send funds form', async (done) => {
     console.log('Open the Send Funds Form\n')
     try {
-      current_eth_funds_on_text = await gFunc.getInnerText(assetTab.balance_value('eth'), gnosisPage, 'css')
-      current_eth_funds = parseFloat((await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')).toFixed(3))
+      current_eth_funds_on_text = await getInnerText(assetTab.balance_value('eth'), gnosisPage, 'css')
+      current_eth_funds = parseFloat((await getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')).toFixed(3))
       // await assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
       // await clickElement({ selector: mainHub.new_transaction_btn }, gnosisPage)
       await clickByText('button', 'New Transaction', gnosisPage)
@@ -83,7 +88,7 @@ describe('Send funds and sign with two owners', () => {
 
       // Checking that the value set by the "Send max" button is the same as the current balance
       await clickElement(sendFundsForm.send_max_btn, gnosisPage)
-      const maxInputValue = await gFunc.getNumberInString(sendFundsForm.amount_input.selector, gnosisPage, 'css')
+      const maxInputValue = await getNumberInString(sendFundsForm.amount_input.selector, gnosisPage, 'css')
       expect(parseFloat(maxInputValue)).toBe(current_eth_funds)
       await clearInput(sendFundsForm.amount_input.selector, gnosisPage, 'css')
 
@@ -100,13 +105,13 @@ describe('Send funds and sign with two owners', () => {
   test('Review information is correct and submit transaction with signature', async (done) => {
     console.log('Review Info and submit')
     try {
-      await gFunc.assertAllElementPresent([
+      await assertAllElementPresent([
         sendFundsForm.send_funds_review.selector,
         sendFundsForm.recipient_address_review.selector,
       ], gnosisPage, 'css')
-      const recipientHash = await gFunc.getInnerText(sendFundsForm.recipient_address_review.selector, gnosisPage, 'css')
+      const recipientHash = await getInnerText(sendFundsForm.recipient_address_review.selector, gnosisPage, 'css')
       expect(recipientHash).toMatch(accountsSelectors.testAccountsHash.acc1)
-      const tokenAmount = await gFunc.getInnerText(sendFundsForm.amount_eth_review.selector, gnosisPage, 'css')
+      const tokenAmount = await getInnerText(sendFundsForm.amount_eth_review.selector, gnosisPage, 'css')
       expect(tokenAmount).toMatch(TOKEN_AMOUNT.toString())
 
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
@@ -129,7 +134,7 @@ describe('Send funds and sign with two owners', () => {
       await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
       current_nonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', current_nonce)
-      await metamask.switchAccount(2) // currently in account1, changing to account 2
+      await metamask.switchAccount(1) // currently in account2, changing to account 1
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
       await assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
@@ -156,18 +161,18 @@ describe('Send funds and sign with two owners', () => {
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
-      await gFunc.assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
+      await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
-      // await gFunc.isTextPresent(transactionsTab.tx_nonce, current_nonce, gnosisPage, "css")
-      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      // await isTextPresent(transactionsTab.tx_nonce, current_nonce, gnosisPage, "css")
+      const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(current_nonce)
-      const sentAmount = await gFunc.selectorChildren(transactionsTab.tx_info, gnosisPage, 'number', 0)
+      const sentAmount = await selectorChildren(transactionsTab.tx_info, gnosisPage, 'number', 0)
       expect(sentAmount).toBe(TOKEN_AMOUNT)
-      await gFunc.clickElement(transactionsTab.tx_type, gnosisPage)
-      const recipientAddress = await gFunc.getInnerText('div.tx-details > div p', gnosisPage, 'css')
+      await clickElement(transactionsTab.tx_type, gnosisPage)
+      const recipientAddress = await getInnerText('div.tx-details > div p', gnosisPage, 'css')
       // regex to match an address hash
       expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(accountsSelectors.testAccountsHash.acc1)
       await clickByText('span', 'ASSETS', gnosisPage)
@@ -177,7 +182,7 @@ describe('Send funds and sign with two owners', () => {
       await gnosisPage.waitForFunction((array) => {
         return document.querySelector(array[0]).innerText !== array[1]
       }, { polling: 100 }, array)
-      const new_eth_funds = await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')
+      const new_eth_funds = await getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')
       expect(parseFloat(new_eth_funds.toFixed(3))).toBe(parseFloat((current_eth_funds - TOKEN_AMOUNT).toFixed(3)))
 
       done()
