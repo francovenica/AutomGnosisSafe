@@ -336,7 +336,7 @@ export const sels = {
     error: (msg) => `//p[contains(text(),"${msg}")]`,
     required: 'Required',
     greater_than_0: 'Should be greater than 0',
-    valid_ENS_name: 'Address should be a valid Ethereum address or ENS name',
+    valid_ENS_name: 'Input must be a valid Ethereum address, ENS or Unstoppable domain',
     duplicated_address: 'Address already introduced',
     not_a_number: 'Must be a number',
     max_amount_tokens: (value = 0) => `Maximum value is ${value}`,

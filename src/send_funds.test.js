@@ -59,7 +59,7 @@ describe('Send funds and sign with two owners', () => {
   test('Fill the form and check error messages when inpus are wrong', async (done) => {
     console.log('Filling the Form\n')
     try {
-      await clickAndType(sendFundsForm.recipient_input, gnosisPage, accountsSelectors.testAccountsHash.non_owner_acc)
+      await clickAndType(sendFundsForm.recipient_input, gnosisPage, accountsSelectors.testAccountsHash.acc1)
 
       await openDropdown(sendFundsForm.select_token, gnosisPage)
       await clickElement(sendFundsForm.select_token_ether, gnosisPage)
@@ -105,7 +105,7 @@ describe('Send funds and sign with two owners', () => {
         sendFundsForm.recipient_address_review.selector,
       ], gnosisPage, 'css')
       const recipientHash = await gFunc.getInnerText(sendFundsForm.recipient_address_review.selector, gnosisPage, 'css')
-      expect(recipientHash).toMatch(accountsSelectors.testAccountsHash.non_owner_acc)
+      expect(recipientHash).toMatch(accountsSelectors.testAccountsHash.acc1)
       const tokenAmount = await gFunc.getInnerText(sendFundsForm.amount_eth_review.selector, gnosisPage, 'css')
       expect(tokenAmount).toMatch(TOKEN_AMOUNT.toString())
 
@@ -126,31 +126,33 @@ describe('Send funds and sign with two owners', () => {
     console.log('Approving the Tx with the owner 2')
     try {
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
-      current_nonce = await gFunc.getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      current_nonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', current_nonce)
-      await metamask.switchAccount(1) // currently in account2, changing to account 1
+      await metamask.switchAccount(2) // currently in account1, changing to account 2
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
-      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
-      await gFunc.assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
-      await clickElement({ selector: transactionsTab.tx_type }, gnosisPage)
+      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
+      await assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
+      await clickElement(transactionsTab.tx_type, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
       await clickByText('button > span', 'Confirm', gnosisPage)
       await assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
+      await assertElementPresent(mainHub.approve_tx_btn, gnosisPage, 'css')
+      await gnosisPage.waitForFunction(() => !document.querySelector("[data-testid='approve-tx-modal-submit-btn'][disabled]"))
       await clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
-      await gnosisPage.waitForTimeout(2000)
+      await gnosisPage.waitForTimeout(3000)
       await metamask.confirmTransaction()
       done()
     } catch (error) {
       console.log(error)
       done(error)
     }
-  }, 90000)
+  }, 120000)
 
   test('Check that transaction was successfully executed', async (done) => {
-    console.log('Verifying Execution of the Tx')
+    console.log('Check that transaction was successfully executed')
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(3000)
@@ -167,7 +169,7 @@ describe('Send funds and sign with two owners', () => {
       await gFunc.clickElement(transactionsTab.tx_type, gnosisPage)
       const recipientAddress = await gFunc.getInnerText('div.tx-details > div p', gnosisPage, 'css')
       // regex to match an address hash
-      expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(accountsSelectors.testAccountsHash.non_owner_acc)
+      expect(recipientAddress.match(/(0x[a-fA-F0-9]+)/)[0]).toMatch(accountsSelectors.testAccountsHash.acc1)
       await clickByText('span', 'ASSETS', gnosisPage)
       await assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       const array = ['[data-testid="balance-ETH"]', current_eth_funds_on_text]

@@ -26,6 +26,6 @@
   },
   "jest": {
     "preset": "jest-puppeteer",
-    "testTimeout": 60000
+    "testTimeout": 90000
   }
 }

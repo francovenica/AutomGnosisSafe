@@ -14,7 +14,7 @@ beforeAll(async () => {
 }, 60000)
 
 afterAll(async () => {
-  await gnosisPage.waitFor(2000)
+  await gnosisPage.waitForTimeout(2000)
   await browser.close()
 })
 
