@@ -1,4 +1,4 @@
-import * as gFunc from '../utils/selectorsHelpers'
+import { approveAndExecuteWithOwner } from '../utils/actions/approveAndExecuteWithOwner'
 import {
   assertElementPresent,
   clearInput,
@@ -12,7 +12,6 @@ import {
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
-import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { settingsPage } from '../utils/selectors/settings'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
@@ -33,10 +32,9 @@ afterAll(async () => {
 
 describe('Adding and removing owners', () => {
   const errorMsg = sels.errorMsg
-  const mainHub = sels.testIdSelectors.main_hub
   let new_owner_name = accountsSelectors.otherAccountNames.owner6_name
   let new_owner_address = accountsSelectors.testAccountsHash.non_owner_acc
-  let current_nonce = ''
+  let currentNonce = ''
 
   test('Filling Form and submitting tx', async (done) => {
     console.log('Filling Form and submitting tx')
@@ -85,23 +83,11 @@ describe('Adding and removing owners', () => {
     try {
       await gnosisPage.bringToFront()
       await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
-      current_nonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
-      console.log('CurrentNonce = ', current_nonce)
-      await metamask.switchAccount(1) // currently in account2, changing to account 1
-      await gnosisPage.bringToFront()
-      await gnosisPage.waitForTimeout(3000)
-      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
-      await assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
-      await clickElement(transactionsTab.tx_type, gnosisPage)
-      await gnosisPage.waitForTimeout(3000)
-      await clickByText('button > span', 'Confirm', gnosisPage)
-      await assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await assertElementPresent(mainHub.approve_tx_btn, gnosisPage, 'css')
-      await gnosisPage.waitForFunction(() => !document.querySelector("[data-testid='approve-tx-modal-submit-btn'][disabled]"))
-      await clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
-      await gnosisPage.waitForTimeout(3000)
-      await metamask.confirmTransaction()
+      currentNonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
+      console.log('CurrentNonce = ', currentNonce)
+      // We are currently using account 2
+      // We approve and execute with account 1
+      await approveAndExecuteWithOwner(1, gnosisPage, metamask)
       done()
     } catch (error) {
       console.log(error)
@@ -153,23 +139,11 @@ describe('Adding and removing owners', () => {
     try {
       await gnosisPage.bringToFront()
       await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
-      current_nonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
-      console.log('CurrentNonce = ', current_nonce)
-      await metamask.switchAccount(2) // currently in account1, changing to account 2
-      await gnosisPage.bringToFront()
-      await gnosisPage.waitForTimeout(3000)
-      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting your confirmation', gnosisPage, 'css')
-      await assertTextPresent('div.tx-votes > div > p', '1 out of 2', gnosisPage, 'css')
-      await clickElement(transactionsTab.tx_type, gnosisPage)
-      await gnosisPage.waitForTimeout(3000)
-      await clickByText('button > span', 'Confirm', gnosisPage)
-      await assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await assertElementPresent(mainHub.approve_tx_btn, gnosisPage, 'css')
-      await gnosisPage.waitForFunction(() => !document.querySelector("[data-testid='approve-tx-modal-submit-btn'][disabled]"))
-      await clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
-      await gnosisPage.waitForTimeout(3000)
-      await metamask.confirmTransaction()
+      currentNonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
+      console.log('CurrentNonce = ', currentNonce)
+      // We are currently using account 1
+      // We approve and execute with account 2
+      await approveAndExecuteWithOwner(2, gnosisPage, metamask)
       done()
     } catch (error) {
       console.log(error)
@@ -182,7 +156,7 @@ describe('Adding and removing owners', () => {
       await assertTextPresent('//h5', 'Queue transactions will appear here', gnosisPage)
       await clickByText('button > span > p', 'History', gnosisPage)
       const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
-      expect(nonce).toBe(current_nonce)
+      expect(nonce).toBe(currentNonce)
       const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
       expect(executedTxStatus).toBe('Success')
       done()

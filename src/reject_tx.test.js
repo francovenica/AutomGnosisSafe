@@ -4,10 +4,12 @@ import {
   clickAndType,
   clickByText,
   clickElement,
+  getInnerText,
   openDropdown
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
+import { generalInterface } from '../utils/selectors/generalInterface'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
@@ -102,7 +104,9 @@ describe('Reject Tx flow', () => {
       )
 
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await clickByText('button', 'Reject Transaction', gnosisPage)
+      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
+      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -120,10 +124,9 @@ describe('Reject Tx flow', () => {
       await gnosisPage.waitForFunction(() =>
         document.querySelector('body').innerText.includes('Cancelling transaction'))
       await metamask.switchAccount(1) // changing to account 1
-      await gnosisPage.waitForTimeout(2000)
       await gnosisPage.bringToFront()
       // await gFunc.assertElementPresent(txtransactionsTabTab.reject_tx_btn, gnosisPage, 'css')
-      await gnosisPage.waitForTimeout(2000)
+      await gnosisPage.waitForTimeout(3000)
       await clickByText(transactionsTab.tx_type.selector, 'Cancelling transaction', gnosisPage)
       await gnosisPage.waitForTimeout(1000)
       await clickByText('button > span', 'Confirm', gnosisPage)
@@ -132,8 +135,9 @@ describe('Reject Tx flow', () => {
       )
 
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-
-      await clickByText('button', 'Approve Transaction', gnosisPage)
+      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
+      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.confirmTransaction()
@@ -154,10 +158,10 @@ describe('Reject Tx flow', () => {
       await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
       await gnosisPage.waitForTimeout(4000)
-      // await assertElementPresent(transactionsTab.rejected_counter(2), gnosisPage, 'css')
-      // await gnosisPage.waitForFunction(() =>
-      //   document.querySelector('table[class^=MuiTable-root]').innerText.includes('Executor')
-      // )
+      const executedTxType = await getInnerText(transactionsTab.tx_type.selector, gnosisPage, 'css')
+      expect(executedTxType).toBe('Cancelling transaction')
+      const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
+      expect(executedTxStatus).toBe('Success')
       await clickByText('span', 'ASSETS', gnosisPage)
       await assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       // await gnosisPage.waitForTimeout(4000) // Numbers flicker for a bit when you enter in this tab
@@ -170,5 +174,5 @@ describe('Reject Tx flow', () => {
       console.log(error)
       done(error)
     }
-  }, 30000)
+  }, 60000)
 })

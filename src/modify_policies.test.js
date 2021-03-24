@@ -4,6 +4,7 @@ import {
   assertElementPresent,
   clickByText,
   clickElement,
+  getNumberInString,
   isTextPresent,
   openDropdown
 } from '../utils/selectorsHelpers'
@@ -96,7 +97,7 @@ describe('Change Policies', () => {
       await clickByText('button > span > p', 'History', gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       // Wating for the new tx to show in the history, looking for the nonce
-      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(transactionNonce)
       await clickElement(transactionsTab.tx_type, gnosisPage)
       const changeConfirmationText = await gFunc.getInnerText('div.tx-details > p', gnosisPage, 'css')
@@ -114,7 +115,7 @@ describe('Change Policies', () => {
     } catch (error) {
       done(error)
     }
-  }, 60000)
+  }, 90000)
   test('Create Tx to revert it back to initial state', async (done) => {
     console.log('Create Tx to revert it back to initial state')
     try {
@@ -136,13 +137,19 @@ describe('Change Policies', () => {
   test('Verifying the rollback', async (done) => {
     console.log('Verifying the rollback')
     try {
-      await MMpage.waitForTimeout(2000)
       await gnosisPage.bringToFront()
+      await gnosisPage.waitForTimeout(2000)
       await clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
-      await MMpage.waitForTimeout(20000)
-      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
-      expect(nonce).toBe(transactionNonce + 1)
+      const expectedNonce = transactionNonce + 1
+      console.log('Waiting for tx with nonce: ', expectedNonce)
+      // FIXME we have to check that transaction was correctly executed
+      // await gnosisPage.waitForFunction(async (selector, expectedNonce) => {
+      //   const nonce = await getNumberInString(selector)
+      //   return nonce === expectedNonce
+      // }, { timeout: 80000 }, transactionsTab.tx_nonce, expectedNonce)
+      // const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      // expect(nonce).toBe(expectedNonce)
       await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
       await clickByText('span', 'SETTINGS', gnosisPage)
       await isTextPresent('body', 'Safe Version', gnosisPage)
