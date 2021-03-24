@@ -16,6 +16,7 @@
     "puppeteer": "^5.5.0"
   },
   "scripts": {
+    "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "test": "jest --detectOpenHandles",
     "test-local": "TESTING_ENV=local yarn test",
     "test-pr": "TESTING_ENV=PR yarn test"
@@ -26,6 +27,7 @@
   },
   "jest": {
     "preset": "jest-puppeteer",
-    "testTimeout": 90000
+    "testTimeout": 90000,
+    "rootDir": "src"
   }
 }

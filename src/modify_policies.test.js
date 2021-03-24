@@ -1,6 +1,16 @@
+import { approveAndExecuteWithOwner } from '../utils/actions/approveAndExecuteWithOwner'
 import * as gFunc from '../utils/selectorsHelpers'
+import {
+  assertElementPresent,
+  clickByText,
+  clickElement,
+  isTextPresent,
+  openDropdown
+} from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
-import { txTab } from '../utils/selectors/transactionsTab'
+import { sendFundsForm } from '../utils/selectors/sendFundsForm'
+import { transactionsTab } from '../utils/selectors/transactionsTab'
+import { settingsTabs } from '../utils/selectors/settings'
 
 import { initWithDefaultSafe } from '../utils/testSetup'
 
@@ -18,42 +28,39 @@ afterAll(async () => {
   await browser.close()
 })
 
-describe.skip('Change Policies', () => {
-  const modify_policies = sels.testIdSelectors.settings_tabs
-  const errorMsg = sels.errorMsg
-  const mainHub = sels.testIdSelectors.main_hub
+describe('Change Policies', () => {
   const general = sels.testIdSelectors.general
-  const assetTab = sels.testIdSelectors.asset_tab
-  // const modify_policies = sels.xpSelectors.modify_policies
-  // const safe_hub = sels.xpSelectors.safe_hub
+  let transactionNonce = ''
+
   // let owner_amount = false //amount of owners, will be taken from the owners tab in the settings
   // let req_conf = false //current required confirmations. taken from the message in the policies tab
   // let max_req_conf = false //max required confirmations. taken from the message in the policies tab
+
   test('Open Modify form', async (done) => {
     console.log('Open Modify form')
     try {
-      await gnosisPage.waitFor(2000)
-      await gFunc.isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
-      await gFunc.clickByText('span', 'SETTINGS', gnosisPage)
-      await gFunc.isTextPresent('body', 'Safe Version', gnosisPage)
-      await gFunc.clickByText('p', 'Policies', gnosisPage)
-      await gFunc.isTextPresent('body', 'Required confirmations', gnosisPage)
-      await gFunc.isTextPresent('body', '2 out of 4 owners', gnosisPage)
-      await gFunc.clickByText('span', 'Modify', gnosisPage)
-      await gFunc.isTextPresent('body', 'Change required confirmations', gnosisPage)
+      await gnosisPage.waitForTimeout(2000)
+      await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
+      await clickByText('span', 'SETTINGS', gnosisPage)
+      await isTextPresent('body', 'Safe Version', gnosisPage)
+      await clickByText('p', 'Policies', gnosisPage)
+      await isTextPresent('body', 'Required confirmations', gnosisPage)
+      await isTextPresent('body', '2 out of 4 owners', gnosisPage)
+      await clickByText('span', 'Change', gnosisPage)
+      await isTextPresent('body', 'Change required confirmations', gnosisPage)
       done()
     } catch (error) {
       done(error)
     }
   }, 60000)
   test('Creating and approving Tx with owner 1', async (done) => {
-    console.log('Verifying modification options')
-
+    console.log('Set modification options and submit')
     try {
-      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
-      await gFunc.clickElement({ selector: '[data-value="1"]' }, gnosisPage)
-      await gFunc.clickByText('span', 'Change', gnosisPage)
-      await gnosisPage.waitFor(2000)
+      await openDropdown(settingsTabs.req_conf_dropdown, gnosisPage)
+      await clickElement({ selector: '[data-value="1"]' }, gnosisPage)
+      await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
+      await clickByText('button > span', 'Submit', gnosisPage)
+      await gnosisPage.waitForTimeout(2000)
       await metamask.sign()
       done()
     } catch (error) {
@@ -61,29 +68,14 @@ describe.skip('Change Policies', () => {
     }
   }, 60000)
   test('Approving Tx with owner 2', async (done) => {
-    console.log('Creating and approving Tx with owner 1')
+    console.log('Approve and execute with owner 2')
     try {
-      await MMpage.waitFor(2000)
       await gnosisPage.bringToFront()
-      // checking amount of "Success and awaiting conf status for final review"
-      await gFunc.assertElementPresent(txTab.tx_status('Awaiting confirmations'), gnosisPage, 'css')
-      const amount_await_conf_status = await gFunc.amountOfElements(txTab.tx_status('Awaiting confirmations'), gnosisPage, 'css')
-      expect(amount_await_conf_status).toBe(1) // it should be only 1 awaiting confirmations tx at this point
-      // Notifications are blocking the click ot the tx, I had to click it in another way now
-      await gnosisPage.evaluate(() => {
-        const firstTx = document.querySelectorAll('[data-testid="transaction-row"]')[0]
-        firstTx && firstTx.click()
-      })
-      await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage, 'css')
-      await gFunc.assertElementPresent(txTab.not_confirmed_tx_check, gnosisPage, 'css')
-      await metamask.switchAccount(1) // currently in account2, changing to account 1
-      await gnosisPage.bringToFront()
-      await gFunc.assertElementPresent(txTab.tx_status('Awaiting your confirmation'), gnosisPage, 'css')
-      await gFunc.clickElement({ selector: txTab.confirm_tx_btn }, gnosisPage)
-      await gFunc.assertElementPresent(mainHub.execute_checkbox, gnosisPage, 'css')
-      await gFunc.clickElement({ selector: mainHub.approve_tx_btn }, gnosisPage)
-      await gnosisPage.waitFor(2000)
-      await metamask.confirmTransaction()
+      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      transactionNonce = await gFunc.getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
+      console.log('CurrentNonce = ', transactionNonce)
+      // We approve and execute with account 1
+      await approveAndExecuteWithOwner(1, gnosisPage, metamask)
       done()
     } catch (error) {
       done(error)
@@ -92,31 +84,44 @@ describe.skip('Change Policies', () => {
   test('Verifying the change in the settings', async (done) => {
     console.log('Verifying the change in the settings')
     try {
-      await MMpage.waitFor(2000)
       await gnosisPage.bringToFront()
+      await gnosisPage.waitForTimeout(2000)
       console.log('Checking for the 2 out of 2')
-      await gFunc.assertElementPresent(txTab.confirmed_counter(2), gnosisPage)
-      console.log('Confirmed  the 2 out of 2')
-      await gFunc.isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
-      await gFunc.clickByText('span', 'SETTINGS', gnosisPage)
-      await gFunc.isTextPresent('body', 'Safe Version', gnosisPage)
-      await gFunc.clickByText('p', 'Policies', gnosisPage)
-      await gFunc.isTextPresent('body', 'Required confirmations', gnosisPage)
-      await gFunc.isTextPresent('body', '1 out of 4 owners', gnosisPage)
+      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
+      // waiting for the queue list to be empty and the executed tx to be on the history tab
+      await gFunc.assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
+      await clickByText('button > span > p', 'History', gnosisPage)
+      await gnosisPage.waitForTimeout(2000)
+      // Wating for the new tx to show in the history, looking for the nonce
+      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      expect(nonce).toBe(transactionNonce)
+      await clickElement(transactionsTab.tx_type, gnosisPage)
+      const changeConfirmationText = await gFunc.getInnerText('div.tx-details > p', gnosisPage, 'css')
+      expect(changeConfirmationText).toBe('Change required confirmations:')
+      const txDetails = await gFunc.getInnerText('div.tx-details', gnosisPage, 'css')
+      console.log(txDetails)
+      console.log('Confirmed the 2 out of 2')
+      await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
+      await clickByText('span', 'SETTINGS', gnosisPage)
+      await isTextPresent('body', 'Safe Version', gnosisPage)
+      await clickByText('p', 'Policies', gnosisPage)
+      await isTextPresent('body', 'Required confirmations', gnosisPage)
+      await isTextPresent('body', '1 out of 4 owners', gnosisPage)
       done()
     } catch (error) {
       done(error)
     }
-  }, 90000)
+  }, 60000)
   test('Create Tx to revert it back to initial state', async (done) => {
     console.log('Create Tx to revert it back to initial state')
     try {
-      await gFunc.clickByText('span', 'Modify', gnosisPage)
-      await gFunc.isTextPresent('body', 'Change required confirmations', gnosisPage)
-      await gFunc.openDropdown({ selector: modify_policies.req_conf_dropdown, type: 'css' }, gnosisPage)
-      await gFunc.clickElement({ selector: '[data-value="2"]' }, gnosisPage)
-      await gFunc.clickByText('span', 'Change', gnosisPage)
-      await gnosisPage.waitFor(2000)
+      await clickByText('span', 'Change', gnosisPage)
+      await isTextPresent('body', 'Change required confirmations', gnosisPage)
+      await openDropdown(settingsTabs.req_conf_dropdown, gnosisPage)
+      await clickElement({ selector: '[data-value="2"]' }, gnosisPage)
+      await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
+      await clickByText('button > span', 'Submit', gnosisPage)
+      await gnosisPage.waitForTimeout(2000)
       await metamask.confirmTransaction()
       done()
     } catch (error) {
@@ -126,15 +131,18 @@ describe.skip('Change Policies', () => {
   test('Verifying the rollback', async (done) => {
     console.log('Verifying the rollback')
     try {
-      await MMpage.waitFor(2000)
+      await MMpage.waitForTimeout(2000)
       await gnosisPage.bringToFront()
-      await gFunc.assertElementPresent(txTab.confirmed_counter(1), gnosisPage)
-      await gFunc.isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
-      await gFunc.clickByText('span', 'SETTINGS', gnosisPage)
-      await gFunc.isTextPresent('body', 'Safe Version', gnosisPage)
-      await gFunc.clickByText('p', 'Policies', gnosisPage)
-      await gFunc.isTextPresent('body', 'Required confirmations', gnosisPage)
-      await gFunc.isTextPresent('body', '2 out of 4 owners', gnosisPage)
+      await clickByText('button > span > p', 'History', gnosisPage)
+      // Wating for the new tx to show in the history, looking for the nonce
+      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      expect(nonce).toBe(transactionNonce + 1)
+      await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
+      await clickByText('span', 'SETTINGS', gnosisPage)
+      await isTextPresent('body', 'Safe Version', gnosisPage)
+      await clickByText('p', 'Policies', gnosisPage)
+      await isTextPresent('body', 'Required confirmations', gnosisPage)
+      await isTextPresent('body', '2 out of 4 owners', gnosisPage)
       done()
     } catch (error) {
       done(error)
