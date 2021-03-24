@@ -18,4 +18,6 @@ export const generalInterface = {
   settings_tab: "[id='section-settings']",
   execute_checkbox: "label[data-testid='execute-checkbox']",
   approve_tx_btn: "button[data-testid='approve-tx-modal-submit-btn']",
+  submit_tx_btn: 'button[type="submit"]',
+  submit_tx_btn_disabled: 'button[type="submit"][disabled]'
 }

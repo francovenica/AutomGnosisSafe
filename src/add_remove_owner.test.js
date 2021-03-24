@@ -181,7 +181,7 @@ describe('Adding and removing owners', () => {
     try {
       await assertTextPresent('//h5', 'Queue transactions will appear here', gnosisPage)
       await clickByText('button > span > p', 'History', gnosisPage)
-      const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(current_nonce)
       const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
       expect(executedTxStatus).toBe('Success')

@@ -8,11 +8,12 @@ import {
   openDropdown
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
+import { generalInterface } from '../utils/selectors/generalInterface'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { settingsTabs } from '../utils/selectors/settings'
 
-import { initWithDefaultSafe } from '../utils/testSetup'
+import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
 
 let browser
 let metamask
@@ -20,7 +21,7 @@ let gnosisPage
 let MMpage
 
 beforeAll(async () => {
-  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafe(true)
+  [browser, metamask, gnosisPage, MMpage] = await initWithDefaultSafeDirectNavigation(true)
 }, 60000)
 
 afterAll(async () => {
@@ -59,7 +60,9 @@ describe('Change Policies', () => {
       await openDropdown(settingsTabs.req_conf_dropdown, gnosisPage)
       await clickElement({ selector: '[data-value="1"]' }, gnosisPage)
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await clickByText('button > span', 'Submit', gnosisPage)
+      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
+      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       await metamask.sign()
       done()
@@ -120,7 +123,9 @@ describe('Change Policies', () => {
       await openDropdown(settingsTabs.req_conf_dropdown, gnosisPage)
       await clickElement({ selector: '[data-value="2"]' }, gnosisPage)
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await clickByText('button > span', 'Submit', gnosisPage)
+      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
+      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       await metamask.confirmTransaction()
       done()
@@ -135,6 +140,7 @@ describe('Change Policies', () => {
       await gnosisPage.bringToFront()
       await clickByText('button > span > p', 'History', gnosisPage)
       // Wating for the new tx to show in the history, looking for the nonce
+      await MMpage.waitForTimeout(20000)
       const nonce = await gFunc.getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(transactionNonce + 1)
       await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)

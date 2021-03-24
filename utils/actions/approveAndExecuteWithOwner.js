@@ -20,9 +20,9 @@ export const approveAndExecuteWithOwner = async (owner, gnosisPage, metamask) =>
   await clickByText('button > span', 'Confirm', gnosisPage)
   await assertElementPresent(generalInterface.execute_checkbox, gnosisPage, 'css')
   await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-  await assertElementPresent(generalInterface.approve_tx_btn, gnosisPage, 'css')
-  await gnosisPage.waitForFunction(() => !document.querySelector("[data-testid='approve-tx-modal-submit-btn'][disabled]"))
-  await clickElement({ selector: generalInterface.approve_tx_btn }, gnosisPage)
+  await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+  await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
+  await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
   await gnosisPage.waitForTimeout(2000)
   await metamask.confirmTransaction()
 }
