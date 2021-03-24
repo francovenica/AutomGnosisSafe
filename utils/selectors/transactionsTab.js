@@ -10,7 +10,7 @@ export const transactionsTab = {
   transaction_row: (index = 0) => `[data-testid='transaction-row-${index}']`,
   no_tx_in_queue: '[alt=\'No Transactions yet\']',
   tx_nonce: 'div.tx-nonce',
-  tx_type: 'div.tx-type',
+  tx_type: { selector: 'div.tx-type', type: 'css' },
   tx_info: 'div.tx-info',
   tx_votes: 'div.tx-votes',
   tx2_status: 'div.tx-status'

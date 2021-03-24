@@ -13,7 +13,7 @@ beforeAll(async () => {
 }, 60000)
 
 afterAll(async () => {
-  await gnosisPage.waitFor(2000)
+  await gnosisPage.waitForTimeout(2000)
   await browser.close()
 })
 
@@ -23,10 +23,7 @@ describe.skip('Adding and removing owners', () => {
   const errorMsg = sels.errorMsg
   const safe_hub = sels.xpSelectors.safe_hub
 
-  const modify_policies = sels.testIdSelectors.settings_tabs
-  const mainHub = sels.testIdSelectors.main_hub
   const general = sels.testIdSelectors.general
-  const assetTab = sels.testIdSelectors.asset_tab
 
   let owner_replaced_address
   let owner_for_replacement_address
@@ -156,7 +153,7 @@ describe.skip('Adding and removing owners', () => {
         replace_owner.tx_add_owner_title,
         // replace_owner.tx_add_owner_name(owner_for_replacement_name), // This is broken in the application. Issue #649
         replace_owner.tx_add_owner_address(owner_for_replacement_address),
-      ],gnosisPage)
+      ], gnosisPage)
       await gFunc.clickSomething(setting_owners.settings_tab, gnosisPage)
       await gFunc.clickSomething(setting_owners.owners_tab, gnosisPage)
       await gFunc.assertElementPresent(setting_owners.owner_table_row_address(owner_for_replacement_address), gnosisPage)

@@ -1,10 +1,5 @@
 import { accountsSelectors } from './selectors/accounts'
 
-// $$(".MuiCollapse-container").forEach((element) => element.remove())
-// console.log(await gnosisPage.$$eval(loadPage.owner_row, x=>x.length)) Count amount of elements with the same selector
-// await page.evaluate(x=>x.style.outline = '3px solid red', element)
-// await page.evaluate(x=>x.style.outline = '', element)
-
 const elementSelector = async (selector, page, type, timeout) => {
   /* handling Xpath and css selectors is different. Since many functions require
   to make this distinction this function was created to do it */
@@ -33,7 +28,7 @@ const elementsSelector = async (selector, page, type, timeout) => {
 }
 
 export const clickElement = async function ({ selector, type = 'css' }, page) {
-  const element = await elementSelector(selector, page, type, 20000)
+  const element = await elementSelector(selector, page, type, 60000)
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {
@@ -65,7 +60,7 @@ export const clickSomething = async function (selector, page, type = 'Xpath') {
 }
 
 export const openDropdown = async function ({ selector, type = 'Xpath' }, page) {
-  const element = await elementSelector(selector, page, type, 20000)
+  const element = await elementSelector(selector, page, type, 60000)
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {
@@ -95,15 +90,6 @@ export const clickAndType = async function ({ selector, type = 'Xpath' }, page, 
   }
 }
 
-// Deprecated
-const removeNotifications = async function (page) {
-  await page.evaluate(() => {
-    const memoRoot = document.querySelector('[class^="memo-root-"]')
-    memoRoot && memoRoot.remove()
-  })
-}
-// Deprecated
-
 export const clearInput = async function (selector, page, type = 'Xpath') {
   const field = await elementSelector(selector, page, type, 20000)
   await field.click({ clickCount: 3 })
@@ -111,8 +97,7 @@ export const clearInput = async function (selector, page, type = 'Xpath') {
 }
 
 export const assertElementPresent = async function (selector, page, type = 'Xpath') {
-  // await removeNotifications(page) // Notif cannot be removed anymore
-  const element = await elementSelector(selector, page, type, 60000)
+  const element = await elementSelector(selector, page, type, 90000)
   try {
     expect(element).not.toBe('Selector Not Found')
   } catch (error) {

@@ -1,0 +1,23 @@
+export const generalInterface = {
+  qr_icon: "img[data-testid='qr-icon']",
+  sidebar: "[data-testid='sidebar']",
+  safe_name_heading: "h2[data-testid='safe-name-heading']",
+  safe_address_heading: "p[data-testid='safe-address-heading']",
+  // main_send_btn : "button[data-testid='main-send-btn']",
+  show_qr_btn: "[title='Show QR']",
+  receiver_modal_safe_name: "[id='safe-name']",
+  receiver_modal_safe_address: "[id='safe-address']",
+  new_transaction_btn: "button[id='new-transaction-btn']",
+  modal_send_funds_btn: "button[data-testid='modal-send-funds-btn']",
+  modal_send_collectible_btn: "button[data-testid='modal-send-collectible-btn']",
+  modal_contract_interaction_btn: "button[data-testid='modal-contract-interaction-btn']",
+  assets_tab: "[id='section-assets']",
+  transactions_tab: "[id='section-transactions']",
+  apps_tab: "[id='section-apps']",
+  addressbook_tab: "[id='section-addressbook']",
+  settings_tab: "[id='section-settings']",
+  execute_checkbox: "label[data-testid='execute-checkbox']",
+  approve_tx_btn: "button[data-testid='approve-tx-modal-submit-btn']",
+  submit_tx_btn: 'button[type="submit"]',
+  submit_tx_btn_disabled: 'button[type="submit"][disabled]'
+}

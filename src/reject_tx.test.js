@@ -86,7 +86,7 @@ describe('Reject Tx flow', () => {
       await gnosisPage.bringToFront()
       await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
       await gFunc.assertTextPresent('div > p', 'NEXT TRANSACTION', gnosisPage, 'css')
-      await clickElement({ selector: transactionsTab.tx_type }, gnosisPage)
+      await clickElement(transactionsTab.tx_type, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
       await clickByText('button > span', 'Cancel', gnosisPage)
 
@@ -124,7 +124,7 @@ describe('Reject Tx flow', () => {
       await gnosisPage.bringToFront()
       // await gFunc.assertElementPresent(txtransactionsTabTab.reject_tx_btn, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(2000)
-      await clickByText(transactionsTab.tx_type, 'Cancelling transaction', gnosisPage)
+      await clickByText(transactionsTab.tx_type.selector, 'Cancelling transaction', gnosisPage)
       await gnosisPage.waitForTimeout(1000)
       await clickByText('button > span', 'Confirm', gnosisPage)
       await gnosisPage.waitForFunction(() =>
@@ -148,7 +148,7 @@ describe('Reject Tx flow', () => {
     console.log('Verifying Execution of the Tx')
     try {
       await gnosisPage.bringToFront()
-      await gnosisPage.waitForTimeout(3000)
+      await gnosisPage.waitForTimeout(2000)
       // await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')

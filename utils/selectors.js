@@ -105,9 +105,6 @@ export const sels = {
         fee_msg_review: "p[data-testid='fee-meg-review-step']",
         submit_btn: "button[data-testid='submit-tx-btn']:enabled",
         submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
-      },
-      settings_tabs: {
-        req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
       }
     },
     safe_hub: {
@@ -244,7 +241,8 @@ export const sels = {
   },
   testIdSelectors: {
     general: { // id's that are on items that are spread through the site
-      qr_icon: "img[data-testid='qr-icon']"
+      qr_icon: "img[data-testid='qr-icon']",
+      sidebar: "[data-testid='sidebar']"
     },
     main_hub: {
       safe_name_heading: "h2[data-testid='safe-name-heading']",
@@ -321,9 +319,6 @@ export const sels = {
       submit_btn: "button[data-testid='submit-tx-btn']:enabled",
       submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
       advanced_options: "//p[contains(text(),'Advanced options')]"
-    },
-    settings_tabs: {
-      req_conf_dropdown: "div[data-testid='threshold-select-input']", // req confirmation dropdown for the safe creation form
     }
   },
   assertions: {
@@ -336,7 +331,7 @@ export const sels = {
     error: (msg) => `//p[contains(text(),"${msg}")]`,
     required: 'Required',
     greater_than_0: 'Should be greater than 0',
-    valid_ENS_name: 'Address should be a valid Ethereum address or ENS name',
+    valid_ENS_name: 'Input must be a valid Ethereum address, ENS or Unstoppable domain',
     duplicated_address: 'Address already introduced',
     not_a_number: 'Must be a number',
     max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
