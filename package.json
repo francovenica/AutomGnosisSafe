@@ -27,7 +27,7 @@
   },
   "jest": {
     "preset": "jest-puppeteer",
-    "rootDir": "src",
-    "testTimeout": 60000
+    "testTimeout": 90000,
+    "rootDir": "src"
   }
 }

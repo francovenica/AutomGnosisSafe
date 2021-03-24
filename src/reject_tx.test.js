@@ -86,7 +86,7 @@ describe('Reject Tx flow', () => {
       await gnosisPage.bringToFront()
       await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
       await gFunc.assertTextPresent('div > p', 'NEXT TRANSACTION', gnosisPage, 'css')
-      await clickElement({ selector: transactionsTab.tx_type }, gnosisPage)
+      await clickElement(transactionsTab.tx_type, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
       await clickByText('button > span', 'Cancel', gnosisPage)
 
@@ -124,7 +124,7 @@ describe('Reject Tx flow', () => {
       await gnosisPage.bringToFront()
       // await gFunc.assertElementPresent(txtransactionsTabTab.reject_tx_btn, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(2000)
-      await clickByText(transactionsTab.tx_type, 'Cancelling transaction', gnosisPage)
+      await clickByText(transactionsTab.tx_type.selector, 'Cancelling transaction', gnosisPage)
       await gnosisPage.waitForTimeout(1000)
       await clickByText('button > span', 'Confirm', gnosisPage)
       await gnosisPage.waitForFunction(() =>
