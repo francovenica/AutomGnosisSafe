@@ -54,7 +54,7 @@ describe('Change Policies', () => {
     } catch (error) {
       done(error)
     }
-  }, 60000)
+  }, 30000)
   test('Creating and approving Tx with owner 1', async (done) => {
     console.log('Set modification options and submit')
     try {
@@ -70,7 +70,7 @@ describe('Change Policies', () => {
     } catch (error) {
       done(error)
     }
-  }, 60000)
+  }, 30000)
   test('Approving Tx with owner 2', async (done) => {
     console.log('Approve and execute with owner 2')
     try {
@@ -84,7 +84,7 @@ describe('Change Policies', () => {
     } catch (error) {
       done(error)
     }
-  }, 90000)
+  }, 60000)
   test('Verifying the change in the settings', async (done) => {
     console.log('Verifying the change in the settings')
     try {
@@ -140,16 +140,13 @@ describe('Change Policies', () => {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(2000)
       await clickByText('button > span > p', 'History', gnosisPage)
-      // Wating for the new tx to show in the history, looking for the nonce
+      // Wating for the tx execution notification, history should update after
+      await isTextPresent('body', 'Transaction successfully executed', gnosisPage)
       const expectedNonce = transactionNonce + 1
       console.log('Waiting for tx with nonce: ', expectedNonce)
-      // FIXME we have to check that transaction was correctly executed
-      // await gnosisPage.waitForFunction(async (selector, expectedNonce) => {
-      //   const nonce = await getNumberInString(selector)
-      //   return nonce === expectedNonce
-      // }, { timeout: 80000 }, transactionsTab.tx_nonce, expectedNonce)
-      // const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
-      // expect(nonce).toBe(expectedNonce)
+      await gnosisPage.waitForTimeout(1000)
+      const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
+      expect(nonce).toBe(expectedNonce)
       await isTextPresent(general.sidebar, 'SETTINGS', gnosisPage)
       await clickByText('span', 'SETTINGS', gnosisPage)
       await isTextPresent('body', 'Safe Version', gnosisPage)

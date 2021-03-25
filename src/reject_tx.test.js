@@ -157,7 +157,7 @@ describe('Reject Tx flow', () => {
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
-      await gnosisPage.waitForTimeout(4000)
+      await gnosisPage.waitForTimeout(2000)
       const executedTxType = await getInnerText(transactionsTab.tx_type.selector, gnosisPage, 'css')
       expect(executedTxType).toBe('Cancelling transaction')
       const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
@@ -174,5 +174,5 @@ describe('Reject Tx flow', () => {
       console.log(error)
       done(error)
     }
-  }, 60000)
+  }, 90000)
 })
