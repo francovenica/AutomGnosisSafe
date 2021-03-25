@@ -31,7 +31,6 @@ afterAll(async () => {
 describe('Reject Tx flow', () => {
   let startBalance = 0.0
 
-  const mainHub = sels.testIdSelectors.main_hub
   const assetTab = sels.testIdSelectors.asset_tab
   const labels = sels.statusToLabel
 
@@ -41,7 +40,7 @@ describe('Reject Tx flow', () => {
       await assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')
       startBalance = await gFunc.getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')
       await clickByText('button', 'New Transaction', gnosisPage)
-      await clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
+      await clickElement({ selector: generalInterface.modal_send_funds_btn }, gnosisPage)
       await assertElementPresent(sendFundsForm.review_btn_disabled.selector, gnosisPage, 'css')
       done()
     } catch (error) {
@@ -86,17 +85,11 @@ describe('Reject Tx flow', () => {
     try {
       console.log('Rejecting with the 1st owner')
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await gFunc.assertTextPresent(transactionsTab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
       await gFunc.assertTextPresent('div > p', 'NEXT TRANSACTION', gnosisPage, 'css')
       await clickElement(transactionsTab.tx_type, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
       await clickByText('button > span', 'Cancel', gnosisPage)
-
-      // Can't click an element by the label because notifications block the click
-      // await gFunc.clickElement({ selector: transactionsTab.tx_status(labels.awaiting_confirmations) }, gnosisPage)
-      // await gFunc.assertElementPresent(transactionsTab.confirmed_counter(1), gnosisPage, 'css')
-      // await gFunc.assertElementPresent(transactionsTab.reject_tx_btn, gnosisPage, 'css')
-      // await gFunc.clickElement({ selector: transactionsTab.reject_tx_btn }, gnosisPage)
 
       // making sure that a "Reject Transaction" text exist in the page first
       await gnosisPage.waitForFunction(() =>
@@ -104,9 +97,9 @@ describe('Reject Tx flow', () => {
       )
 
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await assertElementPresent(generalInterface.submit_btn.selector, gnosisPage, 'css')
       await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
-      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
+      await clickElement(generalInterface.submit_btn, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.sign()
@@ -135,9 +128,9 @@ describe('Reject Tx flow', () => {
       )
 
       await assertElementPresent(sendFundsForm.advanced_options.selector, gnosisPage, 'Xpath')
-      await assertElementPresent(generalInterface.submit_tx_btn, gnosisPage, 'css')
+      await assertElementPresent(generalInterface.submit_btn.selector, gnosisPage, 'css')
       await gnosisPage.waitForFunction(selector => !document.querySelector(selector), {}, generalInterface.submit_tx_btn_disabled)
-      await clickElement({ selector: generalInterface.submit_tx_btn }, gnosisPage)
+      await clickElement(generalInterface.submit_btn, gnosisPage)
 
       await gnosisPage.waitForTimeout(4000)
       await metamask.confirmTransaction()
@@ -153,14 +146,14 @@ describe('Reject Tx flow', () => {
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(2000)
-      // await gFunc.assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
+      // await gFunc.assertTextPresent(transactionsTab.tx_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)
       await gnosisPage.waitForTimeout(2000)
       const executedTxType = await getInnerText(transactionsTab.tx_type.selector, gnosisPage, 'css')
       expect(executedTxType).toBe('Cancelling transaction')
-      const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
+      const executedTxStatus = await getInnerText(transactionsTab.tx_status, gnosisPage, 'css')
       expect(executedTxStatus).toBe('Success')
       await clickByText('span', 'ASSETS', gnosisPage)
       await assertElementPresent(assetTab.balance_value('eth'), gnosisPage, 'css')

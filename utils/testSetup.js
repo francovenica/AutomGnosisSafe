@@ -5,6 +5,7 @@ import config from './config'
 import { accountsSelectors } from './selectors/accounts'
 import { topBar } from './selectors/topBar'
 import { homePage } from './selectors/welcomePage'
+import { generalInterface } from './selectors/generalInterface'
 import { loadSafeForm } from './selectors/loadSafeForm'
 import * as gFunc from './selectorsHelpers'
 import { assertElementPresent, clearInput, clickAndType, clickByText, clickElement } from './selectorsHelpers'
@@ -105,7 +106,7 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
   await assertElementPresent(loadSafeForm.form.selector, gnosisPage, 'css')
   await clickAndType(loadSafeForm.safe_name_field, gnosisPage, accountsSelectors.safeNames.load_safe_name)
   await clickAndType(loadSafeForm.safe_address_field, gnosisPage, accountsSelectors.testAccountsHash.safe1)
-  await clickElement(loadSafeForm.submit_btn, gnosisPage)
+  await clickElement(generalInterface.submit_btn, gnosisPage)
 
   // Second step, review owners
   await assertElementPresent(loadSafeForm.step_two.selector, gnosisPage, 'css')
@@ -116,12 +117,12 @@ export const initWithDefaultSafe = async (importMultipleAccounts = false) => {
     await clearInput(selector, gnosisPage, 'css')
     await clickAndType({ selector: selector, type: 'css' }, gnosisPage, name)
   }
-  await clickElement(loadSafeForm.submit_btn, gnosisPage)
+  await clickElement(generalInterface.submit_btn, gnosisPage)
 
   // Third step, review information and submit
   await assertElementPresent(loadSafeForm.step_three.selector, gnosisPage, 'css')
   await gnosisPage.waitForTimeout(2000)
-  await clickElement(loadSafeForm.submit_btn, gnosisPage)
+  await clickElement(generalInterface.submit_btn, gnosisPage)
 
   return [
     browser,

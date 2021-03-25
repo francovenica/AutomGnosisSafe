@@ -14,6 +14,7 @@ import {
 } from '../utils/selectorsHelpers'
 import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
+import { generalInterface } from '../utils/selectors/generalInterface'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
 import { transactionsTab } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
@@ -36,7 +37,6 @@ afterAll(async () => {
 
 describe('Send funds and sign with two owners', () => {
   const errorMsg = sels.errorMsg
-  const mainHub = sels.testIdSelectors.main_hub
   const assetTab = sels.testIdSelectors.asset_tab
 
   let currentEthFunds = ''
@@ -48,10 +48,8 @@ describe('Send funds and sign with two owners', () => {
     try {
       currentEthFundsOnText = await getInnerText(assetTab.balance_value('eth'), gnosisPage, 'css')
       currentEthFunds = parseFloat((await getNumberInString(assetTab.balance_value('eth'), gnosisPage, 'css')).toFixed(3))
-      // await assertElementPresent(mainHub.new_transaction_btn, gnosisPage, "css")
-      // await clickElement({ selector: mainHub.new_transaction_btn }, gnosisPage)
       await clickByText('button', 'New Transaction', gnosisPage)
-      await clickElement({ selector: mainHub.modal_send_funds_btn }, gnosisPage)
+      await clickElement({ selector: generalInterface.modal_send_funds_btn }, gnosisPage)
       await assertElementPresent(sendFundsForm.review_btn_disabled.selector, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(3000)
       done()
@@ -131,7 +129,7 @@ describe('Send funds and sign with two owners', () => {
     console.log('Approving the Tx with the owner 2')
     try {
       await gnosisPage.bringToFront()
-      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
       currentNonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', currentNonce)
       // We approve and execute with account 1
@@ -148,7 +146,7 @@ describe('Send funds and sign with two owners', () => {
     try {
       await gnosisPage.bringToFront()
       await gnosisPage.waitForTimeout(2000)
-      await assertTextPresent(transactionsTab.tx2_status, 'Pending', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx_status, 'Pending', gnosisPage, 'css')
       // waiting for the queue list to be empty and the executed tx to be on the history tab
       await assertElementPresent(transactionsTab.no_tx_in_queue, gnosisPage, 'css')
       await clickByText('button > span > p', 'History', gnosisPage)

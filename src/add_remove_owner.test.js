@@ -82,7 +82,7 @@ describe('Adding and removing owners', () => {
     console.log('Approving the Tx with the owner 2')
     try {
       await gnosisPage.bringToFront()
-      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
       currentNonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', currentNonce)
       // We are currently using account 2
@@ -138,7 +138,7 @@ describe('Adding and removing owners', () => {
     console.log('Executing the owner deletion with owner 2')
     try {
       await gnosisPage.bringToFront()
-      await assertTextPresent(transactionsTab.tx2_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await assertTextPresent(transactionsTab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
       currentNonce = await getNumberInString('div.tx-nonce > p', gnosisPage, 'css')
       console.log('CurrentNonce = ', currentNonce)
       // We are currently using account 1
@@ -157,7 +157,7 @@ describe('Adding and removing owners', () => {
       await clickByText('button > span > p', 'History', gnosisPage)
       const nonce = await getNumberInString(transactionsTab.tx_nonce, gnosisPage, 'css')
       expect(nonce).toBe(currentNonce)
-      const executedTxStatus = await getInnerText(transactionsTab.tx2_status, gnosisPage, 'css')
+      const executedTxStatus = await getInnerText(transactionsTab.tx_status, gnosisPage, 'css')
       expect(executedTxStatus).toBe('Success')
       done()
     } catch (error) {

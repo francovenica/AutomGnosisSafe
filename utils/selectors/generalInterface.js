@@ -4,7 +4,7 @@ export const generalInterface = {
   safe_name_heading: "h2[data-testid='safe-name-heading']",
   safe_address_heading: "p[data-testid='safe-address-heading']",
   // main_send_btn : "button[data-testid='main-send-btn']",
-  show_qr_btn: "[title='Show QR']",
+  show_qr_btn: { selector: "[title='Show QR']", type: 'css' },
   receiver_modal_safe_name: "[id='safe-name']",
   receiver_modal_safe_address: "[id='safe-address']",
   new_transaction_btn: "button[id='new-transaction-btn']",
@@ -18,6 +18,6 @@ export const generalInterface = {
   settings_tab: "[id='section-settings']",
   execute_checkbox: "label[data-testid='execute-checkbox']",
   approve_tx_btn: "button[data-testid='approve-tx-modal-submit-btn']",
-  submit_tx_btn: 'button[type="submit"]',
+  submit_btn: { selector: "button[type='submit']", type: 'css ' },
   submit_tx_btn_disabled: 'button[type="submit"][disabled]'
 }
