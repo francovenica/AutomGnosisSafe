@@ -13,26 +13,9 @@ const errorMsg = {
   modify_policy: (value = 0) => `Value should be different than ${value}`,
 }
 
-const statusToLabel = {
-  success: 'Success',
-  cancelled: 'Cancelled',
-  failed: 'Failed',
-  awaiting_your_confirmation: 'Awaiting your confirmation',
-  awaiting_confirmations: 'Awaiting confirmations',
-  awaiting_execution: 'Awaiting execution',
-  pending: 'Pending',
-}
-
-
-
-
 export const sels = {
   xpSelectors: {
     testIdSelectors: {
-      general: { // id's that are on items that are spread through the site
-        qr_icon: "img[data-testid='qr-icon']",
-        sidebar: "[data-testid='sidebar']"
-      },
       asset_tab: {
         balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
       }
@@ -59,20 +42,6 @@ export const sels = {
       execute_reject_tx_btn: "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
       assets_tab: "//span[contains(text(),'Assets')]/ancestor::button",
       top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
-    },
-    modify_policies: {
-      settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
-      owner_amount: '//div[5]//div[3]/p', // the number of owners in "settings > owners tab"
-      policies_tab: "//div[contains(text(),'Policies')]",
-      req_conf: '//div/p[2]/b[1]', // the first number in "X out of Y owners" phrase
-      max_req_conf: '//div/p[2]/b[2]', // the second number in "X out of Y owners" phrase
-      modify_btn: "//span[contains(text(),'Modify')]/parent::button", // modify button in the policies tab
-      modify_form_title: '//div[5]/div[3]/div[1]/p', // "Change required information" title of the modify policies form
-      change_btn: "//span[contains(text(),'CHANGE')]/parent::button", // change button in the modifiy policies form
-      current_req_conf: '//form//div[2]/div[1]/div/div/div', // the div with the current selection of owners required
-      owners_selector: '//div[3]/ul/li', // The full selector, its length should be the same as the amount of owners
-      owners_req: (value = 0) => `//ul/li[${value}]`, // individual values of the selector
-      owner_limit: '//form//div[2]/p', // this is the full message, getNumberInString has to be used to get the number
     },
     setting_owners: {
       settings_tab: "//span[contains(text(),'Settings')]/ancestor::a",
@@ -150,9 +119,6 @@ export const sels = {
     token_field: 'div[id=mui-component-select-token] > li' // selector of tokens in send funds
   },
   testIdSelectors: {
-    general: { // id's that are on items that are spread through the site
-      qr_icon: "img[data-testid='qr-icon']"
-    },
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
     }

@@ -11,7 +11,7 @@ import { sels } from '../utils/selectors'
 import { accountsSelectors } from '../utils/selectors/accounts'
 import { generalInterface } from '../utils/selectors/generalInterface'
 import { sendFundsForm } from '../utils/selectors/sendFundsForm'
-import { transactionsTab } from '../utils/selectors/transactionsTab'
+import { transactionsTab, statusLabel } from '../utils/selectors/transactionsTab'
 import { initWithDefaultSafeDirectNavigation } from '../utils/testSetup'
 
 let browser
@@ -32,7 +32,6 @@ describe('Reject Tx flow', () => {
   let startBalance = 0.0
 
   const assetTab = sels.testIdSelectors.asset_tab
-  const labels = sels.statusToLabel
 
   test('Open the Send Funds Form', async (done) => {
     try {
@@ -85,7 +84,7 @@ describe('Reject Tx flow', () => {
     try {
       console.log('Rejecting with the 1st owner')
       await gnosisPage.bringToFront()
-      await gFunc.assertTextPresent(transactionsTab.tx_status, 'Awaiting confirmations', gnosisPage, 'css')
+      await gFunc.assertTextPresent(transactionsTab.tx_status, statusLabel.awaiting_confirmations, gnosisPage, 'css')
       await gFunc.assertTextPresent('div > p', 'NEXT TRANSACTION', gnosisPage, 'css')
       await clickElement(transactionsTab.tx_type, gnosisPage)
       await gnosisPage.waitForTimeout(3000)
@@ -118,7 +117,7 @@ describe('Reject Tx flow', () => {
         document.querySelector('body').innerText.includes('Cancelling transaction'))
       await metamask.switchAccount(1) // changing to account 1
       await gnosisPage.bringToFront()
-      // await gFunc.assertElementPresent(txtransactionsTabTab.reject_tx_btn, gnosisPage, 'css')
+      // await gFunc.assertElementPresent(transactionsTab.reject_tx_btn, gnosisPage, 'css')
       await gnosisPage.waitForTimeout(3000)
       await clickByText(transactionsTab.tx_type.selector, 'Cancelling transaction', gnosisPage)
       await gnosisPage.waitForTimeout(1000)

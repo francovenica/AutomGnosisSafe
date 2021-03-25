@@ -14,3 +14,13 @@ export const transactionsTab = {
   tx_votes: 'div.tx-votes',
   tx_status: 'div.tx-status'
 }
+
+export const statusLabel = {
+  success: 'Success',
+  cancelled: 'Cancelled',
+  failed: 'Failed',
+  awaiting_your_confirmation: 'Awaiting your confirmation',
+  awaiting_confirmations: 'Awaiting confirmations',
+  awaiting_execution: 'Awaiting execution',
+  pending: 'Pending',
+}

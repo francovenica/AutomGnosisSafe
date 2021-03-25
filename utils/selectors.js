@@ -1,16 +1,5 @@
 export const sels = {
   xpSelectors: {
-    homepage: {
-      home_btn: '//div/a/img', // done
-      connect_btn: "//span[contains(text(),'Connect')]/parent::button", // done, separated in connected and not-connected
-      metamask_option: "//span[contains(text(),'MetaMask')]/parent::button", // cant be done
-      accept_cookies: "//span[contains(text(),'Accept selection')]", // done, cannot be used in local
-      loggedin_status: "//p[contains(text(),'metamask [RINKEBY]')]", // done
-      safes_counter: "//div[contains(text(),'Safes')]/p", // done
-      load_safe_btn: "//div[contains(text(),'Load existing Safe')]", // done
-      create_safe_btn: "//div[contains(text(),'Create new Safe')]", // done
-      close_rinkeby_notif: '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/button' // do i need it?
-    },
     load_safe: {
       form_title: "//h2[contains(text(),'Load existing Safe')]", // done, load-safe-form
       name_input: "//input[@name='name']", // done
@@ -27,29 +16,8 @@ export const sels = {
       load_btn: "//button/span[contains(text(),'Load')]", // cant find it
     },
     testIdSelectors: {
-      general: { // id's that are on items that are spread through the site
-        qr_icon: "img[data-testid='qr-icon']",
-        sidebar: "[data-testid='sidebar']"
-      },
       asset_tab: {
         balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
-      },
-      send_funds_form: {
-        modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-        current_eth_balance: "b[data-testid='current-eth-balance']",
-        recipient_input: "input[id='address-book-input']",
-        select_token: "div[id='mui-component-select-token']",
-        review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-        review_btn: "button[data-testid='review-tx-btn']",
-        select_token_ether: "div[data-testid='select-token-Ether']",
-        send_max_btn: "button[data-testid='send-max-btn']",
-        amount_input: "input[data-testid='amount-input']",
-        send_funds_review: "div[data-testid='send-funds-review-step']",
-        recipient_address_review: "p[data-testid='recipient-address-review-step']",
-        amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-        fee_msg_review: "p[data-testid='fee-meg-review-step']",
-        submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-        submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled"
       }
     },
     safe_hub: {
@@ -74,40 +42,6 @@ export const sels = {
       execute_reject_tx_btn: "//span[contains(text(),'Execute Transaction Rejection')]/parent::button",
       assets_tab: "//span[contains(text(),'Assets')]/ancestor::button",
       top_tx_cancelled_label: "//tr[1]//p[contains(text(),'Cancelled')]/parent::div"
-    },
-    send_funds_modal: {
-      modal_title: "//p[contains(text(),'Send Funds')]",
-      step_number: (step) => `//p[contains(text(),'${step} of 2')]`,
-      safe_name: (name) => `//p[contains(text(), '${name}')]`,
-      balance: "//p[contains(text(),'Balance')]",
-      balance_number: '//form/div[1]/div[1]/div[2]/div[2]/p/b',
-      // token_selec: "//div/div/div/div/li",
-      token_selec: '#mui-component-select-token',
-      ether_selection: "//div/span[contains(text(),'Ether')]/parent::div",
-      required_error_input: "//div/p[contains(text(), 'Required')]",
-      amount_input: '//div[6]/div/div/div/input',
-      valid_amount_msg: "//div/p[contains(text(), 'Amount*')]",
-      send_max: "//button[contains(text(),'Send max')]",
-      // 2nd step
-      recipient_hash: '//div[4]/div[2]/div/p',
-      token_icon: '//div[6]/img',
-      token_amount: '//div[6]/p',
-      fee_msg: '//div[7]/p',
-      submit_btn: "//span[contains(text(),'Submit')]/parent::button",
-    },
-    modify_policies: {
-      settings_tab: "//span[contains(text(),'Settings')]/ancestor::button",
-      owner_amount: '//div[5]//div[3]/p', // the number of owners in "settings > owners tab"
-      policies_tab: "//div[contains(text(),'Policies')]",
-      req_conf: '//div/p[2]/b[1]', // the first number in "X out of Y owners" phrase
-      max_req_conf: '//div/p[2]/b[2]', // the second number in "X out of Y owners" phrase
-      modify_btn: "//span[contains(text(),'Modify')]/parent::button", // modify button in the policies tab
-      modify_form_title: '//div[5]/div[3]/div[1]/p', // "Change required information" title of the modify policies form
-      change_btn: "//span[contains(text(),'CHANGE')]/parent::button", // change button in the modifiy policies form
-      current_req_conf: '//form//div[2]/div[1]/div/div/div', // the div with the current selection of owners required
-      owners_selector: '//div[3]/ul/li', // The full selector, its length should be the same as the amount of owners
-      owners_req: (value = 0) => `//ul/li[${value}]`, // individual values of the selector
-      owner_limit: '//form//div[2]/p', // this is the full message, getNumberInString has to be used to get the number
     },
     setting_owners: {
       settings_tab: "//span[contains(text(),'Settings')]/ancestor::a",
@@ -185,30 +119,8 @@ export const sels = {
     token_field: 'div[id=mui-component-select-token] > li' // selector of tokens in send funds
   },
   testIdSelectors: {
-    general: { // id's that are on items that are spread through the site
-      qr_icon: "img[data-testid='qr-icon']",
-      sidebar: "[data-testid='sidebar']"
-    },
     asset_tab: {
       balance_value: (symbol = '') => `div[data-testid='balance-${symbol.toUpperCase()}']`,
-    },
-    send_funds_form: {
-      modal_title_send_funds: "div[data-testid='modal-title-send-funds']",
-      current_eth_balance: "b[data-testid='current-eth-balance']",
-      recipient_input: "input[id='address-book-input']",
-      select_token: "div[id='mui-component-select-token']",
-      review_btn_disabled: "button[data-testid='review-tx-btn']:disabled", // send funds review button initially disabled
-      review_btn: "button[data-testid='review-tx-btn']",
-      select_token_ether: "div[data-testid='select-token-Ether']",
-      send_max_btn: "button[data-testid='send-max-btn']",
-      amount_input: "input[data-testid='amount-input']",
-      send_funds_review: "div[data-testid='send-funds-review-step']",
-      recipient_address_review: "p[data-testid='recipient-address-review-step']",
-      amount_eth_review: "p[data-testid='amount-ETH-review-step']",
-      fee_msg_review: "p[data-testid='fee-meg-review-step']",
-      submit_btn: "button[data-testid='submit-tx-btn']:enabled",
-      submit_btn_disabled: "button[data-testid='submit-tx-btn']:disabled",
-      advanced_options: "//p[contains(text(),'Advanced options')]"
     }
   },
   assertions: {
@@ -226,14 +138,5 @@ export const sels = {
     not_a_number: 'Must be a number',
     max_amount_tokens: (value = 0) => `Maximum value is ${value}`,
     modify_policy: (value = 0) => `Value should be different than ${value}`,
-  },
-  statusToLabel: {
-    success: 'Success',
-    cancelled: 'Cancelled',
-    failed: 'Failed',
-    awaiting_your_confirmation: 'Awaiting your confirmation',
-    awaiting_confirmations: 'Awaiting confirmations',
-    awaiting_execution: 'Awaiting execution',
-    pending: 'Pending',
   }
 }
