@@ -11,6 +11,7 @@ import * as gFunc from './selectorsHelpers'
 import { assertElementPresent, clearInput, clickAndType, clickByText, clickElement } from './selectorsHelpers'
 
 const TESTING_ENV = process.env.TESTING_ENV || 'dev'
+const PUPPETEER_EXEC_PATH = process.env.PUPPETEER_EXEC_PATH
 
 const { SLOWMO, ENVIRONMENT } = config
 
@@ -27,9 +28,11 @@ if (TESTING_ENV === 'PR') {
 
 export const init = async () => {
   const browser = await dappeteer.launch(puppeteer, {
+    // executablePath needs to be defined to run in docker action, else we leave puppeteer to decide
+    executablePath: PUPPETEER_EXEC_PATH ? 'google-chrome-stable' : undefined,
     defaultViewport: null, // this extends the page to the size of the browser
     slowMo: SLOWMO, // Miliseconds it will wait for every action performed. It's 1 by default. change it in the .env file
-    args: ['--start-maximized', envUrl] // maximized browser, URL for the base page
+    args: ['--no-sandbox', '--start-maximized', envUrl] // maximized browser, URL for the base page
   })
 
   const metamask = await dappeteer.getMetamask(browser, {
